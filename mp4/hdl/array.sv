@@ -1,4 +1,4 @@
-/* DO NOT MODIFY. WILL BE OVERRIDDEN BY THE AUTOGRADER.
+/* Copied from MP3 given code.
 A register array to be used for tag arrays, LRU array, etc. */
 
 module array #(

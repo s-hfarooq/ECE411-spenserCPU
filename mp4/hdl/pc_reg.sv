@@ -1,3 +1,5 @@
+/* Copied from MP2 given code. */
+
 module pc_register #(parameter width = 32) (
     input clk,
     input rst,

@@ -3,4 +3,4 @@ module reorder_buffer (
     input logic rst
 );
 
-endmodule
+endmodule : reorder_buffer

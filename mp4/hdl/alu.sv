@@ -1,3 +1,5 @@
+/* Copied from MP2 given code. */
+
 import rv32i_types::*;
 
 module alu (

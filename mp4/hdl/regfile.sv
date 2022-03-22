@@ -1,3 +1,5 @@
+/* Copied from MP2 given code. */
+
 module regfile (
     input clk,
     input rst,

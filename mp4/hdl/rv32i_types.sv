@@ -1,3 +1,5 @@
+/* Copied from MP2 given code. */
+
 package rv32i_types;
 // Mux types are in their own packages to prevent identiier collisions
 // e.g. pcmux::pc_plus4 and regfilemux::pc_plus4 are seperate identifiers

@@ -15,6 +15,7 @@ module instruction_queue #(
     input logic rst,
     input logic flush,
     input logic shift,
+    input logic load,
     input rv32i_word pc_in,
     input rv32i_word next_pc_in,
     input rv32i_word instr_in,
@@ -27,16 +28,30 @@ module instruction_queue #(
     output logic full
 );
 
-// Array of I-Queue entries
 
+// Array of I-Queue entries (Make our own array entries?)
+logic [95:0] entry [entries-1:0];
+
+// array #(.s_index(entries), .width(96)) tag0
+// (
+//     .clk(clk),
+//     .rst(rst || flush),
+//     .read(1'b1),
+//     .load(load),
+//     .rindex(),
+//     .windex(),
+//     .datain({pc_in, next_pc_in, instr_in}),
+//     .dataout({pc_out, next_pc_out, instr_out})
+// );
 
 always_ff @ (posedge clk) begin
-    // stuff
-    if (rst) begin
-    end
-    else begin
+    if (rst || flush) begin
+        for (int i = 0; i < entries; ++i)
+            entry[i] = 96'b0;
+    end else begin
+
     end
 end
 
 
-endmodule
+endmodule : instruction_queue

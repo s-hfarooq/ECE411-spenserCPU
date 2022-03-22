@@ -1,3 +1,5 @@
+/* Copied from MP1 given code. */
+
 import fifo_types::*;
 import structs::*;
 
@@ -13,7 +15,7 @@ module ldst_buffer
 
     // valid-yumi output protocol
     output logic valid_o,
-    output word_t data_o,
+    output ldst_data_t data_o,
     input logic yumi_i
 );
 

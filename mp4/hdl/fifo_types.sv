@@ -1,3 +1,5 @@
+/* Copied from MP1 given code. */
+
 package fifo_types;
 /***************************** Param Declarations ****************************/
 // Width of words (in bits) stored in queue
