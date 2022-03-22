@@ -1,5 +1,4 @@
-module pc_register #(parameter width = 32)
-(
+module pc_register #(parameter width = 32) (
     input clk,
     input rst,
     input load,

@@ -1,7 +1,6 @@
 import rv32i_types::*;
 
-module ir
-(
+module ir (
     input clk,
     input rst,
     input load,

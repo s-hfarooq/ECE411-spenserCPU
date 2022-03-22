@@ -1,7 +1,6 @@
 import rv32i_types::*;
 
-module cmp
-(
+module cmp (
     input branch_funct3_t cmpop,
     input [31:0] a, b,
     output logic f

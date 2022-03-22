@@ -1,7 +1,6 @@
 import rv32i_types::*;
 
-module alu
-(
+module alu (
     input alu_ops aluop,
     input [31:0] a, b,
     output logic [31:0] f

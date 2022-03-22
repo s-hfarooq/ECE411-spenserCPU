@@ -1,5 +1,4 @@
-module regfile
-(
+module regfile (
     input clk,
     input rst,
     input load,
