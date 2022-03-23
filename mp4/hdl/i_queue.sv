@@ -30,17 +30,18 @@ module instruction_queue #(
 
 // Array of I-Queue entries
 logic [95:0] entry [entries-1:0];
-logic [$clog2(entries + 1):0] tail_ptr = $clog2(entries + 1)'b0;
+logic [$clog2(entries + 1):0] tail_ptr = {$clog2(entries + 1){1'b0}}; // near text: "'b";  expecting ";". Check for and fix any syntax errors that appear immediately before or at the specified keyword
 
 assign empty = tail_ptr == 0;
 assign full = tail_ptr == entries;
 
+// change this - dont shift everything, instead change pointer (circular queue)
 always_ff @ (posedge clk) begin
     if (rst || flush) begin
         for (int i = 0; i < entries; ++i)
             entry[i] <= 96'b0;
 
-        tail_ptr <= $clog2(entries + 1)'b0;
+        tail_ptr <= {$clog2(entries + 1){1'b0}};
     end else begin
         case({shift, load})
             00: ; // do nothing
