@@ -17,7 +17,7 @@ module instruction_queue #(
     input logic flush,
     input logic read,
     input logic write,
-    input rv32 pc_in,
+    input rv32i_word pc_in,
     input rv32i_word next_pc_in,
     input rv32i_word instr_in,
     
@@ -55,29 +55,24 @@ always_ff @ (posedge clk) begin
     if (rst || flush) begin
         head_ptr <= {$clog2(entries){1'b0}};
         tail_ptr <= {$clog2(entries){1'b0}};
+        output_buf <= 96'b0;
         counter <= 0;
     end else begin
         case({read, write})
             00: ; // do nothing
-            01: begin
+            01: begin : write
                 if (counter < entries) begin
                     if (empty)
                         output_buf <= {pc_in, next_pc_in, instr_in};
                     queue[tail_ptr] <= {pc_in, next_pc_in, instr_in};
-                    if (tail_ptr == (entries - 1))
-                        tail_ptr <= {$clog2(entries){1'b0}};
-                    else
-                        tail_ptr <= tail_ptr_next;
+                    tail_ptr <= tail_ptr_next;
                     counter <= counter + 1;
                 end
             end
-            10: begin
+            10: begin : read
                 if (counter > 0) begin
                     output_buf <= queue[head_ptr];
-                    if (head_ptr == (entries - 1))
-                        head_ptr <= {$clog2(entries){1'b0}};
-                    else
-                        head_ptr <= head_ptr_next;
+                    head_ptr <= head_ptr_next;
                     counter <= counter - 1;
                 end
             end
