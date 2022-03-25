@@ -17,14 +17,20 @@ module regfile (
 
     // To reservation stations
     output rv32i_word vj_out,
-    output rv32i_word vk_out
+    output rv32i_word vk_out,
+    output rv32i_reg qj_out,
+    output rv32i_reg qk_out
 );
 
-assign vj_out = (rs1_in == 0) ? 32'h0000_0000 : regfile[rs1_in];
-assign vk_out = (rs2_in == 0) ? 32'h0000_0000 : regfile[rs2_in];
-
+// Main structures
 logic [31:0] regfile [31:0];
 logic [4:0] tags [31:0];
+
+// To reservation stations
+assign vj_out = (rs1_in == 0) ? 32'h0000_0000 : regfile[rs1_in];
+assign vk_out = (rs2_in == 0) ? 32'h0000_0000 : regfile[rs2_in];
+assign qj_out = tags[rs1_in];
+assign qk_out = tags[rs2_in];
 
 always_ff @ (posedge clk) begin
     if (rst) begin
