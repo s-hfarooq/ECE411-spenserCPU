@@ -34,8 +34,7 @@ always_ff @ (posedge clk) begin
         end
     end
     else if (flush) begin
-        for (int i = 0; i < 32; ++i)
-            tags[i] <= 5'b00000;
+        // ????????????
     end
     // Load register value from ROB
     else if (load_reg == 1'b1 && reg_dest_rob != 5'b00000) begin
