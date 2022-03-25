@@ -8,10 +8,11 @@ module regfile (
     input rv32i_reg tag_decoder,
     input rv32i_word rs1_in,
     input rv32i_word rs2_in,
+    input rv32i_reg reg_id_decoder,
 
     // From ROB
     input logic load_reg,
-    input rv32i_reg reg_dest_rob,
+    input rv32i_reg reg_id_rob,
     input rv32i_word reg_val,
     input rv32i_reg tag_rob,
 
@@ -43,19 +44,19 @@ always_ff @ (posedge clk) begin
         // ????????????
     end
     // Load register value from ROB
-    else if (load_reg == 1'b1 && reg_dest_rob != 5'b00000) begin
-        regfile[reg_dest_rob] <= reg_val;
+    else if (load_reg == 1'b1 && reg_id_rob != 5'b00000) begin
+        regfile[reg_id_rob] <= reg_val;
 
-        // Clear tag for the register being of ROB commit when
-        // the tag of the register being modified matches the tag
-        // of the ROB entry that was just committed
-        if (tags[reg_dest_rob] == tag_rob)
-            tags[reg_dest_rob] <= 5'b00000;
+        /* Clear tag for the register being of ROB commit when the tag of
+        the register being modified matches the tag of the ROB entry that
+        was just committed */
+        if (tags[reg_id_rob] == tag_rob)
+            tags[reg_id_rob] <= 5'b00000;
     end
 
     // Load register tag from decoder
     else if (load_tag)
-        tags[reg_id] <= tag_decoder;
+        tags[reg_id_decoder] <= tag_decoder;
 end
 
 endmodule : regfile
