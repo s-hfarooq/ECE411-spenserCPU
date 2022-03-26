@@ -35,6 +35,10 @@ module i_queue_testbench();
         #5 clk = ~clk;
     end
 
+    initial begin
+        clk = 0;
+    end
+
     task reset();
         ##1;
         rst <= 1'b1;
@@ -50,7 +54,11 @@ module i_queue_testbench();
     endtask : reset
 
     initial begin : TESTS
+        $display("Starting i_queue tests...");
         reset();
+        ##1;
+        $display("Reset");
+        ##1;
 
         // Write values to queue
         write <= 1'b1;
