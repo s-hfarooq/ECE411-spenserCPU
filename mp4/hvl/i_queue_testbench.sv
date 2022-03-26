@@ -49,28 +49,28 @@ initial begin
     reset();
     /************************ Your Code Here ***********************/
     // Write to queue until full, check data
-    dut.write = 1'b1;
+    // dut.write = 1'b1;
 
-    for (int i = 0; i < 8; ++i) begin
-        itf.data_i[width_p-1 -: 32] = i;
-        itf.data_i[width_p-1-32 -: 32] = 2 * i;
-        itf.data_i[31:0] = 3 * i;
-    end
+    // for (int i = 0; i < 8; ++i) begin
+    //     itf.data_i[width_p-1 -: 32] = i;
+    //     itf.data_i[width_p-1-32 -: 32] = 2 * i;
+    //     itf.data_i[31:0] = 3 * i;
+    // end
 
-    dut.write = 1'b0;
+    // dut.write = 1'b0;
 
-    // Read from queue until empty, make sure it's empty
-    for (int i = 0; i < 8; ++i) begin
-        dut.read = 1'b1;
-        assert (itf.data_o[width_p-1 -: 32] == i &&
-                itf.data_o[width_p-1-32 -: 32] == 2 * i &&
-                itf.data_o[31:0] == 3 * i) else begin
-            report_error(READ_ERROR)
-        end
-        dut.read = 1'b0;
-    end
+    // // Read from queue until empty, make sure it's empty
+    // for (int i = 0; i < 8; ++i) begin
+    //     dut.read = 1'b1;
+    //     assert (itf.data_o[width_p-1 -: 32] == i &&
+    //             itf.data_o[width_p-1-32 -: 32] == 2 * i &&
+    //             itf.data_o[31:0] == 3 * i) else begin
+    //         report_error(READ_ERROR)
+    //     end
+    //     dut.read = 1'b0;
+    // end
 
-    dut.read = 1'b0;
+    // dut.read = 1'b0;
 
     // Simultaneously read and write
 
