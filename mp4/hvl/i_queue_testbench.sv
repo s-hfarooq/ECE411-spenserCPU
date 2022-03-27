@@ -86,7 +86,6 @@ module i_queue_testbench();
         // Write values to queue
         addNToQueue(8);
 
-
         // Read from queue until empty, make sure it's empty
         for(int i = 0; i < 8; ++i)
             readValsFromQueue(i);
@@ -96,17 +95,14 @@ module i_queue_testbench();
         if(empty != 1'b1 || full != 1'b0)
             $error("Queue not empty after dequeuing all values");
         
-
         // Ensure reset works as intended
         // Expected behavior: data = 0; empty = 1, full = 0
         reset();
-        
         if(dut.pc_out != 0 || dut.next_pc_out != 0 || dut.instr_out != 0 || 
             dut.tail_ptr != 0 || dut.head_ptr != 0 || dut.counter != 0 || 
             dut.empty != 1 || dut.full != 0)
             $error("Queue did not reset as expected");
 
-        
         // Enqueue then dequeue - check to make sure circular queue pointers work as intended
         // Fill queue 
         addNToQueue(8);
