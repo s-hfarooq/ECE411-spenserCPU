@@ -7,7 +7,8 @@
 
 import rv32i_types::*;
 
-module instruction_queue #(
+// Instruction queue
+module i_queue #(
     parameter entries = 8
 )
 (
@@ -41,7 +42,7 @@ assign head_ptr_next = head_ptr + 1'b1;
 assign tail_ptr_next = tail_ptr + 1'b1;
 
 // Glue logic
-logic [$clog2(entries)-1:0] counter = 0;
+logic [$clog2(entries):0] counter = 0;
 assign empty = (counter == 0) ? 1'b1 : 1'b0;
 assign full = (counter == entries) ? 1'b1 : 1'b0;
 
@@ -58,25 +59,25 @@ always_ff @ (posedge clk) begin
         output_buf <= 96'b0;
         counter <= 0;
     end else begin
-        case({read, write})
-            00: ; // do nothing
-            01: begin : write
+        unique case({read, write})
+            2'b00: ; // do nothing
+            2'b01: begin
                 if (counter < entries) begin
                     if (empty)
                         output_buf <= {pc_in, next_pc_in, instr_in};
                     queue[tail_ptr] <= {pc_in, next_pc_in, instr_in};
                     tail_ptr <= tail_ptr_next;
-                    counter <= counter + 1;
+                    counter <= counter + 1'b1;
                 end
             end
-            10: begin : read
-                if (counter > 0) begin
+            2'b10: begin
+                if (counter != 0) begin
                     output_buf <= queue[head_ptr];
                     head_ptr <= head_ptr_next;
-                    counter <= counter - 1;
+                    counter <= counter - 1'b1;
                 end
             end
-            11: begin
+            2'b11: begin
                 if (counter == 0)
                     // Want to pass input directly to output if we 
                     // don't have anything in queue already
@@ -92,4 +93,4 @@ always_ff @ (posedge clk) begin
     end
 end
 
-endmodule : instruction_queue
+endmodule : i_queue
