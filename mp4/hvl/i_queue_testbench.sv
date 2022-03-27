@@ -3,91 +3,124 @@
 
 // Copied from MP1 fifo
 
-`ifndef i_queue_testbench
-`define i_queue_testbench
+import rv32i_types::*;
 
-import i_queue_types::*;
+module i_queue_testbench();
+    timeunit 10ns;
+    timeprecision 1ns;
 
-module testbench(i_queue_itf itf);
-
-// Clock Synchronizer for Student Use
-default clocking tb_clk @(negedge itf.clk); endclocking
-
-instruction_queue dut(
     // Inputs
-    .clk(itf.clk),
-    .rst(itf.reset_n),
-    .flush(itf.flush_i),
-    .read(itf.read_i),
-    .write(itf.write_i),
-    .pc_in(itf.data_i[width_p-1 -: 32]),
-    .next_pc_in(itf.data_i[width_p-1-32 -: 32]),
-    .instr_in(itf.data_i[31:0]),
+    logic clk;
+    logic rst;
+    logic flush;
+    logic read;
+    logic write;
+    rv32i_word pc_in;
+    rv32i_word next_pc_in;
+    rv32i_word instr_in;
     
-    // Outputs to decoder
-    .pc_out(itf.data_o[width_p-1 -: 32]),
-    .next_pc_out(itf.data_o[width_p-1-32 -: 32]),
-    .instr_out(itf.data_o[31:0]),
-    .empty(itf.empty_o),
-    .full(itf.full_o)
-);
+    // Outputs
+    rv32i_word pc_out;
+    rv32i_word next_pc_out;
+    rv32i_word instr_out;
+    logic empty;
+    logic full;
 
-task reset();
-    itf.reset_n <= 1'b0;
-    ##(10);
-    itf.reset_n <= 1'b1;
-    ##(1);
-endtask : reset
+    i_queue dut(.*);
 
-function automatic void report_error(error_e err); 
-    itf.tb_report_dut_error(err);
-endfunction : report_error
+    // Clock Synchronizer for Student Use
+    default clocking tb_clk @(negedge clk); endclocking
 
-// DO NOT MODIFY CODE ABOVE THIS LINE
-
-initial begin
-    reset();
-    /************************ Your Code Here ***********************/
-    // Write to queue until full, check data
-    dut.write = 1'b1;
-
-    for (int i = 0; i < 8; ++i) begin
-        itf.data_i[width_p-1 -: 32] = i;
-        itf.data_i[width_p-1-32 -: 32] = 2 * i;
-        itf.data_i[31:0] = 3 * i;
+    always begin
+        #1 clk = ~clk;
     end
 
-    dut.write = 1'b0;
+    initial begin
+        clk = 0;
+    end
 
-    // Read from queue until empty, make sure it's empty
-    for (int i = 0; i < 8; ++i) begin
-        dut.read = 1'b1;
-        assert (itf.data_o[width_p-1 -: 32] == i &&
-                itf.data_o[width_p-1-32 -: 32] == 2 * i &&
-                itf.data_o[31:0] == 3 * i) else begin
-            report_error(READ_ERROR)
+    task reset();
+        ##1;
+        rst <= 1'b1;
+        read <= 1'b0;
+        write <= 1'b0;
+        flush <= 1'b0;
+        pc_in <= 32'b0;
+        next_pc_in <= 32'b0;
+        instr_in <= 32'b0;
+        ##1;
+        rst <= 1'b0;
+        ##1;
+    endtask : reset
+
+    task readValsFromQueue(input int i);
+        read <= 1'b1;
+        ##1;
+        read <= 1'b0;
+
+        if(pc_out != i || next_pc_out != 2 * i || instr_out != 3 * i) begin
+            $error("Value dequeued not correct");
+            $error("i: %b, pc_out: %b, next_pc_out: %b, instr_out: %b, counter: %b", 
+                    i, pc_out, next_pc_out, instr_out, dut.counter);
         end
-        dut.read = 1'b0;
+        ##1;
+    endtask : readValsFromQueue
+
+    task addNToQueue(input int n);
+        for(int i = 0; i < n; ++i) begin
+            write <= 1'b1;
+            pc_in <= i;
+            next_pc_in <= 2 * i;
+            instr_in <= 3 * i;
+            ##1;
+            write <= 1'b0;
+            ##1;
+        end
+    endtask : addNToQueue
+
+    initial begin : TESTS
+        $display("Starting i_queue tests...");
+        reset();
+        ##1;
+
+        // Write values to queue
+        addNToQueue(8);
+
+        // Read from queue until empty, make sure it's empty
+        for(int i = 0; i < 8; ++i)
+            readValsFromQueue(i);
+
+        ##1;
+        // Ensure queue is empty
+        if(empty != 1'b1 || full != 1'b0)
+            $error("Queue not empty after dequeuing all values");
+        
+        // Ensure reset works as intended
+        // Expected behavior: data = 0; empty = 1, full = 0
+        reset();
+        if(dut.pc_out != 0 || dut.next_pc_out != 0 || dut.instr_out != 0 || 
+            dut.tail_ptr != 0 || dut.head_ptr != 0 || dut.counter != 0 || 
+            dut.empty != 1 || dut.full != 0)
+            $error("Queue did not reset as expected");
+
+        // Enqueue then dequeue - check to make sure circular queue pointers work as intended
+        // Fill queue 
+        addNToQueue(8);
+
+        // Read 2 values, ensure they are correct
+        for(int i = 0; i < 2; ++i)
+            readValsFromQueue(i);
+
+        // Write two values to replace old ones that were removed
+        addNToQueue(2);
+
+        // Read next two values, ensure they are correct
+        for(int i = 2; i < 4; ++i)
+            readValsFromQueue(i);
+
+        /***************************************************************/
+        $display("Finished i_queue tests");
+        $finish();
+        $error("TB: Illegal Exit ocurred");
     end
-
-    dut.read = 1'b0;
-
-    // Simultaneously read and write
-
-    // Ensure reset works as intended
-    // Expected behavior: data = 0; empty = 1, full = 0
-    reset();
-    
-    if (dut.pc_out != 0 || dut.next_pc_out != 0 || dut.instr_out != 0 || 
-        dut.tail_ptr != 0 || dut.head_ptr != 0 || dut.counter != 0 || 
-        dut.empty != 1 || dut.full != 0)
-        $error("Invalid data out!")
-
-    /***************************************************************/
-    // Make sure your test bench exits by calling itf.finish();
-    itf.finish();
-    $error("TB: Illegal Exit ocurred");
-end
-
-endmodule : testbench
-`endif
+endmodule
