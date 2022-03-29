@@ -19,15 +19,9 @@ module i_queue #(
     input logic flush,
     input logic read,
     input logic write,
-    // input i_queue_data pc_in,
-    // input rv32i_word next_pc_in,
-    // input rv32i_word instr_in,
     input i_queue_data data_in,
     
     // Outputs to decoder
-    // output rv32i_word pc_out,
-    // output rv32i_word next_pc_out,
-    // output rv32i_word instr_out,
     output i_queue_data data_out,
     output logic empty,
     output logic full
@@ -48,9 +42,6 @@ assign tail_ptr_next = tail_ptr + 1'b1;
 logic [$clog2(entries):0] counter = 0;
 assign empty = (counter == 0) ? 1'b1 : 1'b0;
 assign full = (counter == entries) ? 1'b1 : 1'b0;
-
-// Output buffer
-// i_queue_data output_buf;
 
 always_ff @ (posedge clk) begin
     if (rst || flush) begin

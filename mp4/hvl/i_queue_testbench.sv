@@ -1,7 +1,7 @@
 // any verifiers 
 // O/
 
-// Copied from MP1 fifo
+// Similar to 385 testbenches
 
 import rv32i_types::*;
 import structs::*;
@@ -16,15 +16,9 @@ module i_queue_testbench();
     logic flush;
     logic read;
     logic write;
-    // rv32i_word pc_in;
-    // rv32i_word next_pc_in;
-    // rv32i_word instr_in;
     i_queue_data data_in;
     
     // Outputs
-    // rv32i_word pc_out;
-    // rv32i_word next_pc_out;
-    // rv32i_word instr_out;
     i_queue_data data_out;
     logic empty;
     logic full;
@@ -48,9 +42,6 @@ module i_queue_testbench();
         read <= 1'b0;
         write <= 1'b0;
         flush <= 1'b0;
-        // pc_in <= 32'b0;
-        // next_pc_in <= 32'b0;
-        // instr_in <= 32'b0;
         data_in <= '{default: 0};
         ##1;
         rst <= 1'b0;
@@ -74,9 +65,6 @@ module i_queue_testbench();
         for(int i = 0; i < n; ++i) begin
             write <= 1'b1;
             data_in <= '{i, 2 * i, 3 * i};
-            // pc_in <= i;
-            // next_pc_in <= 2 * i;
-            // instr_in <= 3 * i;
             ##1;
             write <= 1'b0;
             ##1;
