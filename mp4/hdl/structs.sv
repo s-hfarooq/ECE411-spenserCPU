@@ -22,4 +22,10 @@ typedef struct packed {
     rs_reg_t res;
 } rs_data_t;
 
+typedef struct packed {
+    rv32i_word pc;
+    rv32i_word next_pc;
+    rv32i_word instr;
+} i_queue_data;
+
 endpackage: structs
