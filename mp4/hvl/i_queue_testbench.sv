@@ -1,6 +1,4 @@
-// any verifiers 
-// O/
-
+// Testbench for i_queue
 // Similar to 385 testbenches
 
 import rv32i_types::*;
@@ -71,6 +69,13 @@ module i_queue_testbench();
         end
     endtask : addNToQueue
 
+    task checkReset();
+        if(data_out.pc != 0 || data_out.next_pc != 0 || data_out.instr != 0 || 
+            dut.tail_ptr != 0 || dut.head_ptr != 0 || dut.counter != 0 || 
+            dut.empty != 1 || dut.full != 0)
+            $error("Queue did not reset as expected");
+    endtask : checkReset
+
     initial begin : TESTS
         $display("Starting i_queue tests...");
         reset();
@@ -91,10 +96,7 @@ module i_queue_testbench();
         // Ensure reset works as intended
         // Expected behavior: data = 0; empty = 1, full = 0
         reset();
-        if(data_out.pc != 0 || data_out.next_pc != 0 || data_out.instr != 0 || 
-            dut.tail_ptr != 0 || dut.head_ptr != 0 || dut.counter != 0 || 
-            dut.empty != 1 || dut.full != 0)
-            $error("Queue did not reset as expected");
+        checkReset();
 
         // Enqueue then dequeue - check to make sure circular queue pointers work as intended
         // Fill queue 
