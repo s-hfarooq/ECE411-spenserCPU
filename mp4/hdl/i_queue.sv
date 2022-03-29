@@ -6,7 +6,6 @@
 */
 
 import rv32i_types::*;
-import structs::*;
 
 // Instruction queue
 module i_queue #(
@@ -19,22 +18,20 @@ module i_queue #(
     input logic flush,
     input logic read,
     input logic write,
-    // input i_queue_data pc_in,
-    // input rv32i_word next_pc_in,
-    // input rv32i_word instr_in,
-    input i_queue_data data_in,
+    input rv32i_word pc_in,
+    input rv32i_word next_pc_in,
+    input rv32i_word instr_in,
     
     // Outputs to decoder
-    // output rv32i_word pc_out,
-    // output rv32i_word next_pc_out,
-    // output rv32i_word instr_out,
-    output i_queue_data data_out,
+    output rv32i_word pc_out,
+    output rv32i_word next_pc_out,
+    output rv32i_word instr_out,
     output logic empty,
     output logic full
 );
 
 // Array of I-Queue entries
-i_queue_data queue [entries-1:0];
+logic [95:0] queue [entries-1:0];
 
 // Head and tail pointers
 logic [$clog2(entries)-1:0] head_ptr = {$clog2(entries){1'b0}};
@@ -50,13 +47,16 @@ assign empty = (counter == 0) ? 1'b1 : 1'b0;
 assign full = (counter == entries) ? 1'b1 : 1'b0;
 
 // Output buffer
-// i_queue_data output_buf;
+logic [95:0] output_buf;
+assign pc_out = output_buf[95:64];
+assign next_pc_out = output_buf[63:32];
+assign instr_out = output_buf[31:0];
 
 always_ff @ (posedge clk) begin
     if (rst || flush) begin
         head_ptr <= {$clog2(entries){1'b0}};
         tail_ptr <= {$clog2(entries){1'b0}};
-        data_out <= '{default: 0};
+        output_buf <= 96'b0;
         counter <= 0;
     end else begin
         unique case({read, write})
@@ -64,15 +64,15 @@ always_ff @ (posedge clk) begin
             2'b01: begin
                 if (counter < entries) begin
                     if (empty)
-                        data_out <= data_in;
-                    queue[tail_ptr] <= data_in;
+                        output_buf <= {pc_in, next_pc_in, instr_in};
+                    queue[tail_ptr] <= {pc_in, next_pc_in, instr_in};
                     tail_ptr <= tail_ptr_next;
                     counter <= counter + 1'b1;
                 end
             end
             2'b10: begin
                 if (counter != 0) begin
-                    data_out <= queue[head_ptr];
+                    output_buf <= queue[head_ptr];
                     head_ptr <= head_ptr_next;
                     counter <= counter - 1'b1;
                 end
@@ -81,11 +81,11 @@ always_ff @ (posedge clk) begin
                 if (counter == 0)
                     // Want to pass input directly to output if we 
                     // don't have anything in queue already
-                    data_out <= data_in;
+                    output_buf <= {pc_in, next_pc_in, instr_in};
                 else begin
-                    data_out <= queue[head_ptr];
+                    output_buf <= queue[head_ptr];
                     head_ptr <= head_ptr_next;
-                    queue[tail_ptr] <= data_in;
+                    queue[tail_ptr] <= {pc_in, next_pc_in, instr_in};
                     tail_ptr <= tail_ptr_next;
                 end
             end
