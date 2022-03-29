@@ -27,6 +27,6 @@ typedef struct packed {
     rv32i_word pc;
     rv32i_word next_pc;
     rv32i_word instr;
-} i_queue_data;
+} i_queue_data_t;
 
 endpackage: structs
