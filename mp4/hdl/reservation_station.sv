@@ -2,7 +2,7 @@ import rv32i_types::*;
 import structs::*;
 
 module reservation_station #(
-    parameter s_index = 3
+    parameter s_index = 3,
 )
 (
     clk,
@@ -23,11 +23,11 @@ input read;
 input load;
 input [s_index-1:0] rindex;
 input [s_index-1:0] windex;
-input rs_data_t datain;
-output rs_data_t dataout;
+input rs_data_t [width-1:0] datain;
+output rs_data_t [width-1:0] dataout;
 
-rs_data_t data [num_sets-1:0] /* synthesis ramstyle = "logic" */;
-rs_data_t _dataout;
+rs_data_t [width-1:0] data [num_sets-1:0] /* synthesis ramstyle = "logic" */;
+rs_data_t [width-1:0] _dataout;
 assign dataout = _dataout;
 
 always_ff @(posedge clk)
@@ -45,4 +45,4 @@ begin
     end
 end
 
-endmodule : reservation_station
+endmodule : array
