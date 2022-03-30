@@ -1,5 +1,5 @@
 package structs;
-import rv32i_types::rv32i_opcode;
+import rv32i_types::*;
 typedef struct packed {
     logic [3:0] rob_tag;
     logic busy;
