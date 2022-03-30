@@ -1,0 +1,12 @@
+transcript on
+if {[file exists rtl_work]} {
+	vdel -lib rtl_work -all
+}
+vlib rtl_work
+vmap work rtl_work
+
+vlog -sv -work work +incdir+/home/tvitkin2/spenserCPU/mp4/hdl {/home/tvitkin2/spenserCPU/mp4/hdl/rv32i_mux_types.sv}
+vlog -sv -work work +incdir+/home/tvitkin2/spenserCPU/mp4/hdl {/home/tvitkin2/spenserCPU/mp4/hdl/rv32i_types.sv}
+vlog -sv -work work +incdir+/home/tvitkin2/spenserCPU/mp4/hdl {/home/tvitkin2/spenserCPU/mp4/hdl/structs.sv}
+vlog -sv -work work +incdir+/home/tvitkin2/spenserCPU/mp4/hdl {/home/tvitkin2/spenserCPU/mp4/hdl/reservation_station.sv}
+
