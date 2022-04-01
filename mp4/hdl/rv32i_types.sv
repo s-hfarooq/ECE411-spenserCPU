@@ -28,6 +28,12 @@ typedef enum bit [6:0] {
 } rv32i_opcode;
 
 typedef enum bit [2:0] {
+    alu,
+    cmp,
+    ldst
+} instr_t;
+
+typedef enum bit [2:0] {
     beq  = 3'b000,
     bne  = 3'b001,
     blt  = 3'b100,
@@ -71,5 +77,45 @@ typedef enum bit [2:0] {
     alu_or  = 3'b110,
     alu_and = 3'b111
 } alu_ops;
+
+typedef enum bit [6:0] {
+    beq,
+    bne,
+    blt,
+    bge,
+    bltu,
+    bgeu,
+    lb,
+    lh,
+    lw,
+    lbu,
+    lhu,
+    sb,
+    sh,
+    sw,
+    add,
+    addi,
+    sub,
+    sll,
+    slli,
+    slt,
+    slti,
+    sltiu,
+    sltu,
+    xor,
+    xori,
+    sra,
+    srai,
+    srl,
+    srli,
+    or,
+    ori,
+    and,
+    andi,
+    lui,
+    auipc,
+    jal,
+    jalr
+} instr_types_t;
 
 endpackage : rv32i_types

@@ -7,22 +7,30 @@ module reorder_buffer #(
 (
     input logic clk,
     input logic rst,
+    input logic flush,
     input logic read,
 
     // From decoder
-    input rv32i_reg rd,
-    input rv32i_word value,
-    input logic [1:0] op_type,    // math, jump, load, store
+    input rv32i_reg rd_i,
+    input rv32i_word reg_val_i,
 
-
+    // To decoder
+    output rv32i_word reg_val_o,
+    output rv32i_reg reg_o
 );
 
-// still need tag
-rob_values_t rob_arr [entries - 1:0];
+// need to fix entry_num size
+rob_values_t rob_arr [entries-1:0];
 
+always_ff @ (posedge clk) begin
+    if(rst || flush) begin
+        for(int i = 0; i < entries; ++i) begin
+            rob_values_t[i] <= '{default: 0};
+        end
+    end else begin
 
-// register, busy, tag, data columns
-
-
+    end
+    
+end
 
 endmodule : reorder_buffer
