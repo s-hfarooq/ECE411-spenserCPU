@@ -29,4 +29,23 @@ typedef struct packed {
     rv32i_word instr;
 } i_queue_data_t;
 
+typedef struct packed {
+    output [2:0] funct3,
+    output [6:0] funct7,
+    rv32i_opcode opcode,
+    rv32i_word i_imm,
+    rv32i_word s_imm,
+    rv32i_word b_imm,
+    rv32i_word u_imm,
+    rv32i_word j_imm,
+    rv32i_reg rs1,
+    rv32i_reg rs2,
+    rv32i_reg rd   
+} i_decode_opcode_t;
+
+typedef struct packed {
+    logic busy;
+    rv32i_word data;
+} rob_values_t;
+
 endpackage: structs

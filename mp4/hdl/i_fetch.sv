@@ -30,10 +30,16 @@ pc_reg pc(
     .out(pc_out)
 );
 
-// later
-// br_pred predictor(
-//     .clk(clk),
-//     .rst(rst)
+// TODO later
+br_pred predictor(
+    .clk(clk),
+    .rst(rst),
+    .branch_pred_pc_sel(branch_pred_pc_sel)
+);
+
+// TODO later
+// cache i_cache(
+
 // );
 
 i_queue i_queue(
@@ -47,7 +53,6 @@ i_queue i_queue(
     .empty(i_queue_empty),
     .full(i_queue_full)
 );
-
 
 
 always_comb begin : MUXES

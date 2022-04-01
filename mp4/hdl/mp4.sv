@@ -16,6 +16,9 @@ module mp4 (
     output rv32i_word inst_addr, // WHERE DOES THIS CONNECT TO???
     input logic inst_resp,
     input rv32i_word inst_rdata    // 32-bit instruction
+
+    // Testing
+    rv32i_word i_queue_o 
 );
 
 

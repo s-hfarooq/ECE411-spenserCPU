@@ -20,13 +20,13 @@ module regfile (
     input rv32i_reg tag_rob,
 
     // To reservation stations
-    output rv32i_word vj_out,
+    output rv32i_word vj_out, // operands, s1 and s2
     output rv32i_word vk_out,
-    output rv32i_reg qj_out,
-    output rv32i_reg qk_out
-	 
-	 // testing, uncomment to test
-	// output rv32i_word reg0_val,  reg1_val,  reg2_val,  reg3_val,  reg4_val,  reg5_val,  reg6_val,  reg7_val,
+    output rv32i_reg qj_out,  // tags for operands, s1 and s2
+    output rv32i_reg qk_out,
+    output rv32i_reg qi_out   // result tag
+    // testing, uncomment to test
+    // output rv32i_word reg0_val,  reg1_val,  reg2_val,  reg3_val,  reg4_val,  reg5_val,  reg6_val,  reg7_val,
     //                   reg8_val,  reg9_val,  reg10_val, reg11_val, reg12_val, reg13_val, reg14_val, reg15_val,
     //                   reg16_val, reg17_val, reg18_val, reg19_val, reg20_val, reg21_val, reg22_val, reg23_val,
     //                   reg24_val, reg25_val, reg26_val, reg27_val, reg28_val, reg29_val, reg30_val, reg31_val,
