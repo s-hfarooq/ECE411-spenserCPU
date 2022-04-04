@@ -11,18 +11,18 @@ module i_fetch (
     output i_queue_data_t i_queue_data_out,
 
     output logic mem_read,
-    output logic mem_write,
+    output logic mem_write
 );
 
 // i_queue signals
 logic i_queue_empty, i_queue_full, i_queue_flush, i_queue_read, i_queue_write;
-i_queue_data_t i_queue_data_in, i_queue_data_out;
+i_queue_data_t i_queue_data_in;
 
 // PC signals
 logic pc_load, branch_pred_pc_sel;
 rv32i_word pc_in, pc_out, alu_out;
 
-pc_reg pc(
+pc_register pc(
     .clk(clk),
     .rst(rst),
     .load(pc_load),

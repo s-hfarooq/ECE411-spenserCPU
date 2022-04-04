@@ -42,7 +42,7 @@ typedef struct packed {
     rv32i_reg rs2;
     rv32i_reg rd;
     instr_t i_type;
-    instr_types_t instr_type;
+    // instr_types_t instr_type;
     rv32i_word imm_val;
 } i_decode_opcode_t;
 

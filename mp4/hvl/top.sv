@@ -105,7 +105,26 @@ Burst Memory Ports:
 Please refer to tb_itf.sv for more information.
 */
 
-mp4 dut();
+mp4 dut(
+    .clk(itf.clk),
+    .rst(itf.rst),
+    .mem_rdata(itf.mem_rdata),
+    .mem_addr(itf.mem_addr),
+    .mem_resp(itf.mem_resp),
+    .mem_read(itf.mem_read),
+    .mem_write(itf.mem_write),
+    .mem_wdata(itf.mem_wdata),
+    
+    // I-Cache signals
+    .inst_read(itf.inst_read),
+    .inst_addr(itf.inst_addr), // WHERE DOES THIS CONNECT TO???
+    .inst_resp(itf.inst_resp),
+    .inst_rdata(itf.inst_rdata)    // 32-bit instruction
+
+    // Testing
+    // .i_queue_o()
+);
+
 /***************************** End Instantiation *****************************/
 
 endmodule

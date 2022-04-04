@@ -15,10 +15,10 @@ module mp4 (
     output logic inst_read,
     output rv32i_word inst_addr, // WHERE DOES THIS CONNECT TO???
     input logic inst_resp,
-    input rv32i_word inst_rdata,    // 32-bit instruction
+    input rv32i_word inst_rdata    // 32-bit instruction
 
     // Testing
-    output rv32i_word i_queue_o 
+    // output rv32i_word i_queue_o 
 );
 
 
@@ -42,22 +42,22 @@ module mp4 (
 //   output logic mem_resp,
 //   output logic [31:0] mem_rdata_cpu
 // );
-cache i_cache(
-    .clk(clk),
-    .pmem_resp(),
-    .pmem_rdata(),
-    .pmem_address(),
-    .pmem_wdata(),
-    .pmem_read(),
-    .pmem_write(),
-    .mem_read(),
-    .mem_write(),
-    .mem_byte_enable_cpu(),
-    .mem_address(),
-    .mem_wdata_cpu(),
-    .mem_resp(),
-    .mem_rdata_cpu()
-);
+// cache i_cache(
+//     .clk(clk),
+//     .pmem_resp(),
+//     .pmem_rdata(),
+//     .pmem_address(),
+//     .pmem_wdata(),
+//     .pmem_read(),
+//     .pmem_write(),
+//     .mem_read(),
+//     .mem_write(),
+//     .mem_byte_enable_cpu(),
+//     .mem_address(),
+//     .mem_wdata_cpu(),
+//     .mem_resp(),
+//     .mem_rdata_cpu()
+// );
 
 i_fetch i_fetch(
     .clk(clk),

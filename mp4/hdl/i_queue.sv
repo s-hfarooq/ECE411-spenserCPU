@@ -76,6 +76,7 @@ always_ff @ (posedge clk) begin
                     tail_ptr <= tail_ptr + 1'b1;
                 end
             end
+            default: ;
         endcase
     end
 end
