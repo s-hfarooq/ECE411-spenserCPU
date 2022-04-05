@@ -1,10 +1,10 @@
 /* Copied from MP2 given code. */
 
 module register #(parameter width = 32) (
-    input clk,
-    input rst,
-    input load,
-    input [width-1:0] in,
+    input logic clk,
+    input logic rst,
+    input logic load,
+    input logic [width-1:0] in,
     output logic [width-1:0] out
 );
 

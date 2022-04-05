@@ -1,0 +1,9 @@
+# vscode settings files
+.vscode/
+# Quartus compilation files
+*.sv.bak
+**/db/
+**/output_files/
+**/incremental_db/
+*.rpt
+

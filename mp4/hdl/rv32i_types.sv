@@ -4,11 +4,11 @@ package rv32i_types;
 // Mux types are in their own packages to prevent identiier collisions
 // e.g. pcmux::pc_plus4 and regfilemux::pc_plus4 are seperate identifiers
 // for seperate enumerated types
-import pcmux::*;
-import marmux::*;
-import cmpmux::*;
-import alumux::*;
-import regfilemux::*;
+// import pcmux::*;
+// import marmux::*;
+// import cmpmux::*;
+// import alumux::*;
+// import regfilemux::*;
 
 typedef logic [31:0] rv32i_word;
 typedef logic [4:0] rv32i_reg;
@@ -26,6 +26,12 @@ typedef enum bit [6:0] {
     op_reg   = 7'b0110011, //arith ops with register operands (R type)
     op_csr   = 7'b1110011  //control and status register (I type)
 } rv32i_opcode;
+
+typedef enum bit [2:0] {
+    alu,
+    cmp,
+    ldst
+} instr_t;
 
 typedef enum bit [2:0] {
     beq  = 3'b000,
