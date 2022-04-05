@@ -28,6 +28,12 @@ typedef enum bit [6:0] {
 } rv32i_opcode;
 
 typedef enum bit [2:0] {
+    alu,
+    cmp,
+    ldst
+} instr_t;
+
+typedef enum bit [2:0] {
     beq  = 3'b000,
     bne  = 3'b001,
     blt  = 3'b100,

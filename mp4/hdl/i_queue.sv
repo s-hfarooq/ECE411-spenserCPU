@@ -19,16 +19,16 @@ module i_queue #(
     input logic flush,
     input logic read,
     input logic write,
-    input i_queue_data data_in,
+    input i_queue_data_t data_in,
     
     // Outputs to decoder
-    output i_queue_data data_out,
+    output i_queue_data_t data_out,
     output logic empty,
     output logic full
 );
 
 // Array of I-Queue entries
-i_queue_data queue [entries-1:0];
+i_queue_data_t queue [entries-1:0];
 
 // Head and tail pointers
 logic [$clog2(entries)-1:0] head_ptr = {$clog2(entries){1'b0}};
@@ -76,6 +76,7 @@ always_ff @ (posedge clk) begin
                     tail_ptr <= tail_ptr + 1'b1;
                 end
             end
+            default: ;
         endcase
     end
 end

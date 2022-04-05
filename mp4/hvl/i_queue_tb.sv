@@ -14,10 +14,10 @@ module i_queue_testbench();
     logic flush;
     logic read;
     logic write;
-    i_queue_data data_in;
+    i_queue_data_t data_in;
     
     // Outputs
-    i_queue_data data_out;
+    i_queue_data_t data_out;
     logic empty;
     logic full;
 

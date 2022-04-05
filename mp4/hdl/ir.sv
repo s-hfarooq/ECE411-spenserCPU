@@ -2,10 +2,7 @@
 
 import rv32i_types::*;
 
-module ir (
-    input clk,
-    input rst,
-    input load,
+module i_interpreter (
     input [31:0] in,
     output [2:0] funct3,
     output [6:0] funct7,
