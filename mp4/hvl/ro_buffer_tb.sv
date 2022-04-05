@@ -31,8 +31,9 @@ module ro_buffer_testbench();
 
     // To regfile/reservation station
     rob_values_t rob_o;
+    logic is_commiting;
 
-    reorder_buffer dut(.*);
+    ro_buffer dut(.*);
 
     // Clock Synchronizer for Student Use
     default clocking tb_clk @(negedge clk); endclocking
@@ -65,7 +66,7 @@ module ro_buffer_testbench();
             input_i.instr_pc <= i;
             input_i.funct3 <= i;
             input_i.funct7 <= i;
-            input_i.opcode <= i;
+            input_i.opcode <= rv32i_opcode'(i);
             input_i.i_imm <= i;
             input_i.s_imm <= i;
             input_i.b_imm <= i;
@@ -80,7 +81,7 @@ module ro_buffer_testbench();
         end
     endtask : addNToROB
     
-    task ensureCorrectVals(input int n):
+    task ensureCorrectVals(input int n);
         for(int i = 0; i < n; ++i) begin
             read <= 1'b1;
             ##1;

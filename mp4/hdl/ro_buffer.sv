@@ -1,7 +1,7 @@
 import rv32i_types::*;
 import structs::*;
 
-module reorder_buffer #(
+module ro_buffer #(
     parameter entries = 8
 )
 (
@@ -26,7 +26,7 @@ module reorder_buffer #(
 
     // To regfile/reservation station
     output rob_values_t rob_o,
-    output logic is_commting
+    output logic is_commiting
 );
 
 // need to fix entry_num size
@@ -58,18 +58,18 @@ always_ff @ (posedge clk) begin
             // Output to regfile, dequeue
             rob_o <= rob_arr[head_ptr];
             head_ptr <= head_ptr + 1'b1;
-            is_commting <= 1'b1;
+            is_commiting <= 1'b1;
             counter <= counter - 1'b1;
         end else if (read == 1'b1) begin
             // Output to reservation station, dequeue
-            output_rob <= rob_arr[head_ptr];
+            rob_o <= rob_arr[head_ptr];
             head_ptr <= head_ptr + 1'b1;
         end else if (write == 1'b1) begin
             // Save value to ROB, enqueue
             if (counter < entries) begin
                 rob_arr[tail_ptr].op <= input_i;
                 rob_arr[tail_ptr].entry_num <= counter;
-                rob_arr[tail_ptr].can_commit <= 1'b0;
+                rob_arr[tail_ptr].reg_data.can_commit <= 1'b0;
                 rob_arr[tail_ptr].valid <= 1'b1;
                 rob_arr[tail_ptr].reg_data.value <= value_in_reg;
                 rob_arr[tail_ptr].op.instr_pc <= instr_pc_in;
@@ -81,4 +81,4 @@ always_ff @ (posedge clk) begin
     end
 end
 
-endmodule : reorder_buffer
+endmodule : ro_buffer
