@@ -134,6 +134,7 @@ module ro_buffer_testbench();
         ##1;
 
         // test reset
+        addNToROB(3);
         reset();
         if(empty != 1'b1 || full != 1'b0)
             $error("ROB did not reset as expected");

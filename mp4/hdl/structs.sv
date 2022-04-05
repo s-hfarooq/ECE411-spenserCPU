@@ -8,20 +8,9 @@ typedef struct packed {
     rv32i_word dest;
 } ldst_data_t;
 
-typedef struct packed {
-    logic ready;
-    logic [2:0] idx;
-    rv32i_word value;
-} rs_reg_t;
 
-typedef struct packed {
-    logic valid; // ready to commit
-    logic busy;
-    rv32i_opcode opcode;
-    rs_reg_t rs1;
-    rs_reg_t rs2;
-    rs_reg_t res;
-} rs_data_t;
+
+
 
 typedef struct packed {
     rv32i_word pc;
@@ -47,11 +36,32 @@ typedef struct packed {
 typedef struct packed {
     rv32i_word entry_num; // needs to be parametrized
     // logic busy;        // do we need this?
-    logic can_commit;
+    // logic can_commit;
     logic valid;
     i_decode_opcode_t op;
 
-    rv32i_word value;
+    // rv32i_word value;
+    rob_reg_data_t reg_data;
 } rob_values_t;
+
+typedef struct packed {
+    rv32i_word value;
+    logic can_commit;
+} rob_reg_data_t;
+
+typedef struct packed {
+    logic ready;
+    logic [2:0] idx;
+    rob_reg_data_t value;
+} rs_reg_t;
+
+typedef struct packed {
+    logic valid; // ready to commit
+    logic busy;
+    rv32i_opcode opcode;
+    rs_reg_t rs1;
+    rs_reg_t rs2;
+    rs_reg_t res;
+} rs_data_t;
 
 endpackage: structs
