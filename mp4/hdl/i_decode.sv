@@ -5,9 +5,40 @@ module i_decode(
     input clk,
     input rst,
     input load,
+
+    // From Instruction Queue
     input i_queue_data_t d_in,
-    output i_decode_opcode_t op
+
+    // To Instruction Queue
+    output logic iqueue_read,
+
+    // From Register File
+    input rv32i_word vj, vk,
+
+    // From Reorder Buffer
+    input [2:0] rob_tag,
+
+    // To Reorder Buffer
+    output logic rob_write,
+
+    // From ALU Reservation Station
+    input logic alu_rs_full,  // Signal is high if RS is full
+
+    // To ALU Reservation Station
+    output rv32i_word alu_vj, alu_vk, alu_qj, alu_qk,
+    output alu_ops alu_op,
+    output [2:0] alu_tag,
+
+    // From CMP Reservation Station
+    input logic cmp_rs_full,    // Signal is high if RS is full
+
+    // From Load-Store Buffer
+    input logic lsb_full    // Signal is high if buffer is full
+
+    // output i_decode_opcode_t op
 );
+
+i_decode_opcode_t op;
 
 // taken from IR register
 assign op.instr_pc = d_in.pc;
@@ -22,5 +53,118 @@ assign op.j_imm = {{12{d_in.instr[31]}}, d_in.instr[19:12], d_in.instr[20], d_in
 assign op.rs1 = d_in.instr[19:15];
 assign op.rs2 = d_in.instr[24:20];
 assign op.rd = d_in.instr[11:7];
+
+// Decode + Issue
+always_ff @ (posedge clk) begin
+    case (op.opcode)
+        op_lui : begin
+            if (op.rd != 0 && alu_rs_full == 0) begin
+                // send signals to ROB and ALU RS
+            end
+        end
+
+        op_auipc : begin
+            if (op.rd != 0 && alu_rs_full == 0) begin
+                // Send signals to ROB and ALU RS
+            end
+        end
+
+        op_jal : ;
+        op_jalr : ;
+
+        op_br : begin
+            if (cmp_rs_full == 0) begin
+                // Send signals to ROB and CMP RS
+            end
+        end
+
+        op_load : begin
+            if (op.rd != 0 && lsb_full == 0) begin
+                // Send data to ROB and Load-Store Buffer
+            end
+        end
+
+        op_store : begin
+            if (op.rd != 0 && lsb_full == 0) begin
+                // Send data to ROB and Load-Store Buffer
+            end
+        end
+
+        op_imm : begin
+            if (op.rd != 0) begin
+                // Send data to ROB
+                case (op.arith_funct3)
+                    // Might be able to combine add, sll, axor, aor, aand
+                    add : begin
+                        if (alu_rs_full == 0) begin
+                            // Send data to ALU RS
+                            // alu_vj = ;
+                            // alu_vk = ;
+                            // alu_qj = ;
+                            // alu_qk = ;
+                            alu_op = alu_ops'(op.arith_funct3);
+                            // alu_tag = ;
+                            rob_write <= 1'b1;
+                        end
+                    end
+                    sll : ;
+                    slt : ;
+                    sltu : ;
+                    axor : ;
+                    sr : ;
+                    aor : ;
+                    aand : ;
+                    default : ;
+                endcase
+            end
+        end
+
+        op_reg : ;
+        op_csr : ;
+        default : ;
+    endcase
+end
+
+always_comb begin
+
+end
+
+// opcode	 LUI 	op	 0110111 	funct3	 imm[31:12] 	funct7	 imm[31:12]
+// opcode	 AUIPC 	op	 0010111 	funct3	 imm[31:12] 	funct7	 imm[31:12]
+// opcode	 JAL 	op	 1101111 	funct3	 imm[20|10:1|11|19:12] 	funct7	 imm[20|10:1|11|19:12]
+// opcode	 JALR 	op	 1100111 	funct3	 000 	funct7	 imm[11:0]
+// opcode	 BEQ 	op	 1100011 	funct3	 000 	funct7	 imm[12|10:5]
+// opcode	 BNE 	op	 1100011 	funct3	 001 	funct7	 imm[12|10:5]
+// opcode	 BLT 	op	 1100011 	funct3	 100 	funct7	 imm[12|10:5]
+// opcode	 BGE 	op	 1100011 	funct3	 101 	funct7	 imm[12|10:5]
+// opcode	 BLTU 	op	 1100011 	funct3	 110 	funct7	 imm[12|10:5]
+// opcode	 BGEU 	op	 1100011 	funct3	 111 	funct7	 imm[12|10:5]
+// opcode	 LB 	op	 0000011 	funct3	 000 	funct7	 imm[11:0]
+// opcode	 LH 	op	 0000011 	funct3	 001 	funct7	 imm[11:0]
+// opcode	 LW 	op	 0000011 	funct3	 010 	funct7	 imm[11:0]
+// opcode	 LBU 	op	 0000011 	funct3	 100 	funct7	 imm[11:0]
+// opcode	 LHU 	op	 0000011 	funct3	 101 	funct7	 imm[11:0]
+// opcode	 SB 	op	 0100011 	funct3	 000 	funct7	 imm[11:5]
+// opcode	 SH 	op	 0100011 	funct3	 001 	funct7	 imm[11:5]
+// opcode	 SW 	op	 0100011 	funct3	 010 	funct7	 imm[11:5]
+// opcode	 ADDI 	op	 0010011 	funct3	 000 	funct7	 imm[11:0]
+// opcode	 SLTI 	op	 0010011 	funct3	 010 	funct7	 imm[11:0]
+// opcode	 SLTIU 	op	 0010011 	funct3	 011 	funct7	 imm[11:0]
+// opcode	 XORI 	op	 0010011 	funct3	 100 	funct7	 imm[11:0]
+// opcode	 ORI 	op	 0010011 	funct3	 110 	funct7	 imm[11:0]
+// opcode	 ANDI 	op	 0010011 	funct3	 111 	funct7	 imm[11:0]
+// opcode	 SLLI 	op	 0010011 	funct3	 001 	funct7	 0000000
+// opcode	 SRLI 	op	 0010011 	funct3	 101 	funct7	 0000000
+// opcode	 SRAI 	op	 0010011 	funct3	 101 	funct7	 0100000
+// opcode	 ADD 	op	 0110011 	funct3	 000 	funct7	 0000000
+// opcode	 SUB 	op	 0110011 	funct3	 000 	funct7	 0100000
+// opcode	 SLL 	op	 0110011 	funct3	 001 	funct7	 0000000
+// opcode	 SLT 	op	 0110011 	funct3	 010 	funct7	 0000000
+// opcode	 SLTU 	op	 0110011 	funct3	 011 	funct7	 0000000
+// opcode	 XOR 	op	 0110011 	funct3	 100 	funct7	 0000000
+// opcode	 SRL 	op	 0110011 	funct3	 101 	funct7	 0000000
+// opcode	 SRA 	op	 0110011 	funct3	 101 	funct7	 0100000
+// opcode	 OR 	op	 0110011 	funct3	 110 	funct7	 0000000
+// opcode	 AND 	op	 0110011 	funct3	 111 	funct7	 0000000
 
 endmodule
