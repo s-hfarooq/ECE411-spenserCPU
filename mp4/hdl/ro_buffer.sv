@@ -1,10 +1,8 @@
 import rv32i_types::*;
 import structs::*;
+import macros::*;
 
-module ro_buffer #(
-    parameter entries = 8
-)
-(
+module ro_buffer (
     input logic clk,
     input logic rst,
     input logic flush,
@@ -30,28 +28,28 @@ module ro_buffer #(
 );
 
 // need to fix entry_num size
-rob_values_t rob_arr [entries-1:0];
+rob_values_t rob_arr [RO_BUFFER_ENTRIES-1:0];
 
 // Head and tail pointers
-logic [$clog2(entries)-1:0] head_ptr = {$clog2(entries){1'b0}};
-logic [$clog2(entries)-1:0] tail_ptr = {$clog2(entries){1'b0}};
+logic [$clog2(RO_BUFFER_ENTRIES)-1:0] head_ptr = {$clog2(RO_BUFFER_ENTRIES){1'b0}};
+logic [$clog2(RO_BUFFER_ENTRIES)-1:0] tail_ptr = {$clog2(RO_BUFFER_ENTRIES){1'b0}};
 
 // Glue logic
-logic [$clog2(entries):0] counter = 0;
+logic [$clog2(RO_BUFFER_ENTRIES):0] counter = 0;
 assign empty = (counter == 0);
-assign full = (counter == entries);
+assign full = (counter == RO_BUFFER_ENTRIES);
 
 always_ff @ (posedge clk) begin
     is_commiting <= 1'b0;
 
     if(rst || flush) begin
-        for (int i = 0; i < entries; ++i) begin
+        for (int i = 0; i < RO_BUFFER_ENTRIES; ++i) begin
             rob_arr[i] <= '{default: 0};
         end
 
         counter <= 0;
-        head_ptr <= {$clog2(entries){1'b0}};
-        tail_ptr <= {$clog2(entries){1'b0}};
+        head_ptr <= {$clog2(RO_BUFFER_ENTRIES){1'b0}};
+        tail_ptr <= {$clog2(RO_BUFFER_ENTRIES){1'b0}};
     end else begin
         // Check if we should commit head value
         if (rob_arr[head_ptr].reg_data.can_commit == 1'b1) begin
@@ -66,7 +64,7 @@ always_ff @ (posedge clk) begin
             head_ptr <= head_ptr + 1'b1;
         end else if (write == 1'b1) begin
             // Save value to ROB, enqueue
-            if (counter < entries) begin
+            if (counter < RO_BUFFER_ENTRIES) begin
                 rob_arr[tail_ptr].op <= input_i;
                 rob_arr[tail_ptr].entry_num <= counter;
                 rob_arr[tail_ptr].reg_data.can_commit <= 1'b0;

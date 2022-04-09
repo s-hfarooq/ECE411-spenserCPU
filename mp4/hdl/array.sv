@@ -1,11 +1,9 @@
 /* Copied from MP3 given code.
 A register array to be used for tag arrays, LRU array, etc. */
 
-module array #(
-    parameter s_index = 3,
-    parameter width = 1
-)
-(
+import macros::*;
+
+module array (
     clk,
     rst,
     read,
@@ -16,19 +14,19 @@ module array #(
     dataout
 );
 
-localparam num_sets = 2**s_index;
+localparam num_sets = 2**ARRAY_S_INDEX;
 
 input clk;
 input rst;
 input read;
 input load;
-input [s_index-1:0] rindex;
-input [s_index-1:0] windex;
-input [width-1:0] datain;
-output logic [width-1:0] dataout;
+input [ARRAY_S_INDEX-1:0] rindex;
+input [ARRAY_S_INDEX-1:0] windex;
+input [ARRAY_WIDTH-1:0] datain;
+output logic [ARRAY_WIDTH-1:0] dataout;
 
-logic [width-1:0] data [num_sets-1:0] /* synthesis ramstyle = "logic" */;
-logic [width-1:0] _dataout;
+logic [ARRAY_WIDTH-1:0] data [num_sets-1:0] /* synthesis ramstyle = "logic" */;
+logic [ARRAY_WIDTH-1:0] _dataout;
 assign dataout = _dataout;
 
 always_ff @(posedge clk)

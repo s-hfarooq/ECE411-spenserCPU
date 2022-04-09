@@ -1,5 +1,6 @@
 package structs;
 import rv32i_types::*;
+import macros::*;
 
 typedef struct packed {
     logic [3:0] rob_tag;
@@ -35,7 +36,7 @@ typedef struct packed {
 } rob_reg_data_t;
 
 typedef struct packed {
-    rv32i_word entry_num; // needs to be parametrized
+    logic [$clog2(RO_BUFFER_ENTRIES)-1:0] entry_num;
     // logic busy;        // do we need this?
     // logic can_commit;
     logic valid;
@@ -45,9 +46,9 @@ typedef struct packed {
     rob_reg_data_t reg_data;
 } rob_values_t;
 
-typedef struct packed { // how to parameterize structs?????
+typedef struct packed {
     logic ready;
-    rv32i_word idx; // needs to be parametrized based on size of ROB
+    logic [$clog2(RO_BUFFER_ENTRIES)-1:0] idx;
     rob_reg_data_t value;
 } rs_reg_t;
 
@@ -58,6 +59,7 @@ typedef struct packed {
     rs_reg_t rs1;
     rs_reg_t rs2;
     rs_reg_t res;
+    logic [ALU_RS_SIZE-1:0] idx;
 } rs_data_t;
 
 typedef struct packed {
@@ -67,6 +69,31 @@ typedef struct packed {
     rv32i_word alu_qk;
     alu_ops alu_op;
     logic [2:0] alu_tag;
-}
+    logic valid;
+} alu_rs_t;
 
-endpackage: structs
+typedef struct packed {
+    rv32i_word cmp_vj;
+    rv32i_word cmp_vk;
+    rv32i_word cmp_qj;
+    rv32i_word cmp_qk;
+    branch_funct3_t cmp_op;
+    logic [2:0] cmp_tag;
+} cmp_rs_t;
+
+typedef struct packed {
+    rv32i_word vj_out;
+    rv32i_word vk_out;
+    rv32i_reg qj_out;
+    rv32i_reg qk_out;
+    rv32i_reg qi_out;
+} regfile_data_out_t;
+
+typedef struct packed {
+    alu_rs_t from_alu;
+    cmp_rs_t from_cmp;
+    ldst_data_t from_lsdt_buf;
+    rob_values_t to_rob;
+} cdb_t;
+
+endpackage : structs

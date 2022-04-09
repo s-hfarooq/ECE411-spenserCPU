@@ -1,5 +1,6 @@
-include rv32i_types::*;
-include structs::*;
+import rv32i_types::*;
+import structs::*;
+import macros::*;
 
 module i_decode(
     input clk,
@@ -16,7 +17,8 @@ module i_decode(
     input rv32i_word vj, vk, // r1, r2 inputs
 
     // From Reorder Buffer
-    input [2:0] rob_tag,
+    input logic [2:0] rob_tag,
+    // input 
 
     // To Reorder Buffer
     output logic rob_write,
@@ -29,6 +31,9 @@ module i_decode(
 
     // From CMP Reservation Station
     input logic cmp_rs_full,    // Signal is high if RS is full
+
+    // To CMP Reservation Station
+    output cmp_rs_t cmp_o,
 
     // From Load-Store Buffer
     input logic lsb_full    // Signal is high if buffer is full
@@ -51,7 +56,6 @@ assign alu_o.alu_qj = alu_qj;
 assign alu_o.alu_qk = alu_qk;
 assign alu_o.alu_op = alu_op;
 assign alu_o.alu_tag = alu_tag;
-
 
 // taken from IR register
 assign op.instr_pc = d_in.pc;
@@ -82,7 +86,20 @@ always_ff @ (posedge clk) begin
             end
         end
 
-        op_jal : ;
+        op_jal : begin
+            if (alu_rs_full == 0) begin
+                // stuff
+                // ...
+                rob_write = 1'b1;
+                // alu_vj = ;
+                alu_vj = op.instr_pc;
+                alu_vk = 32'd4;
+                alu_qj = 3'd0;
+                alu_qk = 3'd0;
+
+            end
+        end
+
         op_jalr : ;
 
         op_br : begin
@@ -106,34 +123,145 @@ always_ff @ (posedge clk) begin
         op_imm : begin
             if (op.rd != 0) begin
                 // Send data to ROB
+                // ...
                 case (op.arith_funct3)
-                    // Might be able to combine add, sll, axor, aor, aand
-                    add : begin
-                        if (alu_rs_full == 0) begin
-                            // Send data to ALU RS
-                            // alu_vj = ;
-                            // alu_vk = ;
-                            // alu_qj = ;
-                            // alu_qk = ;
-                            alu_op = alu_ops'(op.arith_funct3);
-                            // alu_tag = ;
-                            rob_write <= 1'b1;
+                    slt : begin
+                        if (cmp_rs_full == 0) begin
+                            // send data to CMP Reservation Station
+                            rob_write ' 1'b1;
                         end
                     end
-                    sll : ;
-                    slt : ;
-                    sltu : ;
-                    axor : ;
-                    sr : ;
-                    aor : ;
-                    aand : ;
-                    default : ;
+
+                    sltu : begin
+                        if (cmp_rs_full == 0) begin
+                            // send data to CMP reservation station
+                            rob_write = 1'b1;
+                        end
+                    end
+
+                    sr : begin
+                        if (alu_rs_full == 0) begin
+                            case (funct7[5])
+                                1'b0 : begin
+                                    // alu_vj = ;
+                                    alu_vk = op.i_imm;
+                                    // alu_qj = ;
+                                    alu_qk = 32'b0;
+                                    alu_op = alu_srl;
+                                    rob_write = 1'b1;
+                                end
+
+                                1'b1 : begin
+                                    // alu_vj = ;
+                                    alu_vk = op.i_imm;
+                                    // alu_qj = ;
+                                    alu_qk = 32'b0;
+                                    alu_op = alu_sra;
+                                    rob_write = 1'b1;
+                                end
+
+                                default : ;
+                            endcase
+                        end
+                    end
+
+                    default : begin  // add, sll, axor, aor, aand
+                        if (alu_rs_full == 0) begin
+                            // alu_vj = ;
+                            alu_vk = op.i_imm;
+                            // alu_qj = ;                             alu_qk = 32'b0;
+                            lu_op = alu_ops'(op.arith_funct3);
+
+                            rob_write = 1'b1;                        end
+                    end
                 endcase
             end
         end
 
-        op_reg : ;
-        op_csr : ;
+        op_reg : begin
+            if (op.rd != 0) begin
+                rob_write <= 1'b1;
+                case (op.arith_funct3)
+                    // Might be able to combine sll, slt, axor, aor, aand
+                    add : begin
+                        if (alu_rs_full == 0) begin
+                            case (funct7[5])
+                                1'b0: abegin
+                                    // alu_vj = ;
+                                    // alu_vk = ;
+                                    // alu_qj = ;
+                                    // alu_qk = ;
+                                    lu_op = alu_add;
+
+                                    rob_write = 1'b1;
+                                end
+                                1'b1: abegin
+                                    // alu_vj = ;
+                                    // alu_vk = ;
+                                    // alu_qj = ;
+                                    // alu_qk = ;
+                                    lu_op = alu_sub;
+
+                                    rob_write = 1'b1;
+                                end
+                                default : ;                            endcase
+                        end
+                    end
+
+                    slt : begin // send data to cmp rs somehow
+                        if (cmp_rs_full == 0) begin
+                            /// cmp_o.cmp_vj = ;
+                            // cmp_o.cmp_vk = ;
+                            // cmp_o.cmp_qj = ;
+                            // cmp_o.cmp_qk = ;
+                            cmp_o.cmp_op = blt;
+                            rob_write = 1'b1;                        end
+                        
+                    end;
+                    sltu : begin
+                        if (cmp_rs_full == 0) begin
+
+                            // cmp_o.cmp_vj = ;
+                            // cmp_o.cmp_vk = ;
+                            // cmp_o.cmp_qj = ;
+                            // cmp_o.cmp_qk = ;
+                            cmp_o.cmp_op = bltu;
+                            rob_write = 1'b1;                        end
+                    end;
+                    sr : begin
+                        if (alu_rs_full == 0) begin
+                            case (funct7[5])
+                                1'b0: abegin
+                                    // alu_vj = ;
+                                    // alu_vk = ;
+                                    // alu_qj = ;
+                                    // alu_qk = ;
+                                    lu_op = alu_sll;
+
+                                    rob_write = 1'b1;
+                                end
+                                1'b1: abegin
+                                    // alu_vj = ;
+                                    // alu_vk = ;
+                                    // alu_qj = ;
+                                    // alu_qk = ;
+                                    lu_op = alu_sra;
+
+                                    rob_write = 1'b1;
+                                end
+                                default : ;                            endcase
+                        end
+                    end;
+                    default : begin  // sll, axor, aor, aand
+                        if (alu_rs_full == 0) begin
+                            alu_op = alu_ops'(op.arith_funct3);
+                        end
+                    end
+                endcase
+            end
+        end
+        
+        o// p_csr : ;
         default : ;
     endcase
 end
@@ -141,43 +269,5 @@ end
 always_comb begin
 
 end
-
-// opcode	 LUI 	op	 0110111 	funct3	 imm[31:12] 	funct7	 imm[31:12]
-// opcode	 AUIPC 	op	 0010111 	funct3	 imm[31:12] 	funct7	 imm[31:12]
-// opcode	 JAL 	op	 1101111 	funct3	 imm[20|10:1|11|19:12] 	funct7	 imm[20|10:1|11|19:12]
-// opcode	 JALR 	op	 1100111 	funct3	 000 	funct7	 imm[11:0]
-// opcode	 BEQ 	op	 1100011 	funct3	 000 	funct7	 imm[12|10:5]
-// opcode	 BNE 	op	 1100011 	funct3	 001 	funct7	 imm[12|10:5]
-// opcode	 BLT 	op	 1100011 	funct3	 100 	funct7	 imm[12|10:5]
-// opcode	 BGE 	op	 1100011 	funct3	 101 	funct7	 imm[12|10:5]
-// opcode	 BLTU 	op	 1100011 	funct3	 110 	funct7	 imm[12|10:5]
-// opcode	 BGEU 	op	 1100011 	funct3	 111 	funct7	 imm[12|10:5]
-// opcode	 LB 	op	 0000011 	funct3	 000 	funct7	 imm[11:0]
-// opcode	 LH 	op	 0000011 	funct3	 001 	funct7	 imm[11:0]
-// opcode	 LW 	op	 0000011 	funct3	 010 	funct7	 imm[11:0]
-// opcode	 LBU 	op	 0000011 	funct3	 100 	funct7	 imm[11:0]
-// opcode	 LHU 	op	 0000011 	funct3	 101 	funct7	 imm[11:0]
-// opcode	 SB 	op	 0100011 	funct3	 000 	funct7	 imm[11:5]
-// opcode	 SH 	op	 0100011 	funct3	 001 	funct7	 imm[11:5]
-// opcode	 SW 	op	 0100011 	funct3	 010 	funct7	 imm[11:5]
-// opcode	 ADDI 	op	 0010011 	funct3	 000 	funct7	 imm[11:0]
-// opcode	 SLTI 	op	 0010011 	funct3	 010 	funct7	 imm[11:0]
-// opcode	 SLTIU 	op	 0010011 	funct3	 011 	funct7	 imm[11:0]
-// opcode	 XORI 	op	 0010011 	funct3	 100 	funct7	 imm[11:0]
-// opcode	 ORI 	op	 0010011 	funct3	 110 	funct7	 imm[11:0]
-// opcode	 ANDI 	op	 0010011 	funct3	 111 	funct7	 imm[11:0]
-// opcode	 SLLI 	op	 0010011 	funct3	 001 	funct7	 0000000
-// opcode	 SRLI 	op	 0010011 	funct3	 101 	funct7	 0000000
-// opcode	 SRAI 	op	 0010011 	funct3	 101 	funct7	 0100000
-// opcode	 ADD 	op	 0110011 	funct3	 000 	funct7	 0000000
-// opcode	 SUB 	op	 0110011 	funct3	 000 	funct7	 0100000
-// opcode	 SLL 	op	 0110011 	funct3	 001 	funct7	 0000000
-// opcode	 SLT 	op	 0110011 	funct3	 010 	funct7	 0000000
-// opcode	 SLTU 	op	 0110011 	funct3	 011 	funct7	 0000000
-// opcode	 XOR 	op	 0110011 	funct3	 100 	funct7	 0000000
-// opcode	 SRL 	op	 0110011 	funct3	 101 	funct7	 0000000
-// opcode	 SRA 	op	 0110011 	funct3	 101 	funct7	 0100000
-// opcode	 OR 	op	 0110011 	funct3	 110 	funct7	 0000000
-// opcode	 AND 	op	 0110011 	funct3	 111 	funct7	 0000000
 
 endmodule

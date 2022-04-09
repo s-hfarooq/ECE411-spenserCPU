@@ -95,4 +95,4 @@ always_ff @(posedge clk_i, negedge reset_n_i) begin
 /*****************************************************************************/
 end
 
-endmodule : fifo_synch_1r1w
+endmodule : ldst_buffer
