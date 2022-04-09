@@ -50,12 +50,14 @@ typedef struct packed {
     logic ready;
     logic [$clog2(RO_BUFFER_ENTRIES)-1:0] idx;
     rob_reg_data_t value;
+    logic [$clog2(RO_BUFFER_ENTRIES)-1:0] tag;
 } rs_reg_t;
 
 typedef struct packed {
     logic valid; // ready to commit
     logic busy;
-    rv32i_opcode opcode; 
+    rv32i_opcode opcode;
+    alu_ops alu_op;
     rs_reg_t rs1;
     rs_reg_t rs2;
     rs_reg_t res;
@@ -65,11 +67,10 @@ typedef struct packed {
 typedef struct packed { // when alu_rs needs to send data to the alu, it uses this struct
     rv32i_word alu_vj;
     rv32i_word alu_vk;
-    rv32i_word alu_qj
+    rv32i_word alu_qj;
     rv32i_word alu_qk;
     alu_ops alu_op;
-    logic [2:0] alu_tag;
-    logic valid;
+    logic [$clog2(RO_BUFFER_ENTRIES)-1:0] rob_idx;
 } alu_rs_t;
 
 typedef struct packed {

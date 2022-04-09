@@ -14,7 +14,7 @@ module i_decode(
     output logic iqueue_read,
 
     // From Register File
-    input rv32i_word vj, vk, // r1, r2 inputs
+    input rv32i_word reg_vj, reg_vk, // r1, r2 inputs
 
     // From Reorder Buffer
     input logic [2:0] rob_tag,
@@ -22,6 +22,7 @@ module i_decode(
 
     // To Reorder Buffer
     output logic rob_write,
+    output rv32i_word rob_dest, // Tag/address
 
     // From ALU Reservation Station
     input logic alu_rs_full,  // Signal is high if RS is full
@@ -71,6 +72,13 @@ assign op.rs1 = d_in.instr[19:15];
 assign op.rs2 = d_in.instr[24:20];
 assign op.rd = d_in.instr[11:7];
 
+always_comb begin
+    // if source register is not reg0, and if ROB has the value for the
+    // source register, use that value for the source operand, otherwise
+    // use the value from the regfile.
+    if (reg_vj != 0 && )
+end
+
 // Decode + Issue
 always_ff @ (posedge clk) begin
     case (op.opcode)
@@ -88,23 +96,29 @@ always_ff @ (posedge clk) begin
 
         op_jal : begin
             if (alu_rs_full == 0) begin
-                // stuff
-                // ...
-                rob_write = 1'b1;
-                // alu_vj = ;
-                alu_vj = op.instr_pc;
-                alu_vk = 32'd4;
-                alu_qj = 3'd0;
-                alu_qk = 3'd0;
+                rob_dest <= op.rd;
+                rob_write <= 1'b1;
+                alu_vj <= op.instr_pc;
+                alu_vk <= 32'd4;
+                alu_qj <= 3'd0;
+                alu_qk <= 3'd0;
+                alu_op <= alu_add;
+                rob_write <= 1'b1;
+            end
+        end
+
+        op_jalr : begin
+            // ????? no idea what conditions to use, CHECK
+            if () begin
 
             end
         end
 
-        op_jalr : ;
-
         op_br : begin
             if (cmp_rs_full == 0) begin
-                // Send signals to ROB and CMP RS
+                rob_dest <= op.rd;
+                rob_write <= 1'b1;
+
             end
         end
 
@@ -124,18 +138,18 @@ always_ff @ (posedge clk) begin
             if (op.rd != 0) begin
                 // Send data to ROB
                 // ...
-                case (op.arith_funct3)
+                case (op.funct3)
                     slt : begin
                         if (cmp_rs_full == 0) begin
                             // send data to CMP Reservation Station
-                            rob_write ' 1'b1;
+                            rob_write <= 1'b1;
                         end
                     end
 
                     sltu : begin
                         if (cmp_rs_full == 0) begin
                             // send data to CMP reservation station
-                            rob_write = 1'b1;
+                            rob_write <= 1'b1;
                         end
                     end
 
@@ -143,21 +157,21 @@ always_ff @ (posedge clk) begin
                         if (alu_rs_full == 0) begin
                             case (funct7[5])
                                 1'b0 : begin
-                                    // alu_vj = ;
-                                    alu_vk = op.i_imm;
+                                    // alu_vj <= ;
+                                    alu_vk <= op.i_imm;
                                     // alu_qj = ;
-                                    alu_qk = 32'b0;
-                                    alu_op = alu_srl;
-                                    rob_write = 1'b1;
+                                    alu_qk <= 32'b0;
+                                    alu_op <= alu_srl;
+                                    rob_write <= 1'b1;
                                 end
 
                                 1'b1 : begin
                                     // alu_vj = ;
-                                    alu_vk = op.i_imm;
+                                    alu_vk <= op.i_imm;
                                     // alu_qj = ;
-                                    alu_qk = 32'b0;
-                                    alu_op = alu_sra;
-                                    rob_write = 1'b1;
+                                    alu_qk <= 32'b0;
+                                    alu_op <= alu_sra;
+                                    rob_write <= 1'b1;
                                 end
 
                                 default : ;
@@ -169,10 +183,11 @@ always_ff @ (posedge clk) begin
                         if (alu_rs_full == 0) begin
                             // alu_vj = ;
                             alu_vk = op.i_imm;
-                            // alu_qj = ;                             alu_qk = 32'b0;
-                            lu_op = alu_ops'(op.arith_funct3);
-
-                            rob_write = 1'b1;                        end
+                            // alu_qj = ;
+                            alu_qk <= 32'b0;
+                            alu_op <= alu_ops'(op.funct3);
+                            rob_write <= 1'b1;
+                        end
                     end
                 endcase
             end
@@ -180,88 +195,88 @@ always_ff @ (posedge clk) begin
 
         op_reg : begin
             if (op.rd != 0) begin
-                rob_write <= 1'b1;
-                case (op.arith_funct3)
-                    // Might be able to combine sll, slt, axor, aor, aand
+                case (op.funct3)
                     add : begin
                         if (alu_rs_full == 0) begin
                             case (funct7[5])
-                                1'b0: abegin
+                                1'b0: begin
+                                    // alu_vj <= ;
+                                    // alu_vk <= ;
+                                    // alu_qj <= ;
+                                    // alu_qk <= ;
+                                    alu_op <= alu_add;
+                                    rob_write <= 1'b1;
+                                end
+
+                                1'b1: begin
                                     // alu_vj = ;
                                     // alu_vk = ;
                                     // alu_qj = ;
                                     // alu_qk = ;
-                                    lu_op = alu_add;
-
-                                    rob_write = 1'b1;
+                                    alu_op <= alu_sub;
+                                    rob_write <= 1'b1;
                                 end
-                                1'b1: abegin
-                                    // alu_vj = ;
-                                    // alu_vk = ;
-                                    // alu_qj = ;
-                                    // alu_qk = ;
-                                    lu_op = alu_sub;
-
-                                    rob_write = 1'b1;
-                                end
-                                default : ;                            endcase
+                                default : ;
+                            endcase
                         end
                     end
 
                     slt : begin // send data to cmp rs somehow
                         if (cmp_rs_full == 0) begin
-                            /// cmp_o.cmp_vj = ;
-                            // cmp_o.cmp_vk = ;
-                            // cmp_o.cmp_qj = ;
-                            // cmp_o.cmp_qk = ;
-                            cmp_o.cmp_op = blt;
-                            rob_write = 1'b1;                        end
+                            // cmp_o.cmp_vj <= ;
+                            // cmp_o.cmp_vk <= ;
+                            // cmp_o.cmp_qj <= ;
+                            // cmp_o.cmp_qk <= ;
+                            cmp_o.cmp_op <= blt;
+                            rob_write <= 1'b1;
+                        end
                         
-                    end;
+                    end
+
                     sltu : begin
                         if (cmp_rs_full == 0) begin
+                            // cmp_o.cmp_vj <= ;
+                            // cmp_o.cmp_vk <= ;
+                            // cmp_o.cmp_qj <= ;
+                            // cmp_o.cmp_qk <= ;
+                            cmp_o.cmp_op <= bltu;
+                            rob_write <= 1'b1;
+                        end
+                    end
 
-                            // cmp_o.cmp_vj = ;
-                            // cmp_o.cmp_vk = ;
-                            // cmp_o.cmp_qj = ;
-                            // cmp_o.cmp_qk = ;
-                            cmp_o.cmp_op = bltu;
-                            rob_write = 1'b1;                        end
-                    end;
                     sr : begin
                         if (alu_rs_full == 0) begin
                             case (funct7[5])
-                                1'b0: abegin
-                                    // alu_vj = ;
-                                    // alu_vk = ;
-                                    // alu_qj = ;
-                                    // alu_qk = ;
-                                    lu_op = alu_sll;
-
-                                    rob_write = 1'b1;
+                                1'b0: begin
+                                    // alu_vj <= ;
+                                    // alu_vk <= ;
+                                    // alu_qj <= ;
+                                    // alu_qk <= ;
+                                    alu_op <= alu_sll;
+                                    rob_write <= 1'b1;
                                 end
-                                1'b1: abegin
-                                    // alu_vj = ;
-                                    // alu_vk = ;
-                                    // alu_qj = ;
-                                    // alu_qk = ;
-                                    lu_op = alu_sra;
 
-                                    rob_write = 1'b1;
+                                1'b1: begin
+                                    // alu_vj <= ;
+                                    // alu_vk <= ;
+                                    // alu_qj <= ;
+                                    // alu_qk <= ;
+                                    alu_op <= alu_sra;
+                                    rob_write <= 1'b1;
                                 end
-                                default : ;                            endcase
+                                default : ;
+                            endcase
                         end
-                    end;
+                    end
+
                     default : begin  // sll, axor, aor, aand
                         if (alu_rs_full == 0) begin
-                            alu_op = alu_ops'(op.arith_funct3);
+                            alu_op = alu_ops'(op.funct3);
                         end
                     end
                 endcase
             end
         end
-        
-        o// p_csr : ;
         default : ;
     endcase
 end

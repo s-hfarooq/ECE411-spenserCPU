@@ -17,7 +17,7 @@ module ro_buffer (
     input rv32i_word value_in_reg,
 
     // To decoder
-    output rv32i_word reg_val_o,
+    output rv32i_word reg_val_o [RO_BUFFER_ENTRIES],
     output rv32i_reg reg_o,
     output logic empty,
     output logic full,
