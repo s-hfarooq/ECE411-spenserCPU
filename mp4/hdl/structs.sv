@@ -62,10 +62,10 @@ typedef struct packed {
     logic [ALU_RS_SIZE-1:0] idx;
 } rs_data_t;
 
-typedef struct packed {
+typedef struct packed { // when alu_rs needs to send data to the alu, it uses this struct
     rv32i_word alu_vj;
     rv32i_word alu_vk;
-    rv32i_word alu_qj;
+    rv32i_word alu_qj
     rv32i_word alu_qk;
     alu_ops alu_op;
     logic [2:0] alu_tag;
