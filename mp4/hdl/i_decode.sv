@@ -13,7 +13,7 @@ module i_decode(
     output logic iqueue_read,
 
     // From Register File
-    input rv32i_word vj, vk,
+    input rv32i_word vj, vk, // r1, r2 inputs
 
     // From Reorder Buffer
     input [2:0] rob_tag,
@@ -25,9 +25,7 @@ module i_decode(
     input logic alu_rs_full,  // Signal is high if RS is full
 
     // To ALU Reservation Station
-    output rv32i_word alu_vj, alu_vk, alu_qj, alu_qk,
-    output alu_ops alu_op,
-    output [2:0] alu_tag,
+    output alu_rs_t alu_o,
 
     // From CMP Reservation Station
     input logic cmp_rs_full,    // Signal is high if RS is full
@@ -39,6 +37,21 @@ module i_decode(
 );
 
 i_decode_opcode_t op;
+
+rv32i_word alu_vj;
+rv32i_word alu_vk;
+rv32i_word alu_qj;
+rv32i_word alu_qk;
+alu_ops alu_op;
+logic [2:0] alu_tag;
+
+assign alu_o.alu_vj = alu_vj;
+assign alu_o.alu_vk = alu_vk;
+assign alu_o.alu_qj = alu_qj;
+assign alu_o.alu_qk = alu_qk;
+assign alu_o.alu_op = alu_op;
+assign alu_o.alu_tag = alu_tag;
+
 
 // taken from IR register
 assign op.instr_pc = d_in.pc;

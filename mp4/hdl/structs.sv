@@ -45,19 +45,28 @@ typedef struct packed {
     rob_reg_data_t reg_data;
 } rob_values_t;
 
-typedef struct packed {
+typedef struct packed { // how to parameterize structs?????
     logic ready;
-    logic [2:0] idx;
+    rv32i_word idx; // needs to be parametrized based on size of ROB
     rob_reg_data_t value;
 } rs_reg_t;
 
 typedef struct packed {
     logic valid; // ready to commit
     logic busy;
-    rv32i_opcode opcode;
+    rv32i_opcode opcode; 
     rs_reg_t rs1;
     rs_reg_t rs2;
     rs_reg_t res;
 } rs_data_t;
+
+typedef struct packed {
+    rv32i_word alu_vj;
+    rv32i_word alu_vk;
+    rv32i_word alu_qj;
+    rv32i_word alu_qk;
+    alu_ops alu_op;
+    logic [2:0] alu_tag;
+}
 
 endpackage: structs
