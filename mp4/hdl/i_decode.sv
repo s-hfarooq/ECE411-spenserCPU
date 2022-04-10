@@ -46,7 +46,8 @@ module i_decode(
     // From Load-Store Buffer
     input logic lsb_full    // Signal is high if buffer is full
 
-    // output i_decode_opcode_t op
+    // To Load-Store Buffer
+    // output lsb_t lsb_o
 );
 
 i_decode_opcode_t op;
@@ -80,6 +81,13 @@ assign op.j_imm = {{12{d_in.instr[31]}}, d_in.instr[19:12], d_in.instr[20], d_in
 assign op.rs1 = d_in.instr[19:15];
 assign op.rs2 = d_in.instr[24:20];
 assign op.rd = d_in.instr[11:7];
+
+load_funct3_t load_funct3;
+store_funct3_t store_funct3;
+branch_funct3_t branch_funct3;
+assign load_funct3 = load_funct3_t'(op.funct3);
+assign store_funct3 = store_funct3_t'(op.funct3);
+assign branch_funct3 = branch_funct3_t'(op.funct3);
 
 // Glue signals
 rv32i_word vj_o, vk_o;
@@ -161,19 +169,43 @@ always_ff @ (posedge clk) begin
         op_br : begin
             if (cmp_rs_full == 0) begin
                 rob_dest <= op.rd;
+                // cmp_o.br <= 1'b1;    // High if opcode is branch, non-branch opcodes also use
+                // cmp_o.vj <= vj_o;
+                // cmp_o.vk <= vk_o;
+                // cmp_o.qj <= qj_o;
+                // cmp_o.qk <= qk_o;
+                // cmp_o.funct <= branch_funct3;
+                // cmp_o.cmp_tag <= rob_free_tag;
                 rob_write <= 1'b1;
-
             end
         end
 
         op_load : begin
             if (op.rd != 0 && lsb_full == 0) begin
-                // Send data to ROB and Load-Store Buffer
+                rob_dest <= op.rd;
+                // lsb_o.vj <= vj_o;
+                // lsb_o.vk <= 32'd0;
+                // lsb_o.qj <= qj_o;
+                // lsb_o.qk <= 32'd0;
+                // lsb_o.addr <= op.i_imm;
+                // lsb_o.op <= 1'b0;  // 0 = load, 1 = store
+                // lsb_o.funct <= load_funct3;
+                // lsb_o.tag <= rob_free_tag;
+                rob_write <= 1'b1;
             end
         end
+
         op_store : begin
             if (op.rd != 0 && lsb_full == 0) begin
-                // Send data to ROB and Load-Store Buffer
+                // lsb_o.vj <= vj_o;
+                // lsb_o.vk <= vk_o;
+                // lsb_o.qj <= qj_o;
+                // lsb_o.qk <= qk_o;
+                // lsb_o.addr <= op.s_imm;
+                // lsb_o.op <= 1'b1;  // 0 = load, 1 = store
+                // lsb_o.funct <= store_funct3;
+                // lsb_o.tag <= rob_free_tag;
+                rob-write <= 1'b1;
             end
         end
 
@@ -184,7 +216,7 @@ always_ff @ (posedge clk) begin
                 case (op.funct3)
                     slt : begin
                         if (cmp_rs_full == 0) begin
-                            // send data to CMP Reservation Station
+                            // cmp_o.vj <= 
                             rob_write <= 1'b1;
                         end
                     end

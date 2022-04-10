@@ -12,8 +12,8 @@ module alu_rs (
     // input logic [$clog2(RO_BUFFER_ENTRIES)-1:0] rs_idx_in, // index of register to set valid bit
     // input logic is_valid,
     // input logic [2:0] rob_free_tag,
-    // input rv32i_word rob_reg_vals [RO_BUFFER_ENTRIES],
-    // input logic rob_commit_arr [RO_BUFFER_ENTRIES],
+    input rv32i_word rob_reg_vals [RO_BUFFER_ENTRIES],
+    input logic rob_commit_arr [RO_BUFFER_ENTRIES],
 
     // From/to CDB
     input cdb_t cdb_vals_i,
