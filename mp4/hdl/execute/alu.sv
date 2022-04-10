@@ -12,7 +12,7 @@ module alu (
 );
 
 always_ff @(posedge clk) begin
-    if(load == 1'b1)
+    if(load_alu == 1'b1)
         ready = 1'b1;
     else 
         ready <= 1'b0;

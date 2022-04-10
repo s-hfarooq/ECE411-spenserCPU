@@ -77,6 +77,17 @@ typedef struct packed { // when alu_rs needs to send data to the alu, it uses th
     logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] rob_idx;
 } alu_rs_t;
 
+typedef struct packed { // when alu_rs needs to send data to the alu, it uses this struct
+    logic valid,
+    rv32i_word vj;
+    rv32i_word vk;
+    rv32i_word qj;
+    rv32i_word qk;
+    rv32i_word result;
+    cmp_ops op;
+    logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] rob_idx;
+} cmp_rs_t;
+
 typedef struct packed {
     rv32i_word cmp_vj;
     rv32i_word cmp_vk;

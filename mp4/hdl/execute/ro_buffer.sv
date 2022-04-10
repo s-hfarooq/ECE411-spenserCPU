@@ -41,7 +41,6 @@ end
 // Head and tail pointers
 logic [$clog2(RO_BUFFER_ENTRIES)-1:0] head_ptr = {$clog2(RO_BUFFER_ENTRIES){1'b0}};
 logic [$clog2(RO_BUFFER_ENTRIES)-1:0] tail_ptr = {$clog2(RO_BUFFER_ENTRIES){1'b0}};
-// logic [$clog2(RO_BUFFER_ENTRIES)-1:0] 
 
 // Glue logic
 logic [$clog2(RO_BUFFER_ENTRIES):0] counter = 0;
@@ -57,8 +56,10 @@ always_ff @ (posedge clk) begin
         end
 
         counter <= 0;
-        head_ptr <= {$clog2(RO_BUFFER_ENTRIES){1'b0}};
-        tail_ptr <= {$clog2(RO_BUFFER_ENTRIES){1'b0}};
+
+        // Entry 0 is reserved
+        head_ptr <= {$clog2(RO_BUFFER_ENTRIES){1'b0}} + 1;
+        tail_ptr <= {$clog2(RO_BUFFER_ENTRIES){1'b0}} + 1;
     end else begin
         // Check if we should commit head value
         if (rob_arr[head_ptr].reg_data.can_commit == 1'b1) begin
@@ -70,7 +71,12 @@ always_ff @ (posedge clk) begin
         end else if (read == 1'b1) begin
             // Output to reservation station, dequeue
             rob_o <= rob_arr[head_ptr];
-            head_ptr <= head_ptr + 1'b1;
+
+            // Entry 0 is reserved
+            if(head_ptr >= RO_BUFFER_ENTRIES)
+                head_ptr <= 1;
+            else
+                head_ptr <= head_ptr + 1'b1;                    
         end else if (write == 1'b1) begin
             // Save value to ROB, enqueue
             if (counter < RO_BUFFER_ENTRIES) begin
@@ -81,7 +87,12 @@ always_ff @ (posedge clk) begin
                 rob_arr[tail_ptr].reg_data.value <= value_in_reg;
                 rob_arr[tail_ptr].op.instr_pc <= instr_pc_in;
 
-                tail_ptr <= tail_ptr + 1'b1;
+                // Entry 0 is reserved
+                if(tail_ptr >= RO_BUFFER_ENTRIES)
+                    tail_ptr <= 1;
+                else
+                    tail_ptr <= tail_ptr + 1'b1;
+
                 counter <= counter + 1'b1;
             end
         end
