@@ -47,12 +47,11 @@ typedef struct packed {
 } rob_values_t;
 
 typedef struct packed {
-    logic ready;
-    logic [$clog2(RO_BUFFER_ENTRIES)-1:0] idx;
-    rob_reg_data_t value;
+    logic valid;
+    // logic [$clog2(RO_BUFFER_ENTRIES)-1:0] idx;
+    rv32i_word value;
     logic [$clog2(RO_BUFFER_ENTRIES)-1:0] tag;
 } rs_reg_t;
-
 
 // passing data in and out of the reservation station
 typedef struct packed {
@@ -63,7 +62,7 @@ typedef struct packed {
     rs_reg_t rs1;
     rs_reg_t rs2;
     rs_reg_t res;
-    logic [ALU_RS_SIZE-1:0] idx;
+    // logic [ALU_RS_SIZE-1:0] idx;
 } rs_data_t;
 
 // for doing internal calculations in the alu reservation station

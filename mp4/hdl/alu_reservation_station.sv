@@ -17,8 +17,8 @@ module reservation_station (
 
     // From decoder
     input alu_rs_t alu_o,
-    input rs_data_t data_in,
-    input logic alu_valid,
+    // input rs_data_t data_in,
+    // input logic alu_valid,
 
     // To ALU
     output alu_rs_t data_out,
@@ -39,17 +39,23 @@ rs_data_t data [ALU_RS_SIZE-1:0] /* synthesis ramstyle = "logic" */;
 logic is_in_use [3:0];
 logic [ALU_RS_SIZE-1:0] load_alu;
 
-assign alu_rs_full = (num_entries == ALU_RS_SIZE);
+rs_data_t curr_rs_data;
 
-
-WE NEED TO UPDATE NUM_ENTRIES - YES
+WE NEED TO UPDATE NUM_ENTRIES - YES - NO
 
 
 always_ff @(posedge clk) begin
-    TEST THIS CODE;
-    if(!(is_in_use && 4'b1111)) begin
-        alu_rs_full = 1'b1;
+    alu_rs_full <= 1'b1;
+    for(int i = 0; i < ALU_RS_SIZE; ++i) begin
+        if(is_in_use[i] == 1'b0)
+            alu_rs_full <= 1'b0;
     end
+
+    // TEST THIS CODE;
+    // if(!(is_in_use && 4'b1111)) begin
+    //     alu_rs_full = 1'b1;
+    // end
+    
     if(rst || flush) begin
         for(int i = 0; i < ALU_RS_SIZE; ++i) begin
             data[i] <= '{default: 0};
@@ -60,14 +66,28 @@ always_ff @(posedge clk) begin
         load_rob <= 1'b0;
     end 
     else if(load) begin
+        curr_rs_data.valid <= 1'b0;
+        curr_rs_data.busy <= 1'b0;
+        curr_rs_data.opcode <= alu_o.op;
+        curr_rs_data.alu_op <= alu_o.op;
+        curr_rs_data.rs1.valid <= 1'b0;
+        curr_rs_data.rs1.value <= alu_o.vj; // need to fetch from ROB/regfile?
+        curr_rs_data.rs1.tag <= alu_o.qj;
+        curr_rs_data.rs2.valid <= 1'b0;
+        curr_rs_data.rs2.value <= alu_o.vk; // need to fetch from ROB/regfile?
+        curr_rs_data.rs2.tag <= alu_o.qk;
+        curr_rs_data.res.valid <= 1'b0;
+        curr_rs_data.res.value <= 32'b0;
+        curr_rs_data.res.tag <= alu_o.rob_idx; // ?
+
         if(is_in_use[0] == 1'b0) begin
-            data[0] <= data_in;
+            data[0] <= curr_rs_data;
         end else if(is_in_use[1] == 1'b0) begin
-            data[1] <= data_in;
+            data[1] <= curr_rs_data;
         end else if(is_in_use[2] == 1'b0) begin
-            data[2] <= data_in;
+            data[2] <= curr_rs_data;
         end else if(is_in_use[3] == 1'b0) begin
-            data[3] <= data_in;
+            data[3] <= curr_rs_data;
         end else begin
             alu_rs_full = 1'b1;
         end
@@ -90,18 +110,12 @@ always_ff @(posedge clk) begin: set_data_vals
             data[i].valid = 1'b1;
 
 
-        // Update values from ROB output
-        if(alu_valid == 1'b1) begin
-            for(int i = 0; i < ALU_RS_SIZE; ++i) begin
-                if(alu_o.qj == data[i].rs1.tag)
-                    data[i].rs1.value.value <= alu_o.vj;
-                if(alu_o.qj == data[i].rs2.tag)
-                    data[i].rs2.value.value <= alu_o.vj;
-
-                if(alu_o.qk == data[i].rs1.tag)
-                    data[i].rs1.value.value <= alu_o.vk;
-                if(alu_o.qk == data[i].rs2.tag)
-                    data[i].rsk.value.value <= alu_o.vk;
+        // Update values from ROB output - TODO
+        for(int i = 0; i < RO_BUFFER_ENTRIES; ++i) begin
+            if(rob_commit_arr[i] == 1'b1) begin
+                for(int i = 0; i < ALU_RS_SIZE; ++i) begin
+                    
+                end
             end
         end
     end
@@ -122,14 +136,6 @@ always_ff @(posedge clk) begin: set_data_vals
             is_in_use[i] <= 1'b0;
         end
     end
-end
-
-always_comb begin
-    // if source register is not reg0, and if ROB has the value for the
-    // source register, use that value for the source operand, otherwise
-    // use the value from the regfile.
-
-
 end
 
 // Instantiate ALU's
