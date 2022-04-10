@@ -18,7 +18,7 @@ module regfile (
     input rv32i_word reg_val,
     input rv32i_reg tag_rob,
 
-    // To reservation stations
+    // To Decoder
     outptu regfile_data_out_t d_out
     // output rv32i_word vj_out, // operands, s1 and s2
     // output rv32i_word vk_out,
@@ -58,7 +58,7 @@ logic [4:0] tags [31:0];
 // assign tag25_val = tags[25];assign tag26_val = tags[26];assign tag27_val = tags[27];assign tag28_val = tags[28];
 // assign tag29_val = tags[29];assign tag30_val = tags[30];assign tag31_val = tags[31];assign tag0_val  = tags[0];
 
-// To reservation stations
+// To decoder
 assign d_out.vj_out = (op_in.rs1 == 0) ? 32'h0000_0000 : regfile[op_in.rs1];
 assign d_out.vk_out = (op_in.rs2 == 0) ? 32'h0000_0000 : regfile[op_in.rs2];
 assign d_out.qj_out = tags[op_in.rs1];

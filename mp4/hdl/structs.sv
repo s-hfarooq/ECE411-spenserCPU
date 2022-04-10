@@ -85,9 +85,9 @@ typedef struct packed {
 typedef struct packed {
     rv32i_word vj_out;
     rv32i_word vk_out;
-    rv32i_reg qj_out;
-    rv32i_reg qk_out;
-    rv32i_reg qi_out;
+    logic [$clog2(RO_BUFFER_ENTRIES)-1:0] qj_out;
+    logic [$clog2(RO_BUFFER_ENTRIES)-1:0] qk_out;
+    logic [$clog2(RO_BUFFER_ENTRIES)-1:0] qi_out;
 } regfile_data_out_t;
 
 typedef struct packed {

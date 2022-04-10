@@ -18,6 +18,7 @@ module ro_buffer (
 
     // To decoder
     output rv32i_word reg_val_o [RO_BUFFER_ENTRIES],
+    output logic commit_ready [RO_BUFFER_ENTRIES],
     output rv32i_reg reg_o,
     output logic empty,
     output logic full,
@@ -30,9 +31,17 @@ module ro_buffer (
 // need to fix entry_num size
 rob_values_t rob_arr [RO_BUFFER_ENTRIES-1:0];
 
+always_comb begin
+    for (int i = 0; i < RO_BUFFER_ENTRIES; i++) begin
+        reg_val_o = rob_arr.reg_data.value;
+        commit_ready = rob_arr.reg_data.can_commit;
+    end
+end
+
 // Head and tail pointers
 logic [$clog2(RO_BUFFER_ENTRIES)-1:0] head_ptr = {$clog2(RO_BUFFER_ENTRIES){1'b0}};
 logic [$clog2(RO_BUFFER_ENTRIES)-1:0] tail_ptr = {$clog2(RO_BUFFER_ENTRIES){1'b0}};
+// logic [$clog2(RO_BUFFER_ENTRIES)-1:0] 
 
 // Glue logic
 logic [$clog2(RO_BUFFER_ENTRIES):0] counter = 0;

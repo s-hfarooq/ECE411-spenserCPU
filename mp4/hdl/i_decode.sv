@@ -14,11 +14,13 @@ module i_decode(
     output logic iqueue_read,
 
     // From Register File
-    input rv32i_word reg_vj, reg_vk, // r1, r2 inputs
+    // input rv32i_word reg_vj, reg_vk, // r1, r2 inputs
+    regfile_data_out_t regfile_entry_i,
 
     // From Reorder Buffer
-    input logic [2:0] rob_tag,
-    // input 
+    input logic [2:0] rob_free_tag,
+    input rv32i_word rob_reg_vals [RO_BUFFER_ENTRIES],
+    input logic rob_commit_arr [RO_BUFFER_ENTRIES],
 
     // To Reorder Buffer
     output logic rob_write,
@@ -72,11 +74,29 @@ assign op.rs1 = d_in.instr[19:15];
 assign op.rs2 = d_in.instr[24:20];
 assign op.rd = d_in.instr[11:7];
 
+// Glue signals
+rv32i_word vj_o, vk_o;
+logic [2:0] qj_o, qk_o;
+
 always_comb begin
     // if source register is not reg0, and if ROB has the value for the
     // source register, use that value for the source operand, otherwise
     // use the value from the regfile.
-    if (reg_vj != 0 && )
+    if (reg_vj != 0 && rob_commit_arr[reg_qj]) begin
+        vj_o = rob_reg_vals[reg_qj];
+        qj_o = 3'b000;
+    end else begin
+        vj_o = regfile_entry_i.vj_out;
+        qj_o = regfile_entry_i.qj_out;
+    end
+
+    if (reg_vk != 0 && rob_commit_arr[reg_qk]) begin
+        vk_o = rob_reg_vals[reg_qk];
+        qk_o = 3'b000;
+    end else
+        vk_o = regfile_entry_i.vk_out;
+        qk_o = regfile_entry_i.qk_out;
+end
 end
 
 // Decode + Issue
@@ -127,7 +147,6 @@ always_ff @ (posedge clk) begin
                 // Send data to ROB and Load-Store Buffer
             end
         end
-
         op_store : begin
             if (op.rd != 0 && lsb_full == 0) begin
                 // Send data to ROB and Load-Store Buffer
@@ -135,9 +154,9 @@ always_ff @ (posedge clk) begin
         end
 
         op_imm : begin
-            if (op.rd != 0) begin
-                // Send data to ROB
-                // ...
+            if (op.rd != 0 && rob_free_tag != 0) begin
+                // MAY NEED TO SEND INSTRUCTION TYPE TO ROB...
+                rob_dest <= op.rd;
                 case (op.funct3)
                     slt : begin
                         if (cmp_rs_full == 0) begin
@@ -157,18 +176,18 @@ always_ff @ (posedge clk) begin
                         if (alu_rs_full == 0) begin
                             case (funct7[5])
                                 1'b0 : begin
-                                    // alu_vj <= ;
+                                    alu_vj <= vj_o;
                                     alu_vk <= op.i_imm;
-                                    // alu_qj = ;
+                                    alu_qj = qj_o;
                                     alu_qk <= 32'b0;
                                     alu_op <= alu_srl;
                                     rob_write <= 1'b1;
                                 end
 
                                 1'b1 : begin
-                                    // alu_vj = ;
+                                    alu_vj = vj_o;
                                     alu_vk <= op.i_imm;
-                                    // alu_qj = ;
+                                    alu_qj = qj_o;
                                     alu_qk <= 32'b0;
                                     alu_op <= alu_sra;
                                     rob_write <= 1'b1;
@@ -181,11 +200,12 @@ always_ff @ (posedge clk) begin
 
                     default : begin  // add, sll, axor, aor, aand
                         if (alu_rs_full == 0) begin
-                            // alu_vj = ;
+                            alu_vj = vj_o;
                             alu_vk = op.i_imm;
-                            // alu_qj = ;
+                            alu_qj = qj_o;
                             alu_qk <= 32'b0;
                             alu_op <= alu_ops'(op.funct3);
+                            // <= rob_free_tag;
                             rob_write <= 1'b1;
                         end
                     end
