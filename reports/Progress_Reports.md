@@ -25,3 +25,12 @@ made initial progress on instantiating a reservation station for both the ALU an
 
 ## Roadmap
 For the next checkpoint, we need to unify the modules we created in Checkpoint 1. We also need to implement and verify the other modules required for checkpoint 1, which are the reservation stations, load/store buffer, reorder buffer, and decoder. We need to make sure all instructions work. Like the previous checkpoint, implementation and debug will mostly be done through pair programming.
+
+
+# Checkpoint 2
+
+## Progress Report
+pain
+
+## Roadmap
+suffering

@@ -46,6 +46,7 @@ module i_decode(
 
 i_decode_opcode_t op;
 
+logic alu_valid;
 rv32i_word alu_vj;
 rv32i_word alu_vk;
 rv32i_word alu_qj;
@@ -53,6 +54,7 @@ rv32i_word alu_qk;
 alu_ops alu_op;
 logic [2:0] alu_tag;
 
+assign alu_o.valid = valid;
 assign alu_o.alu_vj = alu_vj;
 assign alu_o.alu_vk = alu_vk;
 assign alu_o.alu_qj = alu_qj;
@@ -82,7 +84,7 @@ always_comb begin
     // if source register is not reg0, and if ROB has the value for the
     // source register, use that value for the source operand, otherwise
     // use the value from the regfile.
-    if (reg_vj != 0 && rob_commit_arr[reg_qj]) begin
+    if (regfile_entry_i.qj_out != 0 && rob_commit_arr[reg_qj]) begin
         vj_o = rob_reg_vals[reg_qj];
         qj_o = 3'b000;
     end else begin
@@ -90,13 +92,13 @@ always_comb begin
         qj_o = regfile_entry_i.qj_out;
     end
 
-    if (reg_vk != 0 && rob_commit_arr[reg_qk]) begin
+    if (regfile_entry_i.qk_out != 0 && rob_commit_arr[reg_qk]) begin
         vk_o = rob_reg_vals[reg_qk];
         qk_o = 3'b000;
-    end else
+    end else begin
         vk_o = regfile_entry_i.vk_out;
         qk_o = regfile_entry_i.qk_out;
-end
+    end
 end
 
 // Decode + Issue
@@ -116,10 +118,11 @@ always_ff @ (posedge clk) begin
 
         op_jal : begin
             if (alu_rs_full == 0) begin
+                alu_valid <= 1'b1;
                 rob_dest <= op.rd;
                 rob_write <= 1'b1;
                 alu_vj <= op.instr_pc;
-                alu_vk <= 32'd4;
+                alu_vk <= 32'd4; // stores pc+4 into rd
                 alu_qj <= 3'd0;
                 alu_qk <= 3'd0;
                 alu_op <= alu_add;
@@ -176,6 +179,7 @@ always_ff @ (posedge clk) begin
                         if (alu_rs_full == 0) begin
                             case (funct7[5])
                                 1'b0 : begin
+                                    alu_valid <= 1'b1;
                                     alu_vj <= vj_o;
                                     alu_vk <= op.i_imm;
                                     alu_qj = qj_o;
@@ -185,6 +189,7 @@ always_ff @ (posedge clk) begin
                                 end
 
                                 1'b1 : begin
+                                    alu_valid <= 1'b1;
                                     alu_vj = vj_o;
                                     alu_vk <= op.i_imm;
                                     alu_qj = qj_o;
@@ -192,7 +197,6 @@ always_ff @ (posedge clk) begin
                                     alu_op <= alu_sra;
                                     rob_write <= 1'b1;
                                 end
-
                                 default : ;
                             endcase
                         end
@@ -200,12 +204,13 @@ always_ff @ (posedge clk) begin
 
                     default : begin  // add, sll, axor, aor, aand
                         if (alu_rs_full == 0) begin
+                            alu_valid <= 1'b1;
                             alu_vj = vj_o;
                             alu_vk = op.i_imm;
                             alu_qj = qj_o;
                             alu_qk <= 32'b0;
                             alu_op <= alu_ops'(op.funct3);
-                            // <= rob_free_tag;
+                            alu_tag <= rob_free_tag;
                             rob_write <= 1'b1;
                         end
                     end
@@ -214,21 +219,25 @@ always_ff @ (posedge clk) begin
         end
 
         op_reg : begin
-            if (op.rd != 0) begin
+            if (op.rd != 0 && rob_free_tag != 0) begin
+                rob_dest <= op.rd;
                 case (op.funct3)
                     add : begin
                         if (alu_rs_full == 0) begin
                             case (funct7[5])
                                 1'b0: begin
-                                    // alu_vj <= ;
-                                    // alu_vk <= ;
+                                    alu_valid <= 1'b1;
+                                    alu_vj <= vj_o;
+                                    alu_vk <= vk_o;
                                     // alu_qj <= ;
                                     // alu_qk <= ;
                                     alu_op <= alu_add;
                                     rob_write <= 1'b1;
+                                    
                                 end
 
                                 1'b1: begin
+                                    alu_valid <= 1'b1;
                                     // alu_vj = ;
                                     // alu_vk = ;
                                     // alu_qj = ;
@@ -268,6 +277,7 @@ always_ff @ (posedge clk) begin
                         if (alu_rs_full == 0) begin
                             case (funct7[5])
                                 1'b0: begin
+                                    alu_valid <= 1'b1;
                                     // alu_vj <= ;
                                     // alu_vk <= ;
                                     // alu_qj <= ;
@@ -277,6 +287,7 @@ always_ff @ (posedge clk) begin
                                 end
 
                                 1'b1: begin
+                                    alu_valid <= 1'b1;
                                     // alu_vj <= ;
                                     // alu_vk <= ;
                                     // alu_qj <= ;
@@ -291,6 +302,7 @@ always_ff @ (posedge clk) begin
 
                     default : begin  // sll, axor, aor, aand
                         if (alu_rs_full == 0) begin
+                            alu_valid = 1'b1;
                             alu_op = alu_ops'(op.funct3);
                         end
                     end

@@ -2,25 +2,26 @@
 package macros;
 
 // array.sv
-`DEFINE ARRAY_S_INDEX 3
-`DEFINE ARRAY_WIDTH 1
+`DEFINE ARRAY_S_INDEX (3)
+`DEFINE ARRAY_WIDTH (1)
 
 // i_queue.sv
-`DEFINE I_QUEUE_ENRTRIES 8
+`DEFINE I_QUEUE_ENRTRIES (8)
 
 // pc_reg.sv
-`DEFINE PC_REGISTER_WIDTH 32
+`DEFINE PC_REGISTER_WIDTH (32)
 
 // reg.sv
-`DEFINE REGISTER_WIDTH 32
+`DEFINE REGISTER_WIDTH (32)
 
 // alu_reservation_station.sv
-`DEFINE ALU_RS_SIZE 4
+`DEFINE ALU_RS_SIZE (4)
 
 // ro_buffer.sv
-`DEFINE RO_BUFFER_ENTRIES 8
+// 8 + 1 because entry 0 is reserved
+`DEFINE RO_BUFFER_ENTRIES (8 + 1) 
 
 // i_decode.sv
-`DEFINE EMPTY_REG 32'b0;
+`DEFINE EMPTY_REG (32'b0)
 
 endpackage : macros

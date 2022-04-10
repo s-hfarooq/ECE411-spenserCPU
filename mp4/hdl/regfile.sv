@@ -19,7 +19,7 @@ module regfile (
     input rv32i_reg tag_rob,
 
     // To Decoder
-    outptu regfile_data_out_t d_out
+    output regfile_data_out_t d_out
     // output rv32i_word vj_out, // operands, s1 and s2
     // output rv32i_word vk_out,
     // output rv32i_reg qj_out,  // tags for operands, s1 and s2
