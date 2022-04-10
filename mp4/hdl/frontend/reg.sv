@@ -1,6 +1,6 @@
 /* Copied from MP2 given code. */
 
-import macros::*;
+`include "macros.sv"
 
 module register (
     input logic clk,

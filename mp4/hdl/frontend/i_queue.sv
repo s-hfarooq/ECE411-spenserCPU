@@ -5,9 +5,10 @@
         Instruction
 */
 
+`include "macros.sv"
+
 import rv32i_types::*;
 import structs::*;
-import macros::*;
 
 // Instruction queue
 module i_queue (

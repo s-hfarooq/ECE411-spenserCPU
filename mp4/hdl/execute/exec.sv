@@ -1,7 +1,7 @@
+`include "macros.sv"
+
 import rv32i_types::*;
 import structs::*;
-import macros::*;
-
 
 module exec (
     input logic clk,

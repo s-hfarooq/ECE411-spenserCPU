@@ -1,6 +1,7 @@
+`include "macros.sv"
+
 import rv32i_types::*;
 import structs::*;
-import macros::*;
 
 module i_decode(
     input clk,
@@ -100,7 +101,7 @@ always_comb begin
     // if source register is not reg0, and if ROB has the value for the
     // source register, use that value for the source operand, otherwise
     // use the value from the regfile.
-    if (regfile_entry_i.qj_out != 0 && rob_commit_arr[reg_qj]) begin
+    if (regfile_entry_i.qj_out != 0 && rob_in.entry_data[reg_qj].reg_data.can_commit) begin
         vj_o = rob_in.entry_data[reg_qj].reg_data.value;
         qj_o = 3'b000;
     end else begin
@@ -108,7 +109,7 @@ always_comb begin
         qj_o = regfile_entry_i.qj_out;
     end
 
-    if (regfile_entry_i.qk_out != 0 && rob_commit_arr[reg_qk]) begin
+    if (regfile_entry_i.qk_out != 0 && rob_in.entry_data[reg_qk].reg_data.can_commit) begin
         vk_o = rob_in.entry_data[reg_qk].reg_data.value;
         qk_o = 3'b000;
     end else begin

@@ -1,6 +1,7 @@
+`include "macros.sv"
+
 package structs;
 import rv32i_types::*;
-import macros::*;
 
 // typedef struct packed {
 //     logic [3:0] rob_tag;
@@ -103,14 +104,14 @@ typedef struct packed { // when alu_rs needs to send data to the alu, it uses th
     logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] rob_idx;
 } cmp_rs_t;
 
-typedef struct packed {
-    rv32i_word cmp_vj;
-    rv32i_word cmp_vk;
-    rv32i_word cmp_qj;
-    rv32i_word cmp_qk;
-    branch_funct3_t cmp_op;
-    logic [2:0] cmp_tag;
-} cmp_rs_t;
+// typedef struct packed {
+//     rv32i_word cmp_vj;
+//     rv32i_word cmp_vk;
+//     rv32i_word cmp_qj;
+//     rv32i_word cmp_qk;
+//     branch_funct3_t cmp_op;
+//     logic [2:0] cmp_tag;
+// } cmp_rs_t;
 
 typedef struct packed {
     rv32i_word vj_out;

@@ -1,7 +1,7 @@
-/* Copied from MP1 given code. */
+`include "macros.sv"
+
 import rv32i_types::*;
 import structs::*;
-import macros::*;
 
 module ldst_buffer
 (
@@ -12,7 +12,7 @@ module ldst_buffer
 
     input cdb_t cdb,
 
-    input lsb_t lsb_entry, // from rob
+    input lsb_t lsb_entry, // from ROB
 
     output cdb_entry_t store_res,
     output cdb_entry_t load_res,
@@ -55,7 +55,7 @@ always_comb begin : store_rs
                 queue[head_ptr].vj = cdb[i].value;
                 // set register to valid
                 queue[head_ptr].qj = 3'b0;
-            end 
+            end
             else if (cdb[i].tag == queue[head_ptr].qk) begin
                 queue[head_ptr].vk = cdb[i].value;
                 // set register to valid
@@ -73,6 +73,7 @@ always_comb begin : store_rs
             store_res.value = queue[head_ptr].vk;
 
             // need to dequeue
+            // increment head pointer? 
         end
     end
     else begin

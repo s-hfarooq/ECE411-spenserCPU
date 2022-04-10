@@ -1,5 +1,4 @@
 // issue - if we define multiple of the same module, we can't have different sizes for each
-package macros;
 
 // array.sv
 `define ARRAY_S_INDEX 3
@@ -28,5 +27,3 @@ package macros;
 `define EMPTY_REG 32'b0
 
 `define NUM_CDB_ENTRIES 1
-
-endpackage : macros

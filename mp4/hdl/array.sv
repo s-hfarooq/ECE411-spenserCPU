@@ -1,7 +1,7 @@
 /* Copied from MP3 given code.
 A register array to be used for tag arrays, LRU array, etc. */
 
-import macros::*;
+`include "macros.sv"
 
 module array (
     clk,

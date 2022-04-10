@@ -1,6 +1,7 @@
+`include "macros.sv"
+
 import rv32i_types::*;
 import structs::*;
-import macros::*;
 
 module ro_buffer (
     input logic clk,
