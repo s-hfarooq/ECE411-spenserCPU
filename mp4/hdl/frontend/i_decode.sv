@@ -305,13 +305,10 @@ always_ff @ (posedge clk) begin
 
                     slt : begin // send data to cmp rs somehow
                         if (cmp_rs_full == 0) begin
-                            // cmp_o.br <= 1'b1;    // High if opcode is branch, non-branch opcodes also use
                             // cmp_o.cmp_vj <= ;
                             // cmp_o.cmp_vk <= ;
                             // cmp_o.cmp_qj <= ;
                             // cmp_o.cmp_qk <= ;
-                            // cmp_o.funct <= branch_funct3;
-                            // cmp_o.cmp_tag <= rob_free_tag;
                             cmp_o.cmp_op <= blt;
                             rob_write <= 1'b1;
                         end

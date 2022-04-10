@@ -2,7 +2,7 @@ import rv32i_types::*;
 import structs::*;
 import macros::*;
 
-module alu_rs (
+module cmp_rs (
     input logic clk,
     input logic rst,
     input logic flush,
@@ -63,22 +63,24 @@ always_ff @(posedge clk) begin
         load_rob <= 1'b0;
     end 
     else if(load) begin
+        // load data from decoder / ROB
+
         curr_rs_data.valid <= 1'b0;
         curr_rs_data.busy <= 1'b0;
         curr_rs_data.opcode <= alu_o.op;
         curr_rs_data.alu_op <= alu_o.op;
-        curr_rs_data.rs1.valid <= 1'b0; // could already be valid - how to determine?
-        curr_rs_data.rs1.value <= alu_o.vj; 
+        curr_rs_data.rs1.valid <= rob_commit_arr[alu_o.qj];
+        curr_rs_data.rs1.value <= rob_reg_vals[alu_o.qj]; // need to get value from ROB (only if tag != 0)
         curr_rs_data.rs1.tag <= alu_o.qj;
-        curr_rs_data.rs2.valid <= 1'b0; // could already be valid - how to determine?
-        curr_rs_data.rs2.value <= alu_o.vk;
+        curr_rs_data.rs2.valid <= rob_commit_arr[alu_o.qk];
+        curr_rs_data.rs2.value <= rob_reg_vals[alu_o.qk]; // need to get value from ROB (only if tag != 0)
         curr_rs_data.rs2.tag <= alu_o.qk;
         curr_rs_data.res.valid <= 1'b0;
         curr_rs_data.res.value <= 32'b0;
         curr_rs_data.res.tag <= alu_o.rob_idx;
 
 
-        // load into first available rs
+        // load into first available rs (TODO PARAMETRIZE)
         if(is_in_use[0] == 1'b0) begin
             data[0] <= curr_rs_data;
         end else if(is_in_use[1] == 1'b0) begin
@@ -101,6 +103,7 @@ always_ff @(posedge clk) begin: set_data_vals
     // CRITICAL PATH WHAT THE FUCK
     // FIX THIS ASAP
     for(int i = 0; i < ALU_RS_SIZE; ++i) begin
+        // check for tag match
         for(int j = 0; j < NUM_CDB_ENTRIES; ++j) begin
             if(data[i].rs1.tag == cdb_vals_i[j].tag) begin
                 data[i].rs1.value <= cdb_vals_i[j].value;
@@ -156,4 +159,4 @@ generate
     end
 endgenerate
 
-endmodule : alu_rs
+endmodule : cmp_rs
