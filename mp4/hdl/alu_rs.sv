@@ -2,18 +2,22 @@ import rv32i_types::*;
 import structs::*;
 import macros::*;
 
-module reservation_station (
+module alu_rs (
     input logic clk,
     input logic rst,
     input logic flush,
     input logic load,
 
     // From ROB
-    input logic [$clog2(RO_BUFFER_ENTRIES)-1:0] rs_idx_in, // index of register to set valid bit
-    input logic is_valid,
-    input logic [2:0] rob_free_tag,
-    input rv32i_word rob_reg_vals [RO_BUFFER_ENTRIES],
-    input logic rob_commit_arr [RO_BUFFER_ENTRIES],
+    // input logic [$clog2(RO_BUFFER_ENTRIES)-1:0] rs_idx_in, // index of register to set valid bit
+    // input logic is_valid,
+    // input logic [2:0] rob_free_tag,
+    // input rv32i_word rob_reg_vals [RO_BUFFER_ENTRIES],
+    // input logic rob_commit_arr [RO_BUFFER_ENTRIES],
+
+    // From/to CDB
+    input cdb_t cdb_vals_i,
+    output cdb_entry_t [ALU_RS_SIZE-1:0] cdb_alu_vals_o,
 
     // From decoder
     input alu_rs_t alu_o,
@@ -24,11 +28,7 @@ module reservation_station (
     output alu_rs_t data_out,
 
     // To decoder
-    output logic alu_rs_full,
-
-    // To ROB
-    output alu_rs_t [ALU_RS_SIZE-1:0] alu_arr,
-    output logic [ALU_RS_SIZE-1:0] load_rob
+    output logic alu_rs_full
 );
 
 // ROB sends valid signal (valid, rs1.ready, rs2.ready must all be high before execution)
@@ -41,20 +41,17 @@ logic [ALU_RS_SIZE-1:0] load_alu;
 
 rs_data_t curr_rs_data;
 
-WE NEED TO UPDATE NUM_ENTRIES - YES - NO
+alu_rs_t [ALU_RS_SIZE-1:0] alu_arr;
+logic [ALU_RS_SIZE-1:0] load_cdb;
 
 
 always_ff @(posedge clk) begin
+    // Can probably make more efficient - worry about later
     alu_rs_full <= 1'b1;
     for(int i = 0; i < ALU_RS_SIZE; ++i) begin
         if(is_in_use[i] == 1'b0)
             alu_rs_full <= 1'b0;
     end
-
-    // TEST THIS CODE;
-    // if(!(is_in_use && 4'b1111)) begin
-    //     alu_rs_full = 1'b1;
-    // end
     
     if(rst || flush) begin
         for(int i = 0; i < ALU_RS_SIZE; ++i) begin
@@ -70,16 +67,18 @@ always_ff @(posedge clk) begin
         curr_rs_data.busy <= 1'b0;
         curr_rs_data.opcode <= alu_o.op;
         curr_rs_data.alu_op <= alu_o.op;
-        curr_rs_data.rs1.valid <= 1'b0;
-        curr_rs_data.rs1.value <= alu_o.vj; // need to fetch from ROB/regfile?
+        curr_rs_data.rs1.valid <= 1'b0; // could already be valid - how to determine?
+        curr_rs_data.rs1.value <= alu_o.vj; 
         curr_rs_data.rs1.tag <= alu_o.qj;
-        curr_rs_data.rs2.valid <= 1'b0;
-        curr_rs_data.rs2.value <= alu_o.vk; // need to fetch from ROB/regfile?
+        curr_rs_data.rs2.valid <= 1'b0; // could already be valid - how to determine?
+        curr_rs_data.rs2.value <= alu_o.vk;
         curr_rs_data.rs2.tag <= alu_o.qk;
         curr_rs_data.res.valid <= 1'b0;
         curr_rs_data.res.value <= 32'b0;
-        curr_rs_data.res.tag <= alu_o.rob_idx; // ?
+        curr_rs_data.res.tag <= alu_o.rob_idx;
 
+
+        // load into first available rs
         if(is_in_use[0] == 1'b0) begin
             data[0] <= curr_rs_data;
         end else if(is_in_use[1] == 1'b0) begin
@@ -89,7 +88,7 @@ always_ff @(posedge clk) begin
         end else if(is_in_use[3] == 1'b0) begin
             data[3] <= curr_rs_data;
         end else begin
-            alu_rs_full = 1'b1;
+            alu_rs_full <= 1'b1;
         end
     end
 end
@@ -97,35 +96,32 @@ end
 always_ff @(posedge clk) begin: set_data_vals
     // if is_valid sent as input, iterate though all items and set valid bit high for rs1/rs2
 
+    // Maybe make generate - more efficient? 
+    // Set valid bits based on input from CDB
+    // CRITICAL PATH WHAT THE FUCK
+    // FIX THIS ASAP
     for(int i = 0; i < ALU_RS_SIZE; ++i) begin
-        if(is_valid == 1'b1) begin
-            if(data[i].rs1.idx == rs_idx_in)
-                data[i].rs1.valid = 1'b1;
-            if(data[i].rs2.idx == rs_idx_in)
-                data[i].rs2.valid = 1'b1;
+        for(int j = 0; j < NUM_CDB_ENTRIES; ++j) begin
+            if(data[i].rs1.tag == cdb_vals_i[j].tag) begin
+                data[i].rs1.value <= cdb_vals_i[j].value;
+                data[i].rs1.valid <= 1'b1;
+            end
+            if(data[i].rs2.tag == cdb_vals_i[j].tag) begin
+                data[i].rs2.value <= cdb_vals_i[j].value;
+                data[i].rs2.valid <= 1'b1;
+            end
         end
 
         // Set valid bit on entry if both inputs are valid
         if(data[i].rs1.valid == 1'b1 && data[i].rs2.valid == 1'b1)
-            data[i].valid = 1'b1;
+            data[i].valid <= 1'b1;
 
-
-        // Update values from ROB output - TODO
-        for(int i = 0; i < RO_BUFFER_ENTRIES; ++i) begin
-            if(rob_commit_arr[i] == 1'b1) begin
-                for(int i = 0; i < ALU_RS_SIZE; ++i) begin
-                    
-                end
-            end
-        end
-    end
-
-    for(int i = 0; i < ALU_RS_SIZE; ++i) begin
-        // if data[i].valid == 1'b1 then update alu_arr value and set load_rob high 1 cycle later
         load_alu[i] <= 1'b0;
+        // if data[i].valid == 1'b1 then update alu_arr value and 
+        // set load_rob high 1 cycle later
         if(data[i].valid == 1'b1) begin
-            alu_arr[i].vj <= data[i].rs1.value.value;
-            alu_arr[i].vk <= data[i].rs2.value.value;
+            alu_arr[i].vj <= data[i].rs1.value;
+            alu_arr[i].vk <= data[i].rs2.value;
             alu_arr[i].qj <= data[i].rs1.tag;
             alu_arr[i].qj <= data[i].rs2.tag;
             alu_arr[i].op <= data[i].alu_op;
@@ -134,6 +130,12 @@ always_ff @(posedge clk) begin: set_data_vals
             load_alu[i] <= 1'b1;
 
             is_in_use[i] <= 1'b0;
+        end
+
+        // Send data to CDB
+        if(load_cdb[i] == 1'b1) begin
+            cdb_alu_vals_o[i].value <= alu_arr[i].result;
+            cdb_alu_vals_o[i].tag <= alu_arr[i].rob_idx;
         end
     end
 end
@@ -149,9 +151,9 @@ generate
             .b(alu_arr[alu_i].vk),
             .f(alu_arr[alu_i].result)
             .load_alu(load_alu[i]),
-            .ready(load_rob[i])
+            .ready(load_cdb[i])
         );
     end
 endgenerate
 
-endmodule : reservation_station
+endmodule : alu_rs

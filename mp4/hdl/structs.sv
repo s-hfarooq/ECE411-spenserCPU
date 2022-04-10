@@ -36,7 +36,7 @@ typedef struct packed {
 } rob_reg_data_t;
 
 typedef struct packed {
-    logic [$clog2(RO_BUFFER_ENTRIES)-1:0] entry_num;
+    logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] entry_num;
     // logic busy;        // do we need this?
     // logic can_commit;
     logic valid;
@@ -50,7 +50,7 @@ typedef struct packed {
     logic valid;
     // logic [$clog2(RO_BUFFER_ENTRIES)-1:0] idx;
     rv32i_word value;
-    logic [$clog2(RO_BUFFER_ENTRIES)-1:0] tag;
+    logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] tag;
 } rs_reg_t;
 
 // passing data in and out of the reservation station
@@ -74,7 +74,7 @@ typedef struct packed { // when alu_rs needs to send data to the alu, it uses th
     rv32i_word qk;
     rv32i_word result;
     alu_ops op;
-    logic [$clog2(RO_BUFFER_ENTRIES)-1:0] rob_idx;
+    logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] rob_idx;
 } alu_rs_t;
 
 typedef struct packed {
@@ -89,16 +89,21 @@ typedef struct packed {
 typedef struct packed {
     rv32i_word vj_out;
     rv32i_word vk_out;
-    logic [$clog2(RO_BUFFER_ENTRIES)-1:0] qj_out;
-    logic [$clog2(RO_BUFFER_ENTRIES)-1:0] qk_out;
-    logic [$clog2(RO_BUFFER_ENTRIES)-1:0] qi_out;
+    logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] qj_out;
+    logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] qk_out;
+    logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] qi_out;
 } regfile_data_out_t;
 
 typedef struct packed {
-    alu_rs_t from_alu;
-    cmp_rs_t from_cmp;
-    ldst_data_t from_lsdt_buf;
-    rob_values_t to_rob;
-} cdb_t;
+    rv32i_word value;
+    logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] tag;
+} cdb_entry_t;
+
+
+typedef cdb_entry_t[`NUM_CDB_ENTRIES-1:0] cdb_t;
+
+
+// if(rob_values[cdb_tag].busy == 1)
+//     rob_vales[cdb_tag].register value = cdb value
 
 endpackage : structs

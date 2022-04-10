@@ -24,4 +24,6 @@ package macros;
 // i_decode.sv
 `DEFINE EMPTY_REG (32'b0)
 
+`DEFINE NUM_CDB_ENTRIES 1
+
 endpackage : macros

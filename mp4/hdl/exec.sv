@@ -63,7 +63,7 @@ ro_buffer rob(
 );
 
 alu_reservation_station alu_rs(
-
+    .cdb_alu_vals_o(cdb[4:0])
 );
 
 cmp_reservation_station cmp_rs(
