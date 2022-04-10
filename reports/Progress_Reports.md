@@ -15,6 +15,7 @@ if not identical to the modules provided in MP2. If there is additional
 time, we would like to finish the other queues/buffers (ROB, load/store
 queue, etc).
 
+
 # Checkpoint 1
 
 ## Progress Report
@@ -30,7 +31,7 @@ For the next checkpoint, we need to unify the modules we created in Checkpoint 1
 # Checkpoint 2
 
 ## Progress Report
-pain
+For checkpoint 2, we implemented the ROB, reservation stations, load store buffer, decoder, and instruction fetch as well as linking all these modules together. 
 
 ## Roadmap
-suffering
+For checkpoint 3, we will need to add L1 caches and implement the arbiter and branch predictor we designed for checkpoint 2. We will likely also be editing the given cache code for better performance. Additionally, we'll decide if we want to implement any additional advanced features. Again, like the previous checkpoint, implementation and debug will mostly be done through pair programming.

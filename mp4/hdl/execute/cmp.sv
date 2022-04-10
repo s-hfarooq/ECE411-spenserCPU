@@ -7,10 +7,9 @@ module cmp (
     input logic [31:0] a, b,
     input logic load_cmp,
 
-    output logic f
+    output logic f,
     output logic ready
 );
-
 
 always_ff @(posedge clk) begin
     if(load_cmp == 1'b1)
@@ -18,7 +17,6 @@ always_ff @(posedge clk) begin
     else 
         ready <= 1'b0;
 end
-
 
 always_comb
 begin

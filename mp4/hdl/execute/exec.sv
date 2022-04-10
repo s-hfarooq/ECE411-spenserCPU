@@ -7,13 +7,13 @@ module exec (
     input logic clk,
     input logic rst,
     input logic flush,
+
     // inputs from decode / issue
     input logic load_tag,
     input rv32i_reg tag_decoder,
     input rv32i_reg reg_id_decoder,
     input i_decode_opcode_t op_in,
 
-    
     // outputs to commit 
 );
 
@@ -63,26 +63,25 @@ ro_buffer rob(
 );
 
 alu_reservation_station alu_rs(
-    .cdb_alu_vals_o(cdb[4:0])
+    // .cdb_alu_vals_o(cdb[4:0])
 );
 
 cmp_reservation_station cmp_rs(
 
 );
 
-cmp comparator(
-    .cmpop(),
-    .a(), 
-    .b(),
-    .f()
-);
+// cmp comparator(
+//     .cmpop(),
+//     .a(), 
+//     .b(),
+//     .f()
+// );
 
-alu alu(
-    .aluop(),
-    .a(), 
-    .b(),
-    .f()
-);
-
+// alu alu(
+//     .aluop(),
+//     .a(), 
+//     .b(),
+//     .f()
+// );
 
 endmodule: exec

@@ -59,7 +59,7 @@ typedef struct packed {
 } rob_values_t;
 
 typedef struct packed {
-    rob_values_t entry_data[$clog2(`RO_BUFFER_ENTRIES)-1:0];
+    rob_values_t [$clog2(`RO_BUFFER_ENTRIES)-1:0] entry_data;
 } rob_arr_t;
 
 typedef struct packed {
