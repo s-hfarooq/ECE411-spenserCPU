@@ -2,12 +2,23 @@ package structs;
 import rv32i_types::*;
 import macros::*;
 
+// typedef struct packed {
+//     logic [3:0] rob_tag;
+//     logic busy;
+//     rv32i_word effective_addr;
+//     rv32i_word dest;
+// } ldst_data_t;
+
 typedef struct packed {
-    logic [3:0] rob_tag;
-    logic busy;
-    rv32i_word effective_addr;
-    rv32i_word dest;
-} ldst_data_t;
+    rv32i_word vj;
+    rv32i_word vk;
+    rv32i_word qj;
+    rv32i_word qk;
+    rv32i_word addr;
+    rv32i_opcode op;
+    logic [2:0] funct;
+    logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] tag;
+} lsb_t;
 
 typedef struct packed {
     rv32i_word pc;
@@ -47,6 +58,10 @@ typedef struct packed {
 } rob_values_t;
 
 typedef struct packed {
+    rob_values_t entry_data[$clog2(`RO_BUFFER_ENTRIES)-1:0];
+} rob_arr_t;
+
+typedef struct packed {
     logic valid;
     // logic [$clog2(RO_BUFFER_ENTRIES)-1:0] idx;
     rv32i_word value;
@@ -67,7 +82,7 @@ typedef struct packed {
 
 // for doing internal calculations in the alu reservation station
 typedef struct packed { // when alu_rs needs to send data to the alu, it uses this struct
-    logic valid,
+    logic valid;
     rv32i_word vj;
     rv32i_word vk;
     rv32i_word qj;
@@ -78,13 +93,13 @@ typedef struct packed { // when alu_rs needs to send data to the alu, it uses th
 } alu_rs_t;
 
 typedef struct packed { // when alu_rs needs to send data to the alu, it uses this struct
-    logic valid,
+    logic valid;
     rv32i_word vj;
     rv32i_word vk;
     rv32i_word qj;
     rv32i_word qk;
     rv32i_word result;
-    cmp_ops op;
+    branch_funct3_t op;
     logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] rob_idx;
 } cmp_rs_t;
 

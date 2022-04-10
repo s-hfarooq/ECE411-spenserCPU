@@ -15,7 +15,7 @@ module i_decode(
 
     // From Register File
     // input rv32i_word reg_vj, reg_vk, // r1, r2 inputs
-    regfile_data_out_t regfile_entry_i,
+    input regfile_data_out_t regfile_entry_i,
 
     // To Register File
     output rv32i_reg rs1_o, rs2_o,
@@ -24,8 +24,9 @@ module i_decode(
 
     // From Reorder Buffer
     input logic [3:0] rob_free_tag,
-    input rv32i_word rob_reg_vals [RO_BUFFER_ENTRIES],
-    input logic rob_commit_arr [RO_BUFFER_ENTRIES],
+    // input rv32i_word rob_reg_vals [RO_BUFFER_ENTRIES],
+    // input logic rob_commit_arr [RO_BUFFER_ENTRIES],
+    input rob_arr_t rob_in,
 
     // To Reorder Buffer
     output logic rob_write,
@@ -100,7 +101,7 @@ always_comb begin
     // source register, use that value for the source operand, otherwise
     // use the value from the regfile.
     if (regfile_entry_i.qj_out != 0 && rob_commit_arr[reg_qj]) begin
-        vj_o = rob_reg_vals[reg_qj];
+        vj_o = rob_in.entry_data[reg_qj].reg_data.value;
         qj_o = 3'b000;
     end else begin
         vj_o = regfile_entry_i.vj_out;
@@ -108,7 +109,7 @@ always_comb begin
     end
 
     if (regfile_entry_i.qk_out != 0 && rob_commit_arr[reg_qk]) begin
-        vk_o = rob_reg_vals[reg_qk];
+        vk_o = rob_in.entry_data[reg_qk].reg_data.value;
         qk_o = 3'b000;
     end else begin
         vk_o = regfile_entry_i.vk_out;

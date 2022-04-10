@@ -1,98 +1,83 @@
 /* Copied from MP1 given code. */
-
-import fifo_types::*;
+import rv32i_types::*;
 import structs::*;
+import macros::*;
 
 module ldst_buffer
 (
-    input logic clk_i,
-    input logic reset_n_i,
+    input clk,
+    input rst,
+    input logic flush,
+    input logic load,
 
-    // valid-ready input protocol
-    input ldst_data_t data_i,
-    input logic valid_i,
-    output logic ready_o,
+    input cdb_t cdb,
 
-    // valid-yumi output protocol
-    output logic valid_o,
-    output ldst_data_t data_o,
-    input logic yumi_i
+    input lsb_t lsb_entry, // from rob
+
+    output cdb_entry_t store_res,
+    output cdb_entry_t load_res,
+
+    output logic ldst_full
 );
 
-/******************************** Declarations *******************************/
-// Need memory to hold queued data
-ldst_data_t [width_p-1:0] queue [cap_p-1:0];
+// Head and tail pointers
+logic [$clog2(LDST_SIZE)-1:0] head_ptr = {$clog2(LDST_SIZE){1'b0}};
+logic [$clog2(LDST_SIZE)-1:0] tail_ptr = {$clog2(LDST_SIZE){1'b0}};
+logic [$clog2(LDST_SIZE):0] entries = 0;
 
-// Pointers which point to the read and write ends of the queue
-ptr_t read_ptr, write_ptr, read_ptr_next, write_ptr_next;
+lsb_t queue [LDST_SIZE-1:0];
 
-// Helper logic
-logic empty, full, ptr_eq, sign_match;
-logic  enqueue, dequeue;
+assign ldst_full = (entries == LDST_SIZE);
 
-// We always know what the next data which will be dequeued is.
-// Thus it only makes sense to register it in an output buffer
-logic [width_p-1:0] output_buffer_r;
-/*****************************************************************************/
+always_ff @(posedge clk) begin
+    if(rst || flush) begin
+        for(int i = 0; i < LDST_SIZE; ++i)
+            queue <= '{default: 0};
+            
+        head_ptr <= {$clog2(LDST_SIZE){1'b0}};
+        tail_ptr <= {$clog2(LDST_SIZE){1'b0}};
+        entries <= {$clog2(LDST_SIZE){1'b0}};
+    end else begin
+        if(load == 1'b1 && entries < LDST_SIZE) begin
+            queue[tail_ptr] <= lsb_entry;
+            tail_ptr <= tail_ptr + 1;
+            entries <= entries + 1;
+        end
+    end
+end
 
-/***************************** Output Assignments ****************************/
-assign ready_o = ~full;
-assign valid_o = ~empty;
-assign data_o = output_buffer_r;
-/*****************************************************************************/
+// store rs
+always_comb begin : store_rs
+    if (queue[head_ptr].type == 1'b1) begin // store
+        // search CDB for valid tags
+        for (int i = 0; i < NUM_CDB_ENTRIES; ++i) begin
+            if (cdb[i].tag == queue[head_ptr].qj) begin
+                queue[head_ptr].vj = cdb[i].value;
+                // set register to valid
+                queue[head_ptr].qj = 3'b0;
+            end 
+            else if (cdb[i].tag == queue[head_ptr].qk) begin
+                queue[head_ptr].vk = cdb[i].value;
+                // set register to valid
+                queue[head_ptr].qk = 3'b0;
+            end
+            else begin
+                // keep waiting
+            end
+        end
+        // check if both registers are valid, then output addr
+        if (queue[head_ptr].qj == 3'b0 && queue[head_ptr].qk == 3'b0) begin
+            store_res.tag = queue[head_ptr].tag;
+            // add addresses together
+            // store addr = queue[head_ptr].vj + queue[head_ptr].address;
+            store_res.value = queue[head_ptr].vk;
 
-/******************************** Assignments ********************************/
-assign full = ptr_eq & (~sign_match);
-assign ptr_eq = |(read_ptr[ptr_width_p-1:0] == write_ptr[ptr_width_p-1:0]);
-assign sign_match = read_ptr[ptr_width_p] == write_ptr[ptr_width_p];
-assign empty = ptr_eq & sign_match;
-assign enqueue = ready_o & valid_i;
-assign dequeue = valid_o & yumi_i;
-assign write_ptr_next = write_ptr + 1;
-assign read_ptr_next = read_ptr + 1;
-/*****************************************************************************/
-
-/*************************** Non-Blocking Assignments ************************/
-always_ff @(posedge clk_i, negedge reset_n_i) begin
-    // The `n` in the `reset_n_i` means the reset signal is active low
-    if (~reset_n_i) begin
-        read_ptr  <= 0;
-        write_ptr <= 0;
+            // need to dequeue
+        end
     end
     else begin
-        case ({enqueue, dequeue})
-            2'b00: ;
-            2'b01: begin : dequeue_case
-                output_buffer_r <= queue[read_ptr_next[ptr_width_p-1:0]];
-                read_ptr <= read_ptr_next;
-            end
-            2'b10: begin : enqueue_case
-                queue[write_ptr[ptr_width_p-1:0]] <= data_i;
-                write_ptr <= write_ptr_next;
-                if (empty) begin
-                    output_buffer_r <= data_i;
-                end
-            end
-            // When enqueing and dequeing simultaneously, we must be careful
-            // to place proper data into output buffer.
-            // If there is only one item in the queue, then the input data
-            // Should be copied directly into the output buffer
-            2'b11: begin : dequeue_and_enqueue_case
-                // Dequeue portion
-                output_buffer_r <= read_ptr_next[ptr_width_p-1:0] ==
-                                     write_ptr[ptr_width_p-1:0] ?
-                                        data_i :
-                                        queue[read_ptr_next[ptr_width_p-1:0]];
-                read_ptr <= read_ptr_next;
-
-                // Enqueue portion
-                queue[write_ptr[ptr_width_p-1:0]] <= data_i;
-                write_ptr <= write_ptr_next;
-                // No need to check empty, since can't dequeue from empty
-            end
-        endcase
+        // do nothing for loads i think?? DOUBLE CHECK
     end
-/*****************************************************************************/
 end
 
 endmodule : ldst_buffer
