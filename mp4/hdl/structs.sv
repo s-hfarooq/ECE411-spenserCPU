@@ -99,11 +99,6 @@ typedef struct packed {
     logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] tag;
 } cdb_entry_t;
 
-
 typedef cdb_entry_t[`NUM_CDB_ENTRIES-1:0] cdb_t;
-
-
-// if(rob_values[cdb_tag].busy == 1)
-//     rob_vales[cdb_tag].register value = cdb value
 
 endpackage : structs
