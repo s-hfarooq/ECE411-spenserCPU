@@ -19,7 +19,7 @@ module i_decode(
     input regfile_data_out_t regfile_entry_i,
 
     // To Register File
-    output rv32i_reg rs1_o, rs2_o,
+    output rv32i_reg rs1_o, rs2_o, rd_o,
     output logic [3:0] tag,
     output logic load_tag,
 
@@ -374,10 +374,14 @@ end
 always_comb begin
     if (rst) begin
         iqueue_read = 1'b0;
+        rd = op.rd;
         load_tag = 1'b0;
+        tag = '0;
     end else begin
         iqueue_read = 1'b0;
+        rd = op.rd;
         load_tag = 1'b0;
+        tag = '0;
         case (op.opcode)
             op_lui, op_auipc, op_jal : begin
                 if (alu_rs_full == 0 && rob_free_tag != 0) begin
