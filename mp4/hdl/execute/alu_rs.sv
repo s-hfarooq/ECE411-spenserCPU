@@ -25,9 +25,6 @@ module alu_rs (
     // input rs_data_t data_in,
     // input logic alu_valid,
 
-    // To ALU
-    output alu_rs_t data_out,
-
     // To decoder
     output logic alu_rs_full
 );
@@ -79,7 +76,6 @@ always_ff @(posedge clk) begin
         curr_rs_data.res.valid <= 1'b0;
         curr_rs_data.res.value <= 32'b0;
         curr_rs_data.res.tag <= alu_o.rob_idx;
-
 
         // load into first available rs (TODO PARAMETRIZE)
         if(is_in_use[0] == 1'b0) begin

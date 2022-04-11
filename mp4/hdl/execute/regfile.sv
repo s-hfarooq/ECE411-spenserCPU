@@ -1,5 +1,5 @@
-typedef logic [31:0] rv32i_word;
-typedef logic [4:0] rv32i_reg;
+import rv32i_types::*;
+import structs::*;
 
 module regfile (
     input logic clk,
