@@ -19,13 +19,13 @@ module mp4 (
     input rv32i_word inst_rdata    // 32-bit instruction
 
     // D-Cache signals
-    /*output logic data_read,
+    output logic data_read,
     output logic data_write,
     output logic [3:0] data_mbe,
     output rv32i_word data_addr,
     output rv32i_word data_wdata,
     input logic data_resp,
-    input rv32i_word data_rdata,*/
+    input rv32i_word data_rdata,
 
     // Testing
     // output rv32i_word i_queue_o

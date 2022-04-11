@@ -18,8 +18,9 @@ module ro_buffer (
     input rv32i_word value_in_reg,
 
     // To decoder
-    output rv32i_word reg_val_o [RO_BUFFER_ENTRIES],
-    output logic commit_ready [RO_BUFFER_ENTRIES],
+    // output rv32i_word reg_val_o [RO_BUFFER_ENTRIES],
+    // output logic commit_ready [RO_BUFFER_ENTRIES],
+    output rob_arr_t rob_arr_o,
     output rv32i_reg reg_o,
     output logic empty,
     output logic full,
@@ -34,8 +35,8 @@ rob_values_t rob_arr [RO_BUFFER_ENTRIES-1:0];
 
 always_comb begin
     for (int i = 0; i < RO_BUFFER_ENTRIES; i++) begin
-        reg_val_o = rob_arr.reg_data.value;
-        commit_ready = rob_arr.reg_data.can_commit;
+        rob_arr_o.entry_data[i].reg_data.value = rob_arr.reg_data.value;
+        rob_arr_o.entry_data[i].reg_data.can_commit = rob_arr.reg_data.can_commit;
     end
 end
 

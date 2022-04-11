@@ -17,7 +17,17 @@ module load_store_queue
     output cdb_entry_t store_res,
     output cdb_entry_t load_res,
 
-    output logic ldst_full
+    output logic ldst_full,
+    output rob_store_complete,
+
+    // From/to cache
+    output logic data_read,
+    output logic data_write,
+    output logic [3:0] data_mbe, // mem byte enable
+    output rv32i_word data_addr,
+    output rv32i_word data_wdata,
+    input logic data_resp,
+    input rv32i_word data_rdata,
 );
 
 // Head and tail pointers
@@ -45,15 +55,33 @@ always_ff @(posedge clk) begin
         end
     end
 end
-
+function void set_defaults()
+    rob_store_complete <= 1'b0;
+    data_read <= 1'b0;
+    data_write <= 1'b0;
+    data_mbe <= 4'b1111;
+endfunction
 // store rs
 always_ff @(posedge clk) begin : store_rs
+    set_defaults();
+
     if(entries > 0) begin
         case(queue[head_ptr].type)
             1'b0: begin // load
-                // request data from d_cache
                 // broadcast data received on CDB
+                // calculate effective address and set tag
+                load_res.value <= data_rdata;
+                load_res.tag <= queue[head_ptr].qj;
+
+                // request data from d_cache
+                data_read <= 1'b1;
+                data_addr <= queue[head_ptr].addr + queue[head_ptr].vj;
+
                 // remove entry from queue
+                if(data_resp == 1'b1) begin // only once cache has responded
+                    head_ptr <= head_ptr + 1;
+                    entries <= entries - 1;
+                end
             end
             1'b1: begin // store
                 // search CDB for valid tags
@@ -76,14 +104,21 @@ always_ff @(posedge clk) begin : store_rs
                 if (queue[head_ptr].qj == 3'b0 && queue[head_ptr].qk == 3'b0) begin
                     store_res.tag <= queue[head_ptr].tag;
                     // add addresses together
-                    // store addr = queue[head_ptr].vj + queue[head_ptr].address;
-                    store_res.value <= queue[head_ptr].addr + queue[head_ptr].vj; // should double check
+                    store_res.value <= queue[head_ptr].vj; // SHOULD THIS BE VJ OR VK
                     store_res.tag <= queue[head_ptr].qj;
 
+                    // store to cache
+                    data_write <= 1'b1;
+                    data_addr <= queue[head_ptr].addr + queue[head_ptr].vj;
+                    // SHOULD THIS BE VJ OR VK
+                    data_wdata <= queue[head_ptr].vk;
+
                     // need to dequeue
-                    // increment head pointer? 
-                    head_ptr <= head_ptr + 1;
-                    entries <= entries - 1;
+                    if(data_resp == 1'b1) begin // only once cache has responded
+                        head_ptr <= head_ptr + 1;
+                        entries <= entries - 1;
+                        rob_store_complete <= 1'b1;
+                    end
                 end
             end
             default: ;
