@@ -1,3 +1,5 @@
+`include "macros.sv"
+
 import rv32i_types::*;
 import structs::*;
 
@@ -48,6 +50,10 @@ logic rob_read, rob_flush;
 rob_values_t rob_o;
 logic rob_is_commiting;
 
+// 0: ldst store_res
+// 1: ldst load_res
+// 2-5: alu_vals_o
+// 6-9: cmp_vals_o
 cdb_t cdb;
 
 logic alu_rs_full;
@@ -111,8 +117,8 @@ load_store_queue ldstbuf (
     .load(),
     .cdb(cdb),
     .lsb_entry(), // from ROB
-    .store_res(),
-    .load_res(),
+    .store_res(cdb[0]),
+    .load_res(cdb[1]),
     .ldst_full(),
 
     //() To/from ROB
@@ -171,8 +177,8 @@ alu_reservation_station alu_rs (
     .rob_commit_arr(),
 
     // From/to CDB
-    .cdb_vals_i(),
-    .cdb_alu_vals_o(),
+    .cdb_vals_i(cdb),
+    .cdb_alu_vals_o(cdb[`ALU_RS_SIZE-1+2 -: `ALU_RS_SIZE]),
 
     // From decoder
     .alu_o(),
@@ -192,8 +198,8 @@ cmp_reservation_station cmp_rs (
     .rob_commit_arr(),
 
     // From/to CDB
-    .cdb_vals_i(),
-    .cdb_alu_vals_o(),
+    .cdb_vals_i(cdb),
+    .cdb_alu_vals_o(cdb[(2*(`ALU_RS_SIZE-1))+2 -: `ALU_RS_SIZE]), // I think this is right
 
     // From decoder
     .cmp_o(),

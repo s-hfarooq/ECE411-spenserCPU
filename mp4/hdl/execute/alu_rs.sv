@@ -13,12 +13,12 @@ module alu_rs (
     // input logic [$clog2(RO_BUFFER_ENTRIES)-1:0] rs_idx_in, // index of register to set valid bit
     // input logic is_valid,
     // input logic [2:0] rob_free_tag,
-    input rv32i_word rob_reg_vals [RO_BUFFER_ENTRIES],
-    input logic rob_commit_arr [RO_BUFFER_ENTRIES],
+    input rv32i_word rob_reg_vals [`RO_BUFFER_ENTRIES],
+    input logic rob_commit_arr [`RO_BUFFER_ENTRIES],
 
     // From/to CDB
     input cdb_t cdb_vals_i,
-    output cdb_entry_t [ALU_RS_SIZE-1:0] cdb_alu_vals_o,
+    output cdb_entry_t [`ALU_RS_SIZE-1:0] cdb_alu_vals_o,
 
     // From decoder
     input alu_rs_t alu_o,
@@ -33,26 +33,26 @@ module alu_rs (
 // set busy to high, send to ALU
 // ALU broadcasts on CDB when done, add to ROB, clear from RS
 
-rs_data_t data [ALU_RS_SIZE-1:0] /* synthesis ramstyle = "logic" */;
+rs_data_t data [`ALU_RS_SIZE-1:0] /* synthesis ramstyle = "logic" */;
 logic is_in_use [3:0];
-logic [ALU_RS_SIZE-1:0] load_alu;
+logic [`ALU_RS_SIZE-1:0] load_alu;
 
 rs_data_t curr_rs_data;
 
-alu_rs_t [ALU_RS_SIZE-1:0] alu_arr;
-logic [ALU_RS_SIZE-1:0] load_cdb;
+alu_rs_t [`ALU_RS_SIZE-1:0] alu_arr;
+logic [`ALU_RS_SIZE-1:0] load_cdb;
 
 
 always_ff @(posedge clk) begin
     // Can probably make more efficient - worry about later
     alu_rs_full <= 1'b1;
-    for(int i = 0; i < ALU_RS_SIZE; ++i) begin
+    for(int i = 0; i < `ALU_RS_SIZE; ++i) begin
         if(is_in_use[i] == 1'b0)
             alu_rs_full <= 1'b0;
     end
     
     if(rst || flush) begin
-        for(int i = 0; i < ALU_RS_SIZE; ++i) begin
+        for(int i = 0; i < `ALU_RS_SIZE; ++i) begin
             data[i] <= '{default: 0};
             alu_arr[i] <= '{default: 0};
             is_in_use[i] <= 1'b0;
@@ -99,9 +99,9 @@ always_ff @(posedge clk) begin: set_data_vals
     // Set valid bits based on input from CDB
     // CRITICAL PATH WHAT THE FUCK
     // FIX THIS ASAP
-    for(int i = 0; i < ALU_RS_SIZE; ++i) begin
+    for(int i = 0; i < `ALU_RS_SIZE; ++i) begin
         // check for tag match
-        for(int j = 0; j < NUM_CDB_ENTRIES; ++j) begin
+        for(int j = 0; j < `NUM_CDB_ENTRIES; ++j) begin
             if(data[i].rs1.tag == cdb_vals_i[j].tag) begin
                 data[i].rs1.value <= cdb_vals_i[j].value;
                 data[i].rs1.valid <= 1'b1;
@@ -143,7 +143,7 @@ end
 // Instantiate ALU's
 genvar alu_i;
 generate
-    for(alu_i = 0; alu_i < ALU_RS_SIZE; ++alu_i) begin
+    for(alu_i = 0; alu_i < `ALU_RS_SIZE; ++alu_i) begin
         alu alu_instantiation(
             .clk(clk),
             .aluop(alu_arr[alu_i].op),

@@ -35,24 +35,24 @@ module load_store_queue
 );
 
 // Head and tail pointers
-logic [$clog2(LDST_SIZE)-1:0] head_ptr = {$clog2(LDST_SIZE){1'b0}};
-logic [$clog2(LDST_SIZE)-1:0] tail_ptr = {$clog2(LDST_SIZE){1'b0}};
-logic [$clog2(LDST_SIZE):0] entries = 0;
+logic [$clog2(`LDST_SIZE)-1:0] head_ptr = {$clog2(`LDST_SIZE){1'b0}};
+logic [$clog2(`LDST_SIZE)-1:0] tail_ptr = {$clog2(`LDST_SIZE){1'b0}};
+logic [$clog2(`LDST_SIZE):0] entries = 0;
 
-lsb_t queue [LDST_SIZE-1:0];
+lsb_t queue [`LDST_SIZE-1:0];
 
-assign ldst_full = (entries == LDST_SIZE);
+assign ldst_full = (entries == `LDST_SIZE);
 
 always_ff @(posedge clk) begin
     if(rst || flush) begin
-        for(int i = 0; i < LDST_SIZE; ++i)
+        for(int i = 0; i < `LDST_SIZE; ++i)
             queue <= '{default: 0};
             
-        head_ptr <= {$clog2(LDST_SIZE){1'b0}};
-        tail_ptr <= {$clog2(LDST_SIZE){1'b0}};
-        entries <= {$clog2(LDST_SIZE){1'b0}};
+        head_ptr <= {$clog2(`LDST_SIZE){1'b0}};
+        tail_ptr <= {$clog2(`LDST_SIZE){1'b0}};
+        entries <= {$clog2(`LDST_SIZE){1'b0}};
     end else begin
-        if(load == 1'b1 && entries < LDST_SIZE) begin
+        if(load == 1'b1 && entries < `LDST_SIZE) begin
             queue[tail_ptr] <= lsb_entry;
             tail_ptr <= tail_ptr + 1;
             entries <= entries + 1;
@@ -89,7 +89,7 @@ always_ff @(posedge clk) begin : store_rs
             end
             1'b1: begin // store
                 // search CDB for valid tags
-                for (int i = 0; i < NUM_CDB_ENTRIES; ++i) begin
+                for (int i = 0; i < `NUM_CDB_ENTRIES; ++i) begin
                     if (cdb[i].tag == queue[head_ptr].qj) begin
                         queue[head_ptr].vj <= cdb[i].value;
                         // set register to valid
