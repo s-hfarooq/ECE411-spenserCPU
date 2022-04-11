@@ -16,9 +16,9 @@ module mp4 (
     
     // I-Cache signals
     output logic inst_read,
-    output rv32i_word inst_addr, // WHERE DOES THIS CONNECT TO??? - PC
+    output rv32i_word inst_addr,
     input logic inst_resp,
-    input rv32i_word inst_rdata    // 32-bit instruction
+    input rv32i_word inst_rdata,    // 32-bit instruction
 
     // D-Cache signals
     output logic data_read,
@@ -27,28 +27,31 @@ module mp4 (
     output rv32i_word data_addr,
     output rv32i_word data_wdata,
     input logic data_resp,
-    input rv32i_word data_rdata,
-
-    // Testing
-    // output rv32i_word i_queue_o
+    input rv32i_word data_rdata
 );
 
 logic iqueue_read;
 i_queue_data_t iqueue_o;
-logic load_tag; // From Decoder to Regfile
-alu_rs_t alu_o;
+logic load_tag;                     // From Decoder to Regfile
 regfile_data_out_t regfile_data_o;  // From regfile to Decoder
 logic [3:0] tag_decoder;
-rv32i_reg rd_from_decoder;    // to Regfile
+rv32i_reg rd_from_decoder;          // to Regfile
 rv32i_reg rs1_from_decoder, rs2_from_decoder;
+logic rob_write;                    // From Decoder to ROB
+rob_arr_t rob_arr;                  // From ROB to Decoder
+logic [3:0] rob_free_tag;
 
 regfile_data_out_t regfile_d_out;
 logic load_reg;
+logic load_ldst;
+logic load_alu_rs;
+logic load_cmp_rs;
 
-logic rob_read, rob_flush;
+logic rob_read;
+logic flush;
 
 rob_values_t rob_o;
-logic rob_is_commiting;
+logic rob_is_committing;
 
 // 0: ldst store_res
 // 1: ldst load_res
@@ -58,6 +61,17 @@ cdb_t cdb;
 
 logic alu_rs_full;
 logic cmp_rs_full;
+cmp_rs_t cmp_o;
+alu_rs_t alu_o;
+lsb_t lsb_decode_o;
+logic ldst_full;
+
+logic rob_store_complete;
+logic rob_curr_is_store;
+logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] rob_head_tag;
+
+logic rob_is_empty;
+logic rob_is_full;
 
 i_fetch i_fetch (
     .clk(clk),
@@ -82,16 +96,16 @@ i_decode decode (
     .rd_o(rd_from_decoder),
     .tag(tag_decoder),
     .load_tag(load_tag),
-    .rob_free_tag(4'd1),
-    .rob_in(),
-    .rob_write(),
-    .rob_dest(),
+    .rob_free_tag(rob_free_tag),
+    .rob_in(rob_arr),
+    .rob_write(rob_write),
+    .rob_dest(),           // dest_reg, send to ROB to load it in
     .alu_rs_full(alu_rs_full),
     .alu_o(alu_o),
     .cmp_rs_full(cmp_rs_full),
-    .cmp_o(),
-    .lsb_full(1'b0),
-    .lsb_o()
+    .cmp_o(cmp_o),
+    .lsb_full(ldst_full),
+    .lsb_o(lsb_decode_o)
 );
 
 regfile reg_file (
@@ -103,7 +117,7 @@ regfile reg_file (
     .reg_id_decoder(rd_from_decoder),
     .rs1_i(rs1_from_decoder),
     .rs2_i(rs2_from_decoder),
-    .load_reg(),
+    .load_reg(rob_is_committing),
     .reg_id_rob(),
     .reg_val(),
     .tag_rob(),
@@ -114,75 +128,62 @@ load_store_queue ldstbuf (
     .clk(clk),
     .rst(rst),
     .flush(flush),
-    .load(),
+    .load(load_ldst),
     .cdb(cdb),
-    .lsb_entry(), // from ROB
+    .lsb_entry(lsb_decode_o), // from ROB/decode
     .store_res(cdb[0]),
     .load_res(cdb[1]),
-    .ldst_full(),
+    .ldst_full(ldst_full),
 
     //() To/from ROB
-    .rob_store_complete(),
-    .curr_is_store(),
-    .head_tag(),
+    .rob_store_complete(rob_store_complete),
+    .curr_is_store(rob_curr_is_store),
+    .head_tag(rob_head_tag),
     
     // From/to d-cache
-    .data_read(),
-    .data_write(),
-    .data_mbe(), // mem byte enable
-    .data_addr(),
-    .data_wdata(),
-    .data_resp(),
-    .data_rdata(),
+    .data_read(data_read),
+    .data_write(data_write),
+    .data_mbe(data_mbe), // mem byte enable
+    .data_addr(data_addr),
+    .data_wdata(data_wdata),
+    .data_resp(data_resp),
+    .data_rdata(data_rdata),
 );
 
 ro_buffer rob (
     .clk(clk),
     .rst(rst),
-    .flush(),
-    .read(flush),
-    .write(),
-
-    // From decoder
+    .flush(flush),
+    .read(),
+    .write(rob_write),
     .input_i(),
     .instr_pc_in(),
-    
-    // From reservation station
     .value_in_reg(),
-
-    // To decoder
-    .rob_arr_o(),
+    .rob_arr_o(rob_arr),
+    .rob_free_tag(rob_free_tag),
     .reg_o(),
-    .empty(),
-    .full(),
-
-    // To regfile/reservation station
+    .empty(rob_is_empty),
+    .full(rob_is_full),
     .rob_o(),
-    .is_commiting(),
-
-    // To/from load store queue
-    .rob_store_complete(),
-    .curr_is_store(),
-    .head_tag()
+    .is_commiting(rob_is_committing),
+    .rob_store_complete(rob_store_complete),
+    .curr_is_store(rob_curr_is_store),
+    .head_tag(rob_head_tag)
 );
 
 alu_reservation_station alu_rs (
     .clk(clk),
     .rst(rst),
     .flush(flush),
-    .load(),
-
+    .load(load_alu_rs),
     // From ROB
     .rob_reg_vals(),
     .rob_commit_arr(),
-
     // From/to CDB
     .cdb_vals_i(cdb),
     .cdb_alu_vals_o(cdb[`ALU_RS_SIZE-1+2 -: `ALU_RS_SIZE]),
-
     // From decoder
-    .alu_o(),
-
+    .alu_o(alu_o),
     // To decoder
     .alu_rs_full(alu_rs_full)
 );
@@ -191,19 +192,15 @@ cmp_reservation_station cmp_rs (
     .clk(clk),
     .rst(rst),
     .flush(flush),
-    .load(),
-
+    .load(load_cmp_rs),
     // From ROB
     .rob_reg_vals(),
     .rob_commit_arr(),
-
     // From/to CDB
     .cdb_vals_i(cdb),
     .cdb_alu_vals_o(cdb[(2*(`ALU_RS_SIZE-1))+2 -: `ALU_RS_SIZE]), // I think this is right
-
     // From decoder
-    .cmp_o(),
-
+    .cmp_o(cmp_o),
     // To decoder
     .cmp_rs_full(cmp_rs_full)
 );

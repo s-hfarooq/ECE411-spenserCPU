@@ -18,16 +18,15 @@ module ro_buffer (
     input rv32i_word value_in_reg,
 
     // To decoder
-    // output rv32i_word reg_val_o [`RO_BUFFER_ENTRIES],
-    // output logic commit_ready [`RO_BUFFER_ENTRIES],
     output rob_arr_t rob_arr_o,
+    output logic [$clog2(`RO_BUFFER_ENTRIES):0] rob_free_tag,
     output rv32i_reg reg_o,
     output logic empty,
     output logic full,
 
     // To regfile/reservation station
     output rob_values_t rob_o,
-    output logic is_commiting,
+    output logic is_committing,
 
     // To/from load store queue
     input logic rob_store_complete,
@@ -38,27 +37,21 @@ module ro_buffer (
 // need to fix entry_num size
 rob_values_t rob_arr [`RO_BUFFER_ENTRIES-1:0];
 
-always_comb begin
-    for (int i = 0; i < `RO_BUFFER_ENTRIES; i++) begin
-        rob_arr_o.entry_data[i].reg_data.value = rob_arr.reg_data.value;
-        rob_arr_o.entry_data[i].reg_data.can_commit = rob_arr.reg_data.can_commit;
-    end
-end
-
 // Head and tail pointers
-logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] head_ptr = {$clog2(`RO_BUFFER_ENTRIES){1'b0}};
-logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] tail_ptr = {$clog2(`RO_BUFFER_ENTRIES){1'b0}};
+logic [$clog2(`RO_BUFFER_ENTRIES):0] head_ptr = {$clog2(`RO_BUFFER_ENTRIES){1'b0}};
+logic [$clog2(`RO_BUFFER_ENTRIES):0] tail_ptr = {$clog2(`RO_BUFFER_ENTRIES){1'b0}};
+logic [$clog2(`RO_BUFFER_ENTRIES):0] tail_next_ptr = {$clog2(`RO_BUFFER_ENTRIES){1'b0}};
 
-assign curr_is_store = (i_decode_opcode_t.op == op_store);
+assign curr_is_store = (input_i.opcode == op_store);
 assign head_tag = head_ptr;
 
 // Glue logic
 logic [$clog2(`RO_BUFFER_ENTRIES):0] counter = 0;
 assign empty = (counter == 0);
-assign full = (counter == `RO_BUFFER_ENTRIES);
+assign full = (counter >= (`RO_BUFFER_ENTRIES - 1));
 
 always_ff @ (posedge clk) begin
-    is_commiting <= 1'b0;
+    is_committing <= 1'b0;
 
     if(rst || flush) begin
         for (int i = 0; i < `RO_BUFFER_ENTRIES; ++i) begin
@@ -70,13 +63,15 @@ always_ff @ (posedge clk) begin
         // Entry 0 is reserved
         head_ptr <= {$clog2(`RO_BUFFER_ENTRIES){1'b0}} + 1;
         tail_ptr <= {$clog2(`RO_BUFFER_ENTRIES){1'b0}} + 1;
+        tail_next_ptr <= {$clog2(`RO_BUFFER_ENTRIES){1'b0}} + 2;
     end else begin
         // Check if we should commit head value
         if (rob_arr[head_ptr].reg_data.can_commit == 1'b1) begin
             // Output to regfile, dequeue
             rob_o <= rob_arr[head_ptr];
+            rob_arr[head_ptr].valid <= 4'b0;
             head_ptr <= head_ptr + 1'b1;
-            is_commiting <= 1'b1;
+            is_committing <= 1'b1;
             counter <= counter - 1'b1;
         end else if (read == 1'b1) begin
             // Output to reservation station, dequeue
@@ -106,9 +101,22 @@ always_ff @ (posedge clk) begin
                 else
                     tail_ptr <= tail_ptr + 1'b1;
 
+                if (tail_next_ptr >= `RO_BUFFER_ENTRIES)
+                    tail_next_ptr <= 1;
+                else
+                    tail_next_ptr <= tail_next_ptr + 1;
+
                 counter <= counter + 1'b1;
             end
         end
+    end
+end
+
+always_comb begin
+    if (write == 1'b1) begin
+        rob_free_tag = (rob_arr[tail_next_ptr].valid == 1) ? '0 : tail_next_ptr;
+    end else begin
+        rob_free_tag = (rob_arr[tail_ptr] == 1) ? '0 : tail_ptr;
     end
 end
 

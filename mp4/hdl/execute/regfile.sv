@@ -15,9 +15,9 @@ module regfile (
 
     // From ROB
     input logic load_reg,
-    input rv32i_reg reg_id_rob,
+    input rv32i_reg reg_id_rob, // Destination reg from ROB
     input rv32i_word reg_val,
-    input rv32i_reg tag_rob,
+    input rv32i_reg tag_rob,    // Tag from ROB
 
     // To Decoder
     output regfile_data_out_t d_out
