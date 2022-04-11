@@ -40,58 +40,29 @@ logic [3:0] tag_decoder;
 rv32i_reg rd_from_decoder;    // to Regfile
 rv32i_reg rs1_from_decoder, rs2_from_decoder;
 
-//assign mem_wdata = 32'b0;
+regfile_data_out_t regfile_d_out;
+logic load_reg;
 
-// module cache (
-//   input clk,
+logic rob_read, rob_flush;
 
-//   /* Physical memory signals */
-//   input logic pmem_resp,
-//   input logic [255:0] pmem_rdata,
-//   output logic [31:0] pmem_address,
-//   output logic [255:0] pmem_wdata,
-//   output logic pmem_read,
-//   output logic pmem_write,
+rob_values_t rob_o;
+logic rob_is_commiting;
 
-//   /* CPU memory signals */
-//   input logic mem_read,
-//   input logic mem_write,
-//   input logic [3:0] mem_byte_enable_cpu,
-//   input logic [31:0] mem_address,
-//   input logic [31:0] mem_wdata_cpu,
-//   output logic mem_resp,
-//   output logic [31:0] mem_rdata_cpu
-// );
-// cache i_cache(
-//     .clk(clk),
-//     .pmem_resp(),
-//     .pmem_rdata(),
-//     .pmem_address(),
-//     .pmem_wdata(),
-//     .pmem_read(),
-//     .pmem_write(),
-//     .mem_read(),
-//     .mem_write(),
-//     .mem_byte_enable_cpu(),
-//     .mem_address(),
-//     .mem_wdata_cpu(),
-//     .mem_resp(),
-//     .mem_rdata_cpu()
-// );
+cdb_t cdb;
 
-i_fetch i_fetch(
+i_fetch i_fetch (
     .clk(clk),
     .rst(rst),
     .mem_resp(inst_resp),
     .mem_rdata(inst_rdata), // 32-bit instruction input
-    .iqueue_read(iqueue_read),
     .i_queue_data_out(iqueue_o),
+    .iqueue_read(iqueue_read),
     .mem_read(inst_read),
     .mem_write(),
     .pc_o(inst_addr)
 );
 
-i_decode decode(
+i_decode decode (
     .clk(clk),
     .rst(rst),
     .d_in(iqueue_o),
@@ -103,15 +74,15 @@ i_decode decode(
     .tag(tag_decoder),
     .load_tag(load_tag),
     .rob_free_tag(4'd1),
-    // .rob_reg_vals(),
-    // .rob_commit_arr(),
+    .rob_in(),
     .rob_write(),
     .rob_dest(),
     .alu_rs_full(1'b0),
     .alu_o(alu_o),
     .cmp_rs_full(1'b0),
-    // .cmp_o(),
-    .lsb_full(1'b0)
+    .cmp_o(),
+    .lsb_full(1'b0),
+    .lsb_o()
 );
 
 regfile reg_file (
@@ -128,6 +99,107 @@ regfile reg_file (
     .reg_val(),
     .tag_rob(),
     .d_out(regfile_data_o)
+);
+
+load_store_queue ldstbuf (
+    .clk(clk),
+    .rst(rst),
+    .flush(flush),
+    .load(),
+    .cdb(),
+    .lsb_entry(), // from ROB
+    .store_res(),
+    .load_res(),
+    .ldst_full(),
+
+    //() To/from ROB
+    .rob_store_complete(),
+    .curr_is_store(),
+    .head_tag(),
+    
+    // From/to d-cache
+    .data_read(),
+    .data_write(),
+    .data_mbe(), // mem byte enable
+    .data_addr(),
+    .data_wdata(),
+    .data_resp(),
+    .data_rdata(),
+);
+
+ro_buffer rob (
+    .clk(clk),
+    .rst(rst),
+    .flush(),
+    .read(flush),
+    .write(),
+
+    // From decoder
+    .input_i(),
+    .instr_pc_in(),
+    
+    // From reservation station
+    .value_in_reg(),
+
+    // To decoder
+    .rob_arr_o(),
+    .reg_o(),
+    .empty(),
+    .full(),
+
+    // To regfile/reservation station
+    .rob_o(),
+    .is_commiting(),
+
+    // To/from load store queue
+    .rob_store_complete(),
+    .curr_is_store(),
+    .head_tag()
+);
+
+alu_reservation_station alu_rs (
+    .clk(clk),
+    .rst(rst),
+    .flush(flush),
+    .load(),
+
+    // From ROB
+    .rob_reg_vals(),
+    .rob_commit_arr(),
+
+    // From/to CDB
+    .cdb_vals_i(),
+    .cdb_alu_vals_o(),
+
+    // From decoder
+    .alu_o(),
+
+    // To decoder
+    .alu_rs_full()
+);
+
+cmp_reservation_station cmp_rs (
+    .clk(clk),
+    .rst(rst),
+    .flush(flush),
+    .load(),
+
+    // From ROB
+    .rob_reg_vals(),
+    .rob_commit_arr(),
+
+    // From/to CDB
+    .cdb_vals_i(),
+    .cdb_alu_vals_o(),
+
+    // From decoder
+    .cmp_o(),
+
+    // To CMP
+    .data_out(),
+
+    // To decoder
+    .cmp_rs_full()
 );
 
 endmodule : mp4
