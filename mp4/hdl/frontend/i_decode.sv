@@ -6,7 +6,7 @@ import structs::*;
 module i_decode(
     input clk,
     input rst,
-    input load,
+    // input load,
 
     // From Instruction Queue
     input i_queue_data_t d_in,
@@ -46,29 +46,13 @@ module i_decode(
     output cmp_rs_t cmp_o,
 
     // From Load-Store Buffer
-    input logic lsb_full    // Signal is high if buffer is full
+    input logic lsb_full,    // Signal is high if buffer is full
 
     // To Load-Store Buffer
-    // output lsb_t lsb_o
+    output lsb_t lsb_o
 );
 
 i_decode_opcode_t op;
-
-// logic alu_o.valid;
-// rv32i_word alu_o.vj;
-// rv32i_word alu_o.vk;
-// rv32i_word alu_o.qj;
-// rv32i_word alu_o.qk;
-// alu_o.ops alu_o.op;
-// logic [2:0] alu_o.rob_idx;
-
-// assign alu_o.valid = alu_o.valid;
-// assign alu_o.alu_o.vj = alu_o.vj;
-// assign alu_o.alu_o.vk = alu_o.vk;
-// assign alu_o.alu_o.qj = alu_o.qj;
-// assign alu_o.alu_o.qk = alu_o.qk;
-// assign alu_o.alu_o.op = alu_o.op;
-// assign alu_o.alu_o.rob_idx = alu_o.rob_idx;
 
 // taken from IR register
 assign op.instr_pc = d_in.pc;
@@ -120,273 +104,286 @@ end
 
 // Decode + Issue
 always_ff @ (posedge clk) begin
-    case (op.opcode)
-        op_lui : begin
-            if (op.rd != 0 && alu_rs_full == 0 && rob_free_tag != 0) begin
-                rob_dest <= op.rd;
-                rob_write <= 1'b1;
-                alu_o.vj <= 32'd0;
-                alu_o.vk <= op.u_imm;
-                alu_o.qj <= 4'd0;
-                alu_o.qk <= 4'd0;
-                alu_o.op <= alu_add;
-                alu_o.rob_idx <= rob_free_tag;
+    if (rst) begin
+        rob_write <= 1'b0;
+        rob_dest <= '0;
+        alu_o.valid <= 1'b0;
+    end else begin
+        rob_write <= 1'b0;
+        rob_dest <= '0;
+        alu_o.valid <= 1'b0;
+        case (op.opcode)
+            // op_lui : begin
+            //     if (op.rd != 0 && alu_rs_full == 0 && rob_free_tag != 0) begin
+            //         rob_dest <= op.rd;
+            //         rob_write <= 1'b1;
+            //         alu_o.vj <= 32'd0;
+            //         alu_o.vk <= op.u_imm;
+            //         alu_o.qj <= 4'd0;
+            //         alu_o.qk <= 4'd0;
+            //         alu_o.op <= alu_add;
+            //         alu_o.rob_idx <= rob_free_tag;
+            //     end
+            // end
+
+            op_auipc : begin // KEEP
+                if (op.rd != 0 && alu_rs_full == 0 && rob_free_tag != 0) begin
+                    rob_dest <= op.rd;
+                    rob_write <= 1'b1;
+                    alu_o.vj <= op.instr_pc;
+                    alu_o.vk <= op.u_imm;
+                    alu_o.qj <= 4'd0;
+                    alu_o.qk <= 4'd0;
+                    alu_o.op <= alu_add;
+                    alu_o.rob_idx <= rob_free_tag;
+                end
             end
-        end
 
-        op_auipc : begin
-            if (op.rd != 0 && alu_rs_full == 0 && rob_free_tag != 0) begin
-                rob_dest <= op.rd;
-                rob_write <= 1'b1;
-                alu_o.vj <= op.instr_pc;
-                alu_o.vk <= op.u_imm;
-                alu_o.qj <= 4'd0;
-                alu_o.qk <= 4'd0;
-                alu_o.op <= alu_add;
-                alu_o.rob_idx <= rob_free_tag;
+            // op_jal : begin
+            //     if (alu_rs_full == 0) begin
+            //         alu_o.valid <= 1'b1;
+            //         rob_dest <= op.rd;
+            //         rob_write <= 1'b1;
+            //         alu_o.vj <= op.instr_pc;
+            //         alu_o.vk <= 32'd4; // stores pc+4 into rd
+            //         alu_o.qj <= 3'd0;
+            //         alu_o.qk <= 3'd0;
+            //         alu_o.op <= alu_add;
+            //         rob_write <= 1'b1;
+            //     end
+            // end
+
+            // op_jalr : begin
+            //     // ????? no idea what conditions to use, CHECK
+            //     if () begin
+
+            //     end
+            // end
+
+            op_br : begin   // KEEP
+                if (cmp_rs_full == 0) begin
+                    rob_dest <= op.rd;
+
+                    cmp_o.valid <= 1'b1;
+                    cmp_o.br <= 1'b1;    // High if opcode is branch, some non-branch opcodes also use
+                    cmp_o.vj <= vj_o;
+                    cmp_o.vk <= vk_o;
+                    cmp_o.qj <= qj_o;
+                    cmp_o.qk <= qk_o;
+                    cmp_o.funct <= branch_funct3;
+                    cmp_o.tag <= rob_free_tag;
+                    rob_write <= 1'b1;
+                end
             end
-        end
 
-        op_jal : begin
-            if (alu_rs_full == 0) begin
-                alu_o.valid <= 1'b1;
-                rob_dest <= op.rd;
-                rob_write <= 1'b1;
-                alu_o.vj <= op.instr_pc;
-                alu_o.vk <= 32'd4; // stores pc+4 into rd
-                alu_o.qj <= 3'd0;
-                alu_o.qk <= 3'd0;
-                alu_o.op <= alu_add;
-                rob_write <= 1'b1;
+            op_load : begin // KEEP
+                if (op.rd != 0 && lsb_full == 0) begin
+                    rob_dest <= op.rd;
+                    lsb_o.vj <= vj_o;
+                    lsb_o.vk <= 32'd0;
+                    lsb_o.qj <= qj_o;
+                    lsb_o.qk <= 32'd0;
+                    lsb_o.addr <= op.i_imm;
+                    lsb_o.op <= 1'b0;  // 0 = load, 1 = store
+                    lsb_o.funct <= load_funct3;
+                    lsb_o.tag <= rob_free_tag;
+                    rob_write <= 1'b1;
+                end
             end
-        end
 
-        op_jalr : begin
-            // ????? no idea what conditions to use, CHECK
-            if () begin
-
+            op_store : begin    // KEEP
+                if (op.rd != 0 && lsb_full == 0) begin
+                    lsb_o.vj <= vj_o;
+                    lsb_o.vk <= vk_o;
+                    lsb_o.qj <= qj_o;
+                    lsb_o.qk <= qk_o;
+                    lsb_o.addr <= op.s_imm;
+                    lsb_o.op <= 1'b1;  // 0 = load, 1 = store
+                    lsb_o.funct <= store_funct3;
+                    lsb_o.tag <= rob_free_tag;
+                    rob_write <= 1'b1;
+                end
             end
-        end
 
-        op_br : begin
-            if (cmp_rs_full == 0) begin
-                rob_dest <= op.rd;
-                // cmp_o.br <= 1'b1;    // High if opcode is branch, non-branch opcodes also use
-                // cmp_o.vj <= vj_o;
-                // cmp_o.vk <= vk_o;
-                // cmp_o.qj <= qj_o;
-                // cmp_o.qk <= qk_o;
-                // cmp_o.funct <= branch_funct3;
-                // cmp_o.cmp_tag <= rob_free_tag;
-                rob_write <= 1'b1;
+            op_imm : begin
+                if (op.rd != 0 && rob_free_tag != 0) begin
+                    // MAY NEED TO SEND INSTRUCTION TYPE TO ROB...
+                    rob_dest <= op.rd;
+                    case (op.funct3)
+                        // slt : begin
+                        //     if (cmp_rs_full == 0) begin
+                        //         // cmp_o.vj <= 
+                        //         rob_write <= 1'b1;
+                        //     end
+                        // end
+
+                        // sltu : begin
+                        //     if (cmp_rs_full == 0) begin
+                        //         // send data to CMP reservation station
+                        //         rob_write <= 1'b1;
+                        //     end
+                        // end
+
+                        // sr : begin
+                        //     if (alu_rs_full == 0) begin
+                        //         case (op.funct7[5])
+                        //             1'b0 : begin
+                        //                 alu_o.valid <= 1'b1;
+                        //                 alu_o.vj <= vj_o;
+                        //                 alu_o.vk <= op.i_imm;
+                        //                 alu_o.qj <= qj_o;
+                        //                 alu_o.qk <= 32'b0;
+                        //                 alu_o.op <= alu_srl;
+                        //                 rob_write <= 1'b1;
+                        //             end
+
+                        //             1'b1 : begin
+                        //                 alu_o.valid <= 1'b1;
+                        //                 alu_o.vj = vj_o;
+                        //                 alu_o.vk <= op.i_imm;
+                        //                 alu_o.qj <= qj_o;
+                        //                 alu_o.qk <= 32'b0;
+                        //                 alu_o.op <= alu_sra;
+                        //                 rob_write <= 1'b1;
+                        //             end
+                        //             default : ;
+                        //         endcase
+                        //     end
+                        // end
+
+                        default : begin  // add, sll, axor, aor, aand
+                            if (alu_rs_full == 0) begin
+                                alu_o.valid <= 1'b1;
+                                alu_o.vj <= vj_o;
+                                alu_o.vk <= op.i_imm;
+                                alu_o.qj <= qj_o;
+                                alu_o.qk <= 32'b0;
+                                alu_o.op <= alu_ops'(op.funct3);
+                                alu_o.rob_idx <= rob_free_tag;
+                                rob_write <= 1'b1;
+                            end
+                        end
+                    endcase
+                end
             end
-        end
 
-        op_load : begin
-            if (op.rd != 0 && lsb_full == 0) begin
-                rob_dest <= op.rd;
-                // lsb_o.vj <= vj_o;
-                // lsb_o.vk <= 32'd0;
-                // lsb_o.qj <= qj_o;
-                // lsb_o.qk <= 32'd0;
-                // lsb_o.addr <= op.i_imm;
-                // lsb_o.op <= 1'b0;  // 0 = load, 1 = store
-                // lsb_o.funct <= load_funct3;
-                // lsb_o.tag <= rob_free_tag;
-                rob_write <= 1'b1;
+            op_reg : begin
+                if (op.rd != 0 && rob_free_tag != 0) begin
+                    rob_dest <= op.rd;
+                    case (op.funct3)
+                        add : begin
+                            if (alu_rs_full == 0) begin
+                                case (op.funct7[5])
+                                    1'b0: begin
+                                        alu_o.valid <= 1'b1;
+                                        alu_o.vj <= vj_o;
+                                        alu_o.vk <= vk_o;
+                                        alu_o.qj <= qj_o;
+                                        alu_o.qk <= qk_o;
+                                        alu_o.op <= alu_add;
+                                        rob_write <= 1'b1;
+                                        
+                                    end
+
+                                    1'b1: begin
+                                        alu_o.valid <= 1'b1;
+                                        alu_o.vj <= vj_o;
+                                        alu_o.vk <= vj_o;
+                                        alu_o.qj <= qj_o;
+                                        alu_o.qk <= qk_o;
+                                        alu_o.op <= alu_sub;
+                                        rob_write <= 1'b1;
+                                    end
+                                    default : ;
+                                endcase
+                            end
+                        end
+
+                        // slt : begin // send data to cmp rs somehow
+                        //     if (cmp_rs_full == 0) begin
+                        //         // cmp_o.br <= 1'b1;    // High if opcode is branch, non-branch opcodes also use
+                        //         // cmp_o.cmp_vj <= ;
+                        //         // cmp_o.cmp_vk <= ;
+                        //         // cmp_o.cmp_qj <= ;
+                        //         // cmp_o.cmp_qk <= ;
+                        //         // cmp_o.funct <= branch_funct3;
+                        //         // cmp_o.cmp_tag <= rob_free_tag;
+                        //         cmp_o.cmp_op <= blt;
+                        //         rob_write <= 1'b1;
+                        //     end
+                            
+                        // end
+
+                        // sltu : begin
+                        //     if (cmp_rs_full == 0) begin
+                        //         // cmp_o.cmp_vj <= ;
+                        //         // cmp_o.cmp_vk <= ;
+                        //         // cmp_o.cmp_qj <= ;
+                        //         // cmp_o.cmp_qk <= ;
+                        //         cmp_o.cmp_op <= bltu;
+                        //         rob_write <= 1'b1;
+                        //     end
+                        // end
+
+                        // sr : begin
+                        //     if (alu_rs_full == 0) begin
+                        //         case (op.funct7[5])
+                        //             1'b0: begin
+                        //                 alu_o.valid <= 1'b1;
+                        //                 alu_o.vj <= vj_o;
+                        //                 alu_o.vk <= vk_o;
+                        //                 alu_o.qj <= qj_o;
+                        //                 alu_o.qk <= qk_o;
+                        //                 alu_o.op <= alu_sll;
+                        //                 rob_write <= 1'b1;
+                        //             end
+
+                        //             1'b1: begin
+                        //                 alu_o.valid <= 1'b1;
+                        //                 alu_o.vj <= vj_o;
+                        //                 alu_o.vk <= vk_o;
+                        //                 alu_o.qj <= qj_o;
+                        //                 alu_o.qk <= qk_o;
+                        //                 alu_o.op <= alu_sra;
+                        //                 rob_write <= 1'b1;
+                        //             end
+                        //             default : ;
+                        //         endcase
+                        //     end
+                        // end
+
+                        default : begin  // sll, axor, aor, aand
+                            if (alu_rs_full == 0) begin
+                                alu_o.valid <= 1'b1;
+                                alu_o.op <= alu_ops'(op.funct3);
+                            end
+                        end
+                    endcase
+                end
             end
-        end
-
-        op_store : begin
-            if (op.rd != 0 && lsb_full == 0) begin
-                // lsb_o.vj <= vj_o;
-                // lsb_o.vk <= vk_o;
-                // lsb_o.qj <= qj_o;
-                // lsb_o.qk <= qk_o;
-                // lsb_o.addr <= op.s_imm;
-                // lsb_o.op <= 1'b1;  // 0 = load, 1 = store
-                // lsb_o.funct <= store_funct3;
-                // lsb_o.tag <= rob_free_tag;
-                rob-write <= 1'b1;
-            end
-        end
-
-        op_imm : begin
-            if (op.rd != 0 && rob_free_tag != 0) begin
-                // MAY NEED TO SEND INSTRUCTION TYPE TO ROB...
-                rob_dest <= op.rd;
-                case (op.funct3)
-                    slt : begin
-                        if (cmp_rs_full == 0) begin
-                            // cmp_o.vj <= 
-                            rob_write <= 1'b1;
-                        end
-                    end
-
-                    sltu : begin
-                        if (cmp_rs_full == 0) begin
-                            // send data to CMP reservation station
-                            rob_write <= 1'b1;
-                        end
-                    end
-
-                    sr : begin
-                        if (alu_rs_full == 0) begin
-                            case (funct7[5])
-                                1'b0 : begin
-                                    alu_o.valid <= 1'b1;
-                                    alu_o.vj <= vj_o;
-                                    alu_o.vk <= op.i_imm;
-                                    alu_o.qj <= qj_o;
-                                    alu_o.qk <= 32'b0;
-                                    alu_o.op <= alu_srl;
-                                    rob_write <= 1'b1;
-                                end
-
-                                1'b1 : begin
-                                    alu_o.valid <= 1'b1;
-                                    alu_o.vj = vj_o;
-                                    alu_o.vk <= op.i_imm;
-                                    alu_o.qj <= qj_o;
-                                    alu_o.qk <= 32'b0;
-                                    alu_o.op <= alu_sra;
-                                    rob_write <= 1'b1;
-                                end
-                                default : ;
-                            endcase
-                        end
-                    end
-
-                    default : begin  // add, sll, axor, aor, aand
-                        if (alu_rs_full == 0) begin
-                            alu_o.valid <= 1'b1;
-                            alu_o.vj <= vj_o;
-                            alu_o.vk <= op.i_imm;
-                            alu_o.qj <= qj_o;
-                            alu_o.qk <= 32'b0;
-                            alu_o.op <= alu_ops'(op.funct3);
-                            alu_o.rob_idx <= rob_free_tag;
-                            rob_write <= 1'b1;
-                        end
-                    end
-                endcase
-            end
-        end
-
-        op_reg : begin
-            if (op.rd != 0 && rob_free_tag != 0) begin
-                rob_dest <= op.rd;
-                case (op.funct3)
-                    add : begin
-                        if (alu_rs_full == 0) begin
-                            case (funct7[5])
-                                1'b0: begin
-                                    alu_o.valid <= 1'b1;
-                                    alu_o.vj <= vj_o;
-                                    alu_o.vk <= vk_o;
-                                    alu_o.qj <= qj_o;
-                                    alu_o.qk <= qk_o;
-                                    alu_o.op <= alu_add;
-                                    rob_write <= 1'b1;
-                                    
-                                end
-
-                                1'b1: begin
-                                    alu_o.valid <= 1'b1;
-                                    alu_o.vj <= vj_o;
-                                    alu_o.vk <= vj_o;
-                                    alu_o.qj <= qj_o;
-                                    alu_o.qk <= qk_o;
-                                    alu_o.op <= alu_sub;
-                                    rob_write <= 1'b1;
-                                end
-                                default : ;
-                            endcase
-                        end
-                    end
-
-                    slt : begin // send data to cmp rs somehow
-                        if (cmp_rs_full == 0) begin
-                            // cmp_o.br <= 1'b1;    // High if opcode is branch, non-branch opcodes also use
-                            // cmp_o.cmp_vj <= ;
-                            // cmp_o.cmp_vk <= ;
-                            // cmp_o.cmp_qj <= ;
-                            // cmp_o.cmp_qk <= ;
-                            // cmp_o.funct <= branch_funct3;
-                            // cmp_o.cmp_tag <= rob_free_tag;
-                            cmp_o.cmp_op <= blt;
-                            rob_write <= 1'b1;
-                        end
-                        
-                    end
-
-                    sltu : begin
-                        if (cmp_rs_full == 0) begin
-                            // cmp_o.cmp_vj <= ;
-                            // cmp_o.cmp_vk <= ;
-                            // cmp_o.cmp_qj <= ;
-                            // cmp_o.cmp_qk <= ;
-                            cmp_o.cmp_op <= bltu;
-                            rob_write <= 1'b1;
-                        end
-                    end
-
-                    sr : begin
-                        if (alu_rs_full == 0) begin
-                            case (funct7[5])
-                                1'b0: begin
-                                    alu_o.valid <= 1'b1;
-                                    alu_o.vj <= vj_o;
-                                    alu_o.vk <= vk_o;
-                                    alu_o.qj <= qj_o;
-                                    alu_o.qk <= qk_o;
-                                    alu_o.op <= alu_sll;
-                                    rob_write <= 1'b1;
-                                end
-
-                                1'b1: begin
-                                    alu_o.valid <= 1'b1;
-                                    alu_o.vj <= vj_o;
-                                    alu_o.vk <= vk_o;
-                                    alu_o.qj <= qj_o;
-                                    alu_o.qk <= qk_o;
-                                    alu_o.op <= alu_sra;
-                                    rob_write <= 1'b1;
-                                end
-                                default : ;
-                            endcase
-                        end
-                    end
-
-                    default : begin  // sll, axor, aor, aand
-                        if (alu_rs_full == 0) begin
-                            alu_o.valid <= 1'b1;
-                            alu_o.op <= alu_ops'(op.funct3);
-                        end
-                    end
-                endcase
-            end
-        end
-        default : ;
-    endcase
+            default : ;
+        endcase
+    end
 end
 
 always_comb begin
     if (rst) begin
-        iqueue_read = 1'b0;
-        rd = op.rd;
+        iqueue_read = 1'b1;
+        rd_o = op.rd;
         load_tag = 1'b0;
         tag = '0;
     end else begin
-        iqueue_read = 1'b0;
-        rd = op.rd;
+        iqueue_read = 1'b1;
+        rd_o = op.rd;
         load_tag = 1'b0;
         tag = '0;
         case (op.opcode)
             op_lui, op_auipc, op_jal : begin
                 if (alu_rs_full == 0 && rob_free_tag != 0) begin
                     iqueue_read = 1'b1;
+                    rd_o = op.rd;
                     load_tag = 1'b1;
+                    tag = rob_free_tag;
                 end
             end
 
@@ -400,7 +397,9 @@ always_comb begin
             op_load : begin
                 if (lsb_full == 0 && rob_free_tag != 0) begin
                     iqueue_read = 1'b1;
+                    rd = op.rd;
                     load_tag = 1'b1;
+                    tag = rob_free_tag;
                 end
             end
 
@@ -411,43 +410,59 @@ always_comb begin
 
             op_imm : begin
                 if (rob_free_tag != 0) begin
-                    case (op.funct3)
-                        slt, sltu : begin
-                            if (cmp_rs_full == 0) begin
-                                iqueue_read = 1'b1;
-                                load_tag = 1'b1;
+                    if (op.rd == 0)
+                        iqueue_read = 1'b1;
+                    else begin
+                        case (op.funct3)
+                            slt, sltu : begin
+                                if (cmp_rs_full == 0) begin
+                                    iqueue_read = 1'b1;
+                                    rd = op.rd;
+                                    load_tag = 1'b1;
+                                    tag = rob_free_tag;
+                                end
                             end
-                        end
 
-                        sr, add, sll, axor, aor, aand: begin
-                            if (alu_rs_full == 0) begin
-                                iqueue_read = 1'b1;
-                                load_tag = 1'b1;
+                            sr, add, sll, axor, aor, aand: begin
+                                if (alu_rs_full == 0) begin
+                                    iqueue_read = 1'b1;
+                                    rd = op.rd;
+                                    load_tag = 1'b1;
+                                    tag = rob_free_tag;
+                                end
                             end
-                        end
-                        default : ;
-                    endcase
+                            default : ;
+                        endcase
+                    end
                 end
             end
 
             op_reg : begin
                 if (rob_free_tag != 0) begin
-                    case (op.funct3)
-                        slt, sltu : begin
-                            if (cmp_rs_full == 0) begin
-                                iqueue_read = 1'b1;
-                                load_tag = 1'b1;
+                    if (op.rd == 0)
+                        iqueue_read = 1'b1;
+                    else begin
+                        case (op.funct3)
+                            slt, sltu : begin
+                                if (cmp_rs_full == 0) begin
+                                    iqueue_read = 1'b1;
+                                    rd = op.rd;
+                                    load_tag = 1'b1;
+                                    tag = rob_free_tag;
+                                end
                             end
-                        end
 
-                        sr, add, sll, axor, aor, aand : begin
-                            if (alu_rs_full == 0) begin
-                                iqueue_read = 1'b1;
-                                load_tag = 1'b1;
+                            sr, add, sll, axor, aor, aand : begin
+                                if (alu_rs_full == 0) begin
+                                    iqueue_read = 1'b1;
+                                    rd = op.rd;
+                                    load_tag = 1'b1;
+                                    tag = rob_free_tag;
+                                end
                             end
-                        end
-                        default : ;
-                    endcase
+                            default : ;
+                        endcase
+                    end
                 end
             end
             default : ;

@@ -10,7 +10,8 @@ module regfile (
     input logic load_tag,
     input rv32i_reg tag_decoder,
     input rv32i_reg reg_id_decoder,
-    input i_decode_opcode_t op_in,
+    // input i_decode_opcode_t op_in,
+    input rv32i_reg rs_i, rs_i,
 
     // From ROB
     input logic load_reg,
@@ -59,10 +60,10 @@ logic [4:0] tags [31:0];
 // assign tag29_val = tags[29];assign tag30_val = tags[30];assign tag31_val = tags[31];assign tag0_val  = tags[0];
 
 // To decoder
-assign d_out.vj_out = (op_in.rs1 == 0) ? 32'h0000_0000 : regfile[op_in.rs1];
-assign d_out.vk_out = (op_in.rs2 == 0) ? 32'h0000_0000 : regfile[op_in.rs2];
-assign d_out.qj_out = tags[op_in.rs1];
-assign d_out.qk_out = tags[op_in.rs2];
+assign d_out.vj_out = (rs1_i == 0) ? 32'h0000_0000 : regfile[rs1_i];
+assign d_out.vk_out = (rs2_i == 0) ? 32'h0000_0000 : regfile[rs2_i];
+assign d_out.qj_out = tags[rs1_i];
+assign d_out.qk_out = tags[rs2_i];
 
 always_ff @ (posedge clk) begin
     if (rst) begin

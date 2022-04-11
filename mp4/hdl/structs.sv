@@ -11,6 +11,7 @@ import rv32i_types::*;
 // } ldst_data_t;
 
 typedef struct packed {
+    logic type; // 0 = load, 1 = store
     rv32i_word vj;
     rv32i_word vk;
     rv32i_word qj;
