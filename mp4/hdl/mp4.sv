@@ -50,6 +50,9 @@ logic rob_is_commiting;
 
 cdb_t cdb;
 
+logic alu_rs_full;
+logic cmp_rs_full;
+
 i_fetch i_fetch (
     .clk(clk),
     .rst(rst),
@@ -77,9 +80,9 @@ i_decode decode (
     .rob_in(),
     .rob_write(),
     .rob_dest(),
-    .alu_rs_full(1'b0),
+    .alu_rs_full(alu_rs_full),
     .alu_o(alu_o),
-    .cmp_rs_full(1'b0),
+    .cmp_rs_full(cmp_rs_full),
     .cmp_o(),
     .lsb_full(1'b0),
     .lsb_o()
@@ -106,7 +109,7 @@ load_store_queue ldstbuf (
     .rst(rst),
     .flush(flush),
     .load(),
-    .cdb(),
+    .cdb(cdb),
     .lsb_entry(), // from ROB
     .store_res(),
     .load_res(),
@@ -175,7 +178,7 @@ alu_reservation_station alu_rs (
     .alu_o(),
 
     // To decoder
-    .alu_rs_full()
+    .alu_rs_full(alu_rs_full)
 );
 
 cmp_reservation_station cmp_rs (
@@ -195,11 +198,8 @@ cmp_reservation_station cmp_rs (
     // From decoder
     .cmp_o(),
 
-    // To CMP
-    .data_out(),
-
     // To decoder
-    .cmp_rs_full()
+    .cmp_rs_full(cmp_rs_full)
 );
 
 endmodule : mp4

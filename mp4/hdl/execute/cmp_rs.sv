@@ -19,10 +19,7 @@ module cmp_rs (
 
     // From decoder
     input cmp_rs_t cmp_o,
-
-    // To CMP
-    output cmp_rs_t data_out,
-
+    
     // To decoder
     output logic cmp_rs_full
 );
