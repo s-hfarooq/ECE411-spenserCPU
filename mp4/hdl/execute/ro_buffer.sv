@@ -27,7 +27,12 @@ module ro_buffer (
 
     // To regfile/reservation station
     output rob_values_t rob_o,
-    output logic is_commiting
+    output logic is_commiting,
+
+    // To/from load store queue
+    input logic rob_store_complete,
+    output logic curr_is_store,
+    output logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] head_tag
 );
 
 // need to fix entry_num size
@@ -43,6 +48,9 @@ end
 // Head and tail pointers
 logic [$clog2(RO_BUFFER_ENTRIES)-1:0] head_ptr = {$clog2(RO_BUFFER_ENTRIES){1'b0}};
 logic [$clog2(RO_BUFFER_ENTRIES)-1:0] tail_ptr = {$clog2(RO_BUFFER_ENTRIES){1'b0}};
+
+assign curr_is_store = (i_decode_opcode_t.op == op_store);
+assign head_tag = head_ptr;
 
 // Glue logic
 logic [$clog2(RO_BUFFER_ENTRIES):0] counter = 0;
@@ -74,11 +82,14 @@ always_ff @ (posedge clk) begin
             // Output to reservation station, dequeue
             rob_o <= rob_arr[head_ptr];
 
-            // Entry 0 is reserved
-            if(head_ptr >= RO_BUFFER_ENTRIES)
-                head_ptr <= 1;
-            else
-                head_ptr <= head_ptr + 1'b1;                    
+            // If storing, wait until store complete before moving to next value in ROB
+            if(curr_is_store == 1'b0 || rob_store_complete == 1'b1) begin
+                // Entry 0 is reserved
+                if(head_ptr >= RO_BUFFER_ENTRIES)
+                    head_ptr <= 1;
+                else
+                    head_ptr <= head_ptr + 1'b1;
+            end
         end else if (write == 1'b1) begin
             // Save value to ROB, enqueue
             if (counter < RO_BUFFER_ENTRIES) begin

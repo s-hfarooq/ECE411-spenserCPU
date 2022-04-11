@@ -18,9 +18,13 @@ module load_store_queue
     output cdb_entry_t load_res,
 
     output logic ldst_full,
-    output rob_store_complete,
 
-    // From/to cache
+    // To/from ROB
+    output logic rob_store_complete,
+    input logic curr_is_store,
+    input logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] head_tag,
+    
+    // From/to d-cache
     output logic data_read,
     output logic data_write,
     output logic [3:0] data_mbe, // mem byte enable
@@ -100,8 +104,10 @@ always_ff @(posedge clk) begin : store_rs
                         // keep waiting
                     end
                 end
-                // check if both registers are valid, then output addr
-                if (queue[head_ptr].qj == 3'b0 && queue[head_ptr].qk == 3'b0) begin
+
+                // check if both registers are valid and current store instruction at top of ROB, then output addr
+                if (queue[head_ptr].qj == 3'b0 && queue[head_ptr].qk == 3'b0 && 
+                     curr_is_store == 1'b1 && head_tag == queue[head_ptr].tag) begin
                     store_res.tag <= queue[head_ptr].tag;
                     // add addresses together
                     store_res.value <= queue[head_ptr].vj; // SHOULD THIS BE VJ OR VK
