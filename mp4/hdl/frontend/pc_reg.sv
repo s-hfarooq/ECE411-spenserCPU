@@ -1,17 +1,19 @@
 /* Copied from MP2 given code. */
 
-module pc_register #(parameter width = 32) (
+`include "../macros.sv"
+
+module pc_register (
     input logic clk,
     input logic rst,
     input logic load,
-    input logic [width-1:0] in,
-    output logic [width-1:0] out
+    input logic [`PC_REGISTER_WIDTH-1:0] in,
+    output logic [`PC_REGISTER_WIDTH-1:0] out
 );
 
 /*
 * PC needs to start at 0x60
  */
-logic [width-1:0] data;
+logic [`PC_REGISTER_WIDTH-1:0] data;
 
 always_ff @(posedge clk)
 begin

@@ -1,14 +1,16 @@
 /* Copied from MP2 given code. */
 
-module register #(parameter width = 32) (
+`include "../macros.sv"
+
+module register (
     input logic clk,
     input logic rst,
     input logic load,
-    input logic [width-1:0] in,
-    output logic [width-1:0] out
+    input logic [`REGISTER_WIDTH-1:0] in,
+    output logic [`REGISTER_WIDTH-1:0] out
 );
 
-logic [width-1:0] data = 1'b0;
+logic [`REGISTER_WIDTH-1:0] data = 1'b0;
 
 always_ff @(posedge clk)
 begin

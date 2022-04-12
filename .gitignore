@@ -2,6 +2,7 @@
 .vscode/
 # Quartus compilation files
 *.sv.bak
+*.do.bak*
 **/db/
 **/output_files/
 **/incremental_db/

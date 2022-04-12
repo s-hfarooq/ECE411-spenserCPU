@@ -1,5 +1,5 @@
-typedef logic [31:0] rv32i_word;
-typedef logic [4:0] rv32i_reg;
+import rv32i_types::*;
+import structs::*;
 
 module regfile (
     input logic clk,
@@ -10,20 +10,22 @@ module regfile (
     input logic load_tag,
     input rv32i_reg tag_decoder,
     input rv32i_reg reg_id_decoder,
-    input i_decode_opcode_t op_in,
+    // input i_decode_opcode_t op_in,
+    input rv32i_reg rs1_i, rs2_i,
 
     // From ROB
     input logic load_reg,
-    input rv32i_reg reg_id_rob,
+    input rv32i_reg reg_id_rob, // Destination reg from ROB
     input rv32i_word reg_val,
-    input rv32i_reg tag_rob,
+    input rv32i_reg tag_rob,    // Tag from ROB
 
-    // To reservation stations
-    output rv32i_word vj_out, // operands, s1 and s2
-    output rv32i_word vk_out,
-    output rv32i_reg qj_out,  // tags for operands, s1 and s2
-    output rv32i_reg qk_out,
-    output rv32i_reg qi_out   // result tag
+    // To Decoder
+    output regfile_data_out_t d_out
+    // output rv32i_word vj_out, // operands, s1 and s2
+    // output rv32i_word vk_out,
+    // output rv32i_reg qj_out,  // tags for operands, s1 and s2
+    // output rv32i_reg qk_out,
+    // output rv32i_reg qi_out   // result tag
     // testing, uncomment to test
     // output rv32i_word reg0_val,  reg1_val,  reg2_val,  reg3_val,  reg4_val,  reg5_val,  reg6_val,  reg7_val,
     //                   reg8_val,  reg9_val,  reg10_val, reg11_val, reg12_val, reg13_val, reg14_val, reg15_val,
@@ -57,11 +59,11 @@ logic [4:0] tags [31:0];
 // assign tag25_val = tags[25];assign tag26_val = tags[26];assign tag27_val = tags[27];assign tag28_val = tags[28];
 // assign tag29_val = tags[29];assign tag30_val = tags[30];assign tag31_val = tags[31];assign tag0_val  = tags[0];
 
-// To reservation stations
-assign vj_out = (op_in.rs1 == 0) ? 32'h0000_0000 : regfile[op_in.rs1];
-assign vk_out = (op_in.rs2 == 0) ? 32'h0000_0000 : regfile[op_in.rs2];
-assign qj_out = tags[op_in.rs1];
-assign qk_out = tags[op_in.rs2];
+// To decoder
+assign d_out.vj_out = (rs1_i == 0) ? 32'h0000_0000 : regfile[rs1_i];
+assign d_out.vk_out = (rs2_i == 0) ? 32'h0000_0000 : regfile[rs2_i];
+assign d_out.qj_out = tags[rs1_i];
+assign d_out.qk_out = tags[rs2_i];
 
 always_ff @ (posedge clk) begin
     if (rst) begin

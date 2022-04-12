@@ -19,9 +19,6 @@ module ro_buffer_testbench();
     i_decode_opcode_t input_i;
     rv32i_word instr_pc_in;
 
-    // From reservation station
-    rv32i_word value_in_reg;
-
     // Outputs
     // To decoder
     rv32i_word reg_val_o;
@@ -54,7 +51,6 @@ module ro_buffer_testbench();
         write <= 1'b0;
         input_i <= '{default: 0};
         instr_pc_in <= 32'b0;
-        value_in_reg <= 32'b0;
         ##1;
         rst <= 1'b0;
         ##1;
