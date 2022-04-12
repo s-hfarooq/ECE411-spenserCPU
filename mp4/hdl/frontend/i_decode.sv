@@ -32,6 +32,7 @@ module i_decode(
     // To Reorder Buffer
     output logic rob_write,
     output rv32i_word rob_dest, // Tag/address
+    output i_decode_opcode_t op,
 
     // From ALU Reservation Station
     input logic alu_rs_full,  // Signal is high if RS is full
@@ -52,7 +53,7 @@ module i_decode(
     output lsb_t lsb_o
 );
 
-i_decode_opcode_t op;
+// i_decode_opcode_t op;
 
 // taken from IR register
 assign op.instr_pc = d_in.pc;
@@ -187,6 +188,7 @@ always_ff @ (posedge clk) begin
                     lsb_o.op <= 1'b0;  // 0 = load, 1 = store
                     lsb_o.funct <= load_funct3;
                     lsb_o.tag <= rob_free_tag;
+                    lsb_o.type_of_inst <= 1'b0;
                     rob_write <= 1'b1;
                 end
             end
@@ -201,6 +203,7 @@ always_ff @ (posedge clk) begin
                     lsb_o.op <= 1'b1;  // 0 = load, 1 = store
                     lsb_o.funct <= store_funct3;
                     lsb_o.tag <= rob_free_tag;
+                    lsb_o.type_of_inst <= 1'b1;
                     rob_write <= 1'b1;
                 end
             end

@@ -36,7 +36,7 @@ end
 //assign mem_write = 1'b0;
 assign i_queue_write = 1'b1;
 
-pc_register pc(
+pc_register pc (
     .clk(clk),
     .rst(rst),
     .load(pc_load),
@@ -45,7 +45,7 @@ pc_register pc(
 );
 
 // TODO later
-br_pred predictor(
+br_pred predictor (
     .clk(clk),
     .rst(rst),
     .branch_pred_pc_sel(branch_pred_pc_sel),
@@ -57,13 +57,7 @@ br_pred predictor(
 
 // );
 
-always_comb begin
-    i_queue_data_in.pc <= pc_out;
-    i_queue_data_in.next_pc <= pc_out + 4; // branching will be different
-    i_queue_data_in.instr <= mem_rdata;
-end
-
-i_queue i_queue(
+i_queue i_queue (
     .clk(clk),
     .rst(rst),
     .flush(i_queue_flush),
@@ -75,6 +69,11 @@ i_queue i_queue(
     .full(i_queue_full)
 );
 
+always_comb begin
+    i_queue_data_in.pc <= pc_out;
+    i_queue_data_in.next_pc <= pc_out + 4; // branching will be different
+    i_queue_data_in.instr <= mem_rdata;
+end
 
 always_comb begin : MUXES
     case (branch_pred_pc_sel)

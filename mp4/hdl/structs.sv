@@ -11,13 +11,13 @@ import rv32i_types::*;
 // } ldst_data_t;
 
 typedef struct packed {
-    logic type; // 0 = load, 1 = store
+    logic type_of_inst; // 0 = load, 1 = store
     rv32i_word vj;
     rv32i_word vk;
     rv32i_word qj;
     rv32i_word qk;
     rv32i_word addr;
-    rv32i_opcode op;
+    // logic op; // Renamed as type_of_inst
     logic [2:0] funct;
     logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] tag;
 } lsb_t;
@@ -59,8 +59,8 @@ typedef struct packed {
     rob_reg_data_t reg_data;
 } rob_values_t;
 
-typedef struct packed {
-    rob_values_t [$clog2(`RO_BUFFER_ENTRIES)-1:0] entry_data;
+typedef struct {
+    rob_values_t entry_data [(`RO_BUFFER_ENTRIES)-1:0];
 } rob_arr_t;
 
 typedef struct packed {
@@ -96,6 +96,7 @@ typedef struct packed { // when alu_rs needs to send data to the alu, it uses th
 
 typedef struct packed { // when alu_rs needs to send data to the alu, it uses this struct
     logic valid;
+    logic br;   // high if opcode is a branch, some non-branch opcodes also use cmp
     rv32i_word vj;
     rv32i_word vk;
     rv32i_word qj;

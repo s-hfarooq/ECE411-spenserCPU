@@ -1,4 +1,4 @@
-`include "macros.sv"
+`include "../macros.sv"
 
 import rv32i_types::*;
 import structs::*;
@@ -15,6 +15,7 @@ module alu_rs (
     // input logic [2:0] rob_free_tag,
     input rv32i_word rob_reg_vals [`RO_BUFFER_ENTRIES],
     input logic rob_commit_arr [`RO_BUFFER_ENTRIES],
+    output logic load_rob,
 
     // From/to CDB
     input cdb_t cdb_vals_i,
@@ -65,7 +66,7 @@ always_ff @(posedge clk) begin
 
         curr_rs_data.valid <= 1'b0;
         curr_rs_data.busy <= 1'b0;
-        curr_rs_data.opcode <= alu_o.op;
+        curr_rs_data.opcode <= rv32i_opcode'(alu_o.op);
         curr_rs_data.alu_op <= alu_o.op;
         curr_rs_data.rs1.valid <= rob_commit_arr[alu_o.qj];
         curr_rs_data.rs1.value <= rob_reg_vals[alu_o.qj]; // need to get value from ROB (only if tag != 0)
@@ -125,7 +126,7 @@ always_ff @(posedge clk) begin: set_data_vals
             alu_arr[i].qj <= data[i].rs1.tag;
             alu_arr[i].qj <= data[i].rs2.tag;
             alu_arr[i].op <= data[i].alu_op;
-            alu_arr[i].rob_idx <= data[i].res.idx;
+            alu_arr[i].rob_idx <= data[i].res.tag;
 
             load_alu[i] <= 1'b1;
 
@@ -143,13 +144,13 @@ end
 // Instantiate ALU's
 genvar alu_i;
 generate
-    for(alu_i = 0; alu_i < `ALU_RS_SIZE; ++alu_i) begin
+    for(alu_i = 0; alu_i < `ALU_RS_SIZE; ++alu_i) begin : generate_alu
         alu alu_instantiation(
             .clk(clk),
             .aluop(alu_arr[alu_i].op),
             .a(alu_arr[alu_i].vj),
             .b(alu_arr[alu_i].vk),
-            .f(alu_arr[alu_i].result)
+            .f(alu_arr[alu_i].result),
             .load_alu(load_alu[i]),
             .ready(load_cdb[i])
         );

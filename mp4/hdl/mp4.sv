@@ -40,6 +40,7 @@ rv32i_reg rs1_from_decoder, rs2_from_decoder;
 logic rob_write;                    // From Decoder to ROB
 rob_arr_t rob_arr;                  // From ROB to Decoder
 logic [3:0] rob_free_tag;
+i_decode_opcode_t decoded_signals;
 
 regfile_data_out_t regfile_d_out;
 logic load_reg;
@@ -48,7 +49,7 @@ logic load_alu_rs;
 logic load_cmp_rs;
 
 logic rob_read;
-logic flush;
+logic flush = 1'b0;
 
 rob_values_t rob_o;
 logic rob_is_committing;
@@ -99,7 +100,9 @@ i_decode decode (
     .rob_free_tag(rob_free_tag),
     .rob_in(rob_arr),
     .rob_write(rob_write),
-    .rob_dest(),           // dest_reg, send to ROB to load it in
+    // I'm going to use the i_decode_opcode_t version
+    // .rob_dest(),           // dest_reg, send to ROB to load it in
+    .op(decoded_signals),
     .alu_rs_full(alu_rs_full),
     .alu_o(alu_o),
     .cmp_rs_full(cmp_rs_full),
@@ -111,7 +114,7 @@ i_decode decode (
 regfile reg_file (
     .clk(clk),
     .rst(rst),
-    .flush(1'b0),
+    .flush(flush),
     .load_tag(load_tag),
     .tag_decoder(tag_decoder),
     .reg_id_decoder(rd_from_decoder),
@@ -156,8 +159,8 @@ ro_buffer rob (
     .flush(flush),
     .read(),
     .write(rob_write),
-    .input_i(),
-    .instr_pc_in(),
+    .input_i(decoded_signals),
+    // .instr_pc_in(),
     .value_in_reg(),
     .rob_arr_o(rob_arr),
     .rob_free_tag(rob_free_tag),

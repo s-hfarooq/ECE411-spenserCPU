@@ -12,7 +12,7 @@ module ro_buffer (
 
     // From decoder
     input i_decode_opcode_t input_i,
-    input rv32i_word instr_pc_in,
+    // input rv32i_word instr_pc_in,
 
     // From reservation station
     input rv32i_word value_in_reg,
@@ -38,9 +38,9 @@ module ro_buffer (
 rob_values_t rob_arr [`RO_BUFFER_ENTRIES-1:0];
 
 // Head and tail pointers
-logic [$clog2(`RO_BUFFER_ENTRIES):0] head_ptr = {$clog2(`RO_BUFFER_ENTRIES){1'b0}};
-logic [$clog2(`RO_BUFFER_ENTRIES):0] tail_ptr = {$clog2(`RO_BUFFER_ENTRIES){1'b0}};
-logic [$clog2(`RO_BUFFER_ENTRIES):0] tail_next_ptr = {$clog2(`RO_BUFFER_ENTRIES){1'b0}};
+logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] head_ptr = {$clog2(`RO_BUFFER_ENTRIES){1'b0}};
+logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] tail_ptr = {$clog2(`RO_BUFFER_ENTRIES){1'b0}};
+logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] tail_next_ptr = {$clog2(`RO_BUFFER_ENTRIES){1'b0}};
 
 assign curr_is_store = (input_i.opcode == op_store);
 assign head_tag = head_ptr;
@@ -93,7 +93,7 @@ always_ff @ (posedge clk) begin
                 rob_arr[tail_ptr].reg_data.can_commit <= 1'b0;
                 rob_arr[tail_ptr].valid <= 1'b1;
                 rob_arr[tail_ptr].reg_data.value <= value_in_reg;
-                rob_arr[tail_ptr].op.instr_pc <= instr_pc_in;
+                // rob_arr[tail_ptr].op.instr_pc <= instr_pc_in;
 
                 // Entry 0 is reserved
                 if(tail_ptr >= `RO_BUFFER_ENTRIES)
@@ -112,12 +112,20 @@ always_ff @ (posedge clk) begin
     end
 end
 
+// always_comb begin
+//     if (write == 1'b1) begin
+//         rob_free_tag = (rob_arr[tail_next_ptr].valid == 1) ? '0 : tail_next_ptr;
+//     end else begin
+//         rob_free_tag = (rob_arr[tail_ptr] == 1) ? '0 : tail_ptr;
+//     end
+// end
+
 always_comb begin
-    if (write == 1'b1) begin
-        rob_free_tag = (rob_arr[tail_next_ptr].valid == 1) ? '0 : tail_next_ptr;
-    end else begin
-        rob_free_tag = (rob_arr[tail_ptr] == 1) ? '0 : tail_ptr;
-    end
+    case (write)
+        1'b0 : rob_free_tag = (rob_arr[tail_ptr] == 1) ? '0 : tail_ptr;
+        1'b1 : rob_free_tag = (rob_arr[tail_next_ptr].valid == 1) ? '0 : tail_next_ptr;
+        default : ;
+    endcase
 end
 
 endmodule : ro_buffer

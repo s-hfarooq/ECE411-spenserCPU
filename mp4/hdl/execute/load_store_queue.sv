@@ -70,7 +70,7 @@ always_ff @(posedge clk) begin : store_rs
     set_defaults();
 
     if(entries > 0) begin
-        case(queue[head_ptr].type)
+        case(queue[head_ptr].type_of_inst)
             1'b0: begin // load
                 // broadcast data received on CDB
                 // calculate effective address and set tag
