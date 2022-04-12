@@ -150,7 +150,7 @@ load_store_queue ldstbuf (
     .data_addr(data_addr),
     .data_wdata(data_wdata),
     .data_resp(data_resp),
-    .data_rdata(data_rdata),
+    .data_rdata(data_rdata)
 );
 
 ro_buffer rob (
@@ -168,13 +168,13 @@ ro_buffer rob (
     .empty(rob_is_empty),
     .full(rob_is_full),
     .rob_o(),
-    .is_commiting(rob_is_committing),
+    .is_committing(rob_is_committing),
     .rob_store_complete(rob_store_complete),
     .curr_is_store(rob_curr_is_store),
     .head_tag(rob_head_tag)
 );
 
-alu_reservation_station alu_rs (
+alu_rs alu_rs (
     .clk(clk),
     .rst(rst),
     .flush(flush),
@@ -191,7 +191,7 @@ alu_reservation_station alu_rs (
     .alu_rs_full(alu_rs_full)
 );
 
-cmp_reservation_station cmp_rs (
+cmp_rs cmp_rs (
     .clk(clk),
     .rst(rst),
     .flush(flush),
@@ -201,7 +201,7 @@ cmp_reservation_station cmp_rs (
     .rob_commit_arr(),
     // From/to CDB
     .cdb_vals_i(cdb),
-    .cdb_alu_vals_o(cdb[(2*(`ALU_RS_SIZE-1))+2 -: `ALU_RS_SIZE]), // I think this is right
+    .cdb_cmp_vals_o(cdb[(2*(`ALU_RS_SIZE-1))+2 -: `ALU_RS_SIZE]), // I think this is right
     // From decoder
     .cmp_o(cmp_o),
     // To decoder

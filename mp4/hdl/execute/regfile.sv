@@ -11,7 +11,7 @@ module regfile (
     input rv32i_reg tag_decoder,
     input rv32i_reg reg_id_decoder,
     // input i_decode_opcode_t op_in,
-    input rv32i_reg rs_i, rs_i,
+    input rv32i_reg rs1_i, rs2_i,
 
     // From ROB
     input logic load_reg,

@@ -131,4 +131,4 @@ typedef struct packed {
 
 typedef cdb_entry_t[`NUM_CDB_ENTRIES-1:0] cdb_t;
 
-endpackage : struct
+endpackage : structs

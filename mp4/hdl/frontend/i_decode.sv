@@ -187,7 +187,7 @@ always_ff @ (posedge clk) begin
                     cmp_o.qj <= qj_o;
                     cmp_o.qk <= qk_o;
                     cmp_o.op <= branch_funct3;
-                    cmp_o.tag <= rob_free_tag;
+                    cmp_o.rob_idx <= rob_free_tag;
                     rob_write <= 1'b1;
                 end
             end
@@ -202,7 +202,7 @@ always_ff @ (posedge clk) begin
                     lsb_o.qj <= qj_o;
                     lsb_o.qk <= 32'd0;
                     lsb_o.addr <= i_imm;
-                    lsb_o.op <= 1'b0;  // 0 = load, 1 = store
+                    lsb_o.type_of_inst <= 1'b0;  // 0 = load, 1 = store
                     lsb_o.funct <= load_funct3;
                     lsb_o.tag <= rob_free_tag;
                     lsb_o.type_of_inst <= 1'b0;
@@ -217,7 +217,7 @@ always_ff @ (posedge clk) begin
                     lsb_o.qj <= qj_o;
                     lsb_o.qk <= qk_o;
                     lsb_o.addr <= s_imm;
-                    lsb_o.op <= 1'b1;  // 0 = load, 1 = store
+                    lsb_o.type_of_inst <= 1'b1;  // 0 = load, 1 = store
                     lsb_o.funct <= store_funct3;
                     lsb_o.tag <= rob_free_tag;
                     lsb_o.type_of_inst <= 1'b1;
@@ -421,7 +421,7 @@ always_comb begin
             op_load : begin
                 if (lsb_full == 0 && rob_free_tag != 0) begin
                     iqueue_read = 1'b1;
-                    rd = rd;
+                    rd_o = rd;
                     load_tag = 1'b1;
                     tag = rob_free_tag;
                 end
@@ -441,7 +441,7 @@ always_comb begin
                             slt, sltu : begin
                                 if (cmp_rs_full == 0) begin
                                     iqueue_read = 1'b1;
-                                    rd = rd;
+                                    rd_o = rd;
                                     load_tag = 1'b1;
                                     tag = rob_free_tag;
                                 end
@@ -450,7 +450,7 @@ always_comb begin
                             sr, add, sll, axor, aor, aand: begin
                                 if (alu_rs_full == 0) begin
                                     iqueue_read = 1'b1;
-                                    rd = rd;
+                                    rd_o = rd;
                                     load_tag = 1'b1;
                                     tag = rob_free_tag;
                                 end
@@ -470,7 +470,7 @@ always_comb begin
                             slt, sltu : begin
                                 if (cmp_rs_full == 0) begin
                                     iqueue_read = 1'b1;
-                                    rd = rd;
+                                    rd_o = rd;
                                     load_tag = 1'b1;
                                     tag = rob_free_tag;
                                 end
@@ -479,7 +479,7 @@ always_comb begin
                             sr, add, sll, axor, aor, aand : begin
                                 if (alu_rs_full == 0) begin
                                     iqueue_read = 1'b1;
-                                    rd = rd;
+                                    rd_o = rd;
                                     load_tag = 1'b1;
                                     tag = rob_free_tag;
                                 end

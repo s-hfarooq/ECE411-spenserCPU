@@ -70,20 +70,16 @@ always_ff @ (posedge clk) begin
             // Output to regfile, dequeue
             rob_o <= rob_arr[head_ptr];
             rob_arr[head_ptr].valid <= 4'b0;
-            head_ptr <= head_ptr + 1'b1;
             is_committing <= 1'b1;
-            counter <= counter - 1'b1;
-        end else if (read == 1'b1) begin
-            // Output to reservation station, dequeue
-            rob_o <= rob_arr[head_ptr];
 
-            // If storing, wait until store complete before moving to next value in ROB
             if(curr_is_store == 1'b0 || rob_store_complete == 1'b1) begin
                 // Entry 0 is reserved
-                if(head_ptr >= RO_BUFFER_ENTRIES)
+                if(head_ptr >= `RO_BUFFER_ENTRIES)
                     head_ptr <= 1;
                 else
                     head_ptr <= head_ptr + 1'b1;
+
+                counter <= counter - 1'b1;
             end
         end else if (write == 1'b1) begin
             // Save value to ROB, enqueue

@@ -31,7 +31,7 @@ module load_store_queue
     output rv32i_word data_addr,
     output rv32i_word data_wdata,
     input logic data_resp,
-    input rv32i_word data_rdata,
+    input rv32i_word data_rdata
 );
 
 // Head and tail pointers
@@ -44,6 +44,18 @@ lsb_t queue [`LDST_SIZE-1:0];
 assign ldst_full = (entries == `LDST_SIZE);
 
 always_ff @(posedge clk) begin
+
+end
+function void set_defaults();
+    rob_store_complete = 1'b0;
+    data_read = 1'b0;
+    data_write = 1'b0;
+    data_mbe = 4'b1111;
+endfunction
+// store rs
+always_ff @(posedge clk) begin : store_rs
+    set_defaults();
+
     if(rst || flush) begin
         for(int i = 0; i < `LDST_SIZE; ++i)
             queue <= '{default: 0};
@@ -58,16 +70,6 @@ always_ff @(posedge clk) begin
             entries <= entries + 1;
         end
     end
-end
-function void set_defaults()
-    rob_store_complete <= 1'b0;
-    data_read <= 1'b0;
-    data_write <= 1'b0;
-    data_mbe <= 4'b1111;
-endfunction
-// store rs
-always_ff @(posedge clk) begin : store_rs
-    set_defaults();
 
     if(entries > 0) begin
         case(queue[head_ptr].type_of_inst)
