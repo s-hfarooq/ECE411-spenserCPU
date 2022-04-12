@@ -43,6 +43,8 @@ rs_data_t curr_rs_data;
 alu_rs_t [`ALU_RS_SIZE-1:0] alu_arr;
 logic [`ALU_RS_SIZE-1:0] load_cdb;
 
+// for whatever reason we got a multiple drivers error when writing directly to alu_arr[i].value
+rv32i_word [`ALU_RS_SIZE-1:0] alu_res_arr;
 
 always_ff @(posedge clk) begin
     // Can probably make more efficient - worry about later
@@ -91,9 +93,7 @@ always_ff @(posedge clk) begin
             alu_rs_full <= 1'b1;
         end
     end
-end
 
-always_ff @(posedge clk) begin: set_data_vals
     // if is_valid sent as input, iterate though all items and set valid bit high for rs1/rs2
 
     // Maybe make generate - more efficient? 
@@ -135,7 +135,7 @@ always_ff @(posedge clk) begin: set_data_vals
 
         // Send data to CDB
         if(load_cdb[i] == 1'b1) begin
-            cdb_alu_vals_o[i].value <= alu_arr[i].result;
+            cdb_alu_vals_o[i].value <= alu_rse_arr[i];
             cdb_alu_vals_o[i].tag <= alu_arr[i].rob_idx;
         end
     end
@@ -150,9 +150,9 @@ generate
             .aluop(alu_arr[alu_i].op),
             .a(alu_arr[alu_i].vj),
             .b(alu_arr[alu_i].vk),
-            .f(alu_arr[alu_i].result),
-            .load_alu(load_alu[i]),
-            .ready(load_cdb[i])
+            .f(alu_res_arr[alu_i]),
+            .load_alu(load_alu[alu_i]),
+            .ready(load_cdb[alu_i])
         );
     end
 endgenerate

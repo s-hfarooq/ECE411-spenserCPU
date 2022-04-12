@@ -1,4 +1,4 @@
-`include "macros.sv"
+`include "../macros.sv"
 
 import rv32i_types::*;
 import structs::*;
@@ -12,6 +12,7 @@ module cmp_rs (
     // From ROB
     input rv32i_word rob_reg_vals [`RO_BUFFER_ENTRIES],
     input logic rob_commit_arr [`RO_BUFFER_ENTRIES],
+    output logic load_rob,
 
     // From/to CDB
     input cdb_t cdb_vals_i,
@@ -32,6 +33,9 @@ rs_data_t curr_rs_data;
 
 cmp_rs_t [`CMP_RS_SIZE-1:0] cmp_arr;
 logic [`CMP_RS_SIZE-1:0] load_cdb;
+
+// for whatever reason we got a multiple drivers error when writing directly to alu_arr[i].value
+rv32i_word [`CMP_RS_SIZE-1:0] cmp_res_arr;
 
 always_ff @(posedge clk) begin
     // Can probably make more efficient - worry about later
@@ -55,7 +59,7 @@ always_ff @(posedge clk) begin
 
         curr_rs_data.valid <= 1'b0;
         curr_rs_data.busy <= 1'b0;
-        curr_rs_data.opcode <= cmp_o.op;
+        curr_rs_data.opcode <= rv32i_opcode'(cmp_o.op);
         curr_rs_data.cmp_op <= cmp_o.op;
         curr_rs_data.rs1.valid <= rob_commit_arr[cmp_o.qj];
         curr_rs_data.rs1.value <= rob_reg_vals[cmp_o.qj]; // need to get value from ROB (only if tag != 0)
@@ -81,9 +85,7 @@ always_ff @(posedge clk) begin
             cmp_rs_full <= 1'b1;
         end
     end
-end
-
-always_ff @(posedge clk) begin: set_data_vals
+    
     // if is_valid sent as input, iterate though all items and set valid bit high for rs1/rs2
 
     // Maybe make generate - more efficient? 
@@ -116,7 +118,7 @@ always_ff @(posedge clk) begin: set_data_vals
             cmp_arr[i].qj <= data[i].rs1.tag;
             cmp_arr[i].qj <= data[i].rs2.tag;
             cmp_arr[i].op <= data[i].cmp_op;
-            cmp_arr[i].rob_idx <= data[i].res.idx;
+            cmp_arr[i].rob_idx <= data[i].res.tag;
 
             load_cmp[i] <= 1'b1;
 
@@ -125,7 +127,7 @@ always_ff @(posedge clk) begin: set_data_vals
 
         // Send data to CDB
         if(load_cdb[i] == 1'b1) begin
-            cdb_cmp_vals_o[i].value <= alu_arr[i].result;
+            cdb_cmp_vals_o[i].value <= cmp_res_arr[i];
             cdb_cmp_vals_o[i].tag <= cmp_arr[i].rob_idx;
         end
     end
@@ -134,15 +136,15 @@ end
 // Instantiate CMP's
 genvar cmp_i;
 generate
-    for(cmp_i = 0; cmp_i < `CMP_RS_SIZE; ++cmp_i) begin
+    for(cmp_i = 0; cmp_i < `CMP_RS_SIZE; ++cmp_i) begin : generate_cmp
         cmp cmp_instantiation(
             .clk(clk),
             .cmpop(cmp_arr[cmp_i].op),
             .a(cmp_arr[cmp_i].vj),
             .b(cmp_arr[cmp_i].vk),
-            .f(cmp_arr[cmp_i].result)
-            .load_cmp(load_cmp[i]),
-            .ready(load_cdb[i])
+            .f(cmp_res_arr[cmp_i])
+            .load_cmp(load_cmp[cmp_i]),
+            .ready(load_cdb[cmp_i])
         );
     end
 endgenerate

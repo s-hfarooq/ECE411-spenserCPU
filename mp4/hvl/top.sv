@@ -108,21 +108,27 @@ Please refer to tb_itf.sv for more information.
 mp4 dut(
     .clk(itf.clk),
     .rst(itf.rst),
-    .mem_rdata(itf.mem_rdata),
-    .mem_addr(itf.mem_addr),
-    .mem_resp(itf.mem_resp),
-    .mem_read(itf.mem_read),
-    .mem_write(itf.mem_write),
-    .mem_wdata(itf.mem_wdata),
+    // .mem_rdata(itf.mem_rdata),
+    // .mem_addr(itf.mem_addr),
+    // .mem_resp(itf.mem_resp),
+    // .mem_read(itf.mem_read),
+    // .mem_write(itf.mem_write),
+    // .mem_wdata(itf.mem_wdata),
     
     // I-Cache signals
     .inst_read(itf.inst_read),
     .inst_addr(itf.inst_addr), // WHERE DOES THIS CONNECT TO???
     .inst_resp(itf.inst_resp),
-    .inst_rdata(itf.inst_rdata)    // 32-bit instruction
+    .inst_rdata(itf.inst_rdata),    // 32-bit instruction
 
-    // Testing
-    // .i_queue_o()
+    // D-Cache signals
+    .data_read(itf.data_read),
+    .data_write(itf.data_write),
+    .data_mbe(itf.data_mbe),
+    .data_addr(itf.data_addr),
+    .data_wdata(itf.data_wdata),
+    .data_resp(itf.data_resp),
+    .data_rdata(itf.data_rdata)
 );
 
 /***************************** End Instantiation *****************************/

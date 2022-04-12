@@ -3,6 +3,7 @@
 import rv32i_types::*;
 
 module cmp (
+    input clk,
     input branch_funct3_t cmpop,
     input logic [31:0] a, b,
     input logic load_cmp,

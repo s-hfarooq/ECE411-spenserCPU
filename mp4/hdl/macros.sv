@@ -16,6 +16,9 @@
 // alu_reservation_station.sv
 `define ALU_RS_SIZE 4
 
+// cmp_reservation_station.sv
+`define CMP_RS_SIZE 4
+
 // alu_reservation_station.sv
 `define LDST_SIZE 4
 

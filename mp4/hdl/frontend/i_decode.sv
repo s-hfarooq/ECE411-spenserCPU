@@ -32,7 +32,7 @@ module i_decode(
     // To Reorder Buffer
     output logic rob_write,
     output rv32i_word rob_dest, // Tag/address
-    output i_decode_opcode_t op,
+    // output i_decode_opcode_t op,
 
     // From ALU Reservation Station
     input logic alu_rs_full,  // Signal is high if RS is full
@@ -55,19 +55,26 @@ module i_decode(
 
 // i_decode_opcode_t op;
 
+rv32i_word instr_pc;
+logic [2:0] funct3;
+logic [6:0] funct7;
+logic [6:0] opcode;
+logic [31:0] i_imm, s_imm, b_imm, u_imm, j_imm;
+logic rv32i_reg rs1, rs2, rd;
+
 // taken from IR register
-assign op.instr_pc = d_in.pc;
-assign op.funct3 = d_in.instr[14:12];
-assign op.funct7 = d_in.instr[31:25];
-assign op.opcode = rv32i_opcode'(d_in.instr[6:0]);
-assign op.i_imm = {{21{d_in.instr[31]}}, d_in.instr[30:20]};
-assign op.s_imm = {{21{d_in.instr[31]}}, d_in.instr[30:25], d_in.instr[11:7]};
-assign op.b_imm = {{20{d_in.instr[31]}}, d_in.instr[7], d_in.instr[30:25], d_in.instr[11:8], 1'b0};
-assign op.u_imm = {d_in.instr[31:12], 12'h000};
-assign op.j_imm = {{12{d_in.instr[31]}}, d_in.instr[19:12], d_in.instr[20], d_in.instr[30:21], 1'b0};
-assign op.rs1 = d_in.instr[19:15];
-assign op.rs2 = d_in.instr[24:20];
-assign op.rd = d_in.instr[11:7];
+assign instr_pc = d_in.pc;
+assign funct3 = d_in.instr[14:12];
+assign funct7 = d_in.instr[31:25];
+assign opcode = rv32i_opcode'(d_in.instr[6:0]);
+assign i_imm = {{21{d_in.instr[31]}}, d_in.instr[30:20]};
+assign s_imm = {{21{d_in.instr[31]}}, d_in.instr[30:25], d_in.instr[11:7]};
+assign b_imm = {{20{d_in.instr[31]}}, d_in.instr[7], d_in.instr[30:25], d_in.instr[11:8], 1'b0};
+assign u_imm = {d_in.instr[31:12], 12'h000};
+assign j_imm = {{12{d_in.instr[31]}}, d_in.instr[19:12], d_in.instr[20], d_in.instr[30:21], 1'b0};
+assign rs1 = d_in.instr[19:15];
+assign rs2 = d_in.instr[24:20];
+assign rd = d_in.instr[11:7];
 
 load_funct3_t load_funct3;
 store_funct3_t store_funct3;
