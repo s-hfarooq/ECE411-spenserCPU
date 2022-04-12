@@ -8,7 +8,7 @@ module regfile (
 
     // From decoder
     input logic load_tag,
-    input rv32i_reg tag_decoder,
+    input tag_t tag_decoder,
     input rv32i_reg reg_id_decoder,
     // input i_decode_opcode_t op_in,
     input rv32i_reg rs1_i, rs2_i,
