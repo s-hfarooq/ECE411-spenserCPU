@@ -1,4 +1,4 @@
-`include "macros.sv"
+`include "../macros.sv"
 
 import rv32i_types::*;
 import structs::*;
@@ -31,7 +31,7 @@ module i_decode(
 
     // To Reorder Buffer
     output logic rob_write,
-    output rv32i_word rob_dest, // Tag/address
+    // output rv32i_word rob_dest, // Tag/address
     // output i_decode_opcode_t op,
 
     // From ALU Reservation Station

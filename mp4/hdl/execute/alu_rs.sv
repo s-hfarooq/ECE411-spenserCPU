@@ -135,7 +135,7 @@ always_ff @(posedge clk) begin
 
         // Send data to CDB
         if(load_cdb[i] == 1'b1) begin
-            cdb_alu_vals_o[i].value <= alu_rse_arr[i];
+            cdb_alu_vals_o[i].value <= alu_res_arr[i];
             cdb_alu_vals_o[i].tag <= alu_arr[i].rob_idx;
         end
     end

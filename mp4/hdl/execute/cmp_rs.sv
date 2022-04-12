@@ -142,7 +142,7 @@ generate
             .cmpop(cmp_arr[cmp_i].op),
             .a(cmp_arr[cmp_i].vj),
             .b(cmp_arr[cmp_i].vk),
-            .f(cmp_res_arr[cmp_i])
+            .f(cmp_res_arr[cmp_i]),
             .load_cmp(load_cmp[cmp_i]),
             .ready(load_cdb[cmp_i])
         );

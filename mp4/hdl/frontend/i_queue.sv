@@ -5,7 +5,7 @@
         Instruction
 */
 
-`include "macros.sv"
+`include "../macros.sv"
 
 import rv32i_types::*;
 import structs::*;
