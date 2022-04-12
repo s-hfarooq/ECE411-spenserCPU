@@ -39,7 +39,7 @@ cmp_rs_t [`CMP_RS_SIZE-1:0] cmp_arr;
 logic [`CMP_RS_SIZE-1:0] load_cdb;
 
 // for whatever reason we got a multiple drivers error when writing directly to alu_arr[i].value
-rv32i_word [`CMP_RS_SIZE-1:0] cmp_res_arr;
+logic [`CMP_RS_SIZE-1:0] cmp_res_arr;
 
 always_ff @(posedge clk) begin
     // Can probably make more efficient - worry about later
