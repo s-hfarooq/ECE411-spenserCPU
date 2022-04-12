@@ -7,7 +7,6 @@ module cmp_rs (
     input logic clk,
     input logic rst,
     input logic flush,
-    input logic load,
 
     // From ROB
     input rv32i_word rob_reg_vals [`RO_BUFFER_ENTRIES],
@@ -54,7 +53,7 @@ always_ff @(posedge clk) begin
 
         // load_rob <= 1'b0;
     end 
-    else if(load) begin
+    else if(cmp_o.valid) begin
         // load data from decoder / ROB
 
         curr_rs_data.valid <= 1'b0;
@@ -128,7 +127,7 @@ always_ff @(posedge clk) begin
         // Send data to CDB
         if(load_cdb[i] == 1'b1) begin
             cdb_cmp_vals_o[i].value <= cmp_res_arr[i];
-            cdb_cmp_vals_o[i].tag <= cmp_arr[i].rob_idx;
+            cdb_cmp_vals_o[i].tag <= data[i].res.tag;
         end
     end
 end

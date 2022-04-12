@@ -1,0 +1,1156 @@
+# do fetch_run_msim_rtl_verilog.do
+# if {[file exists rtl_work]} {
+# 	vdel -lib rtl_work -all
+# }
+# vlib rtl_work
+# vmap work rtl_work
+# Model Technology ModelSim - Intel FPGA Edition vmap 10.5b Lib Mapping Utility 2016.10 Oct  5 2016
+# vmap work rtl_work 
+# Copying /software/quartus-std-18.1/modelsim_ase/linuxaloem/../modelsim.ini to modelsim.ini
+# Modifying modelsim.ini
+# 
+# vlog -sv -work work +incdir+/home/tvitkin2/spenserCPU/mp4/hdl {/home/tvitkin2/spenserCPU/mp4/hdl/br_pred.sv}
+# Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 16:47:49 on Apr 07,2022
+# vlog -reportprogress 300 -sv -work work "+incdir+/home/tvitkin2/spenserCPU/mp4/hdl" /home/tvitkin2/spenserCPU/mp4/hdl/br_pred.sv 
+# -- Compiling module br_pred
+# 
+# Top level modules:
+# 	br_pred
+# End time: 16:47:49 on Apr 07,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -sv -work work +incdir+/home/tvitkin2/spenserCPU/mp4/hdl {/home/tvitkin2/spenserCPU/mp4/hdl/rv32i_types.sv}
+# Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 16:47:49 on Apr 07,2022
+# vlog -reportprogress 300 -sv -work work "+incdir+/home/tvitkin2/spenserCPU/mp4/hdl" /home/tvitkin2/spenserCPU/mp4/hdl/rv32i_types.sv 
+# -- Compiling package rv32i_types
+# 
+# Top level modules:
+# 	--none--
+# End time: 16:47:49 on Apr 07,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -sv -work work +incdir+/home/tvitkin2/spenserCPU/mp4/hdl {/home/tvitkin2/spenserCPU/mp4/hdl/pc_reg.sv}
+# Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 16:47:49 on Apr 07,2022
+# vlog -reportprogress 300 -sv -work work "+incdir+/home/tvitkin2/spenserCPU/mp4/hdl" /home/tvitkin2/spenserCPU/mp4/hdl/pc_reg.sv 
+# -- Compiling module pc_register
+# 
+# Top level modules:
+# 	pc_register
+# End time: 16:47:49 on Apr 07,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -sv -work work +incdir+/home/tvitkin2/spenserCPU/mp4/hdl {/home/tvitkin2/spenserCPU/mp4/hdl/structs.sv}
+# Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 16:47:49 on Apr 07,2022
+# vlog -reportprogress 300 -sv -work work "+incdir+/home/tvitkin2/spenserCPU/mp4/hdl" /home/tvitkin2/spenserCPU/mp4/hdl/structs.sv 
+# -- Compiling package structs
+# -- Importing package rv32i_types
+# 
+# Top level modules:
+# 	--none--
+# End time: 16:47:49 on Apr 07,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -sv -work work +incdir+/home/tvitkin2/spenserCPU/mp4/hdl {/home/tvitkin2/spenserCPU/mp4/hdl/mp4.sv}
+# Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 16:47:49 on Apr 07,2022
+# vlog -reportprogress 300 -sv -work work "+incdir+/home/tvitkin2/spenserCPU/mp4/hdl" /home/tvitkin2/spenserCPU/mp4/hdl/mp4.sv 
+# -- Compiling package mp4_sv_unit
+# -- Importing package rv32i_types
+# -- Importing package structs
+# -- Compiling module mp4
+# 
+# Top level modules:
+# 	mp4
+# End time: 16:47:50 on Apr 07,2022, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+# vlog -sv -work work +incdir+/home/tvitkin2/spenserCPU/mp4/hdl {/home/tvitkin2/spenserCPU/mp4/hdl/i_queue.sv}
+# Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 16:47:50 on Apr 07,2022
+# vlog -reportprogress 300 -sv -work work "+incdir+/home/tvitkin2/spenserCPU/mp4/hdl" /home/tvitkin2/spenserCPU/mp4/hdl/i_queue.sv 
+# -- Compiling package i_queue_sv_unit
+# -- Importing package rv32i_types
+# -- Importing package structs
+# -- Compiling module i_queue
+# 
+# Top level modules:
+# 	i_queue
+# End time: 16:47:50 on Apr 07,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -sv -work work +incdir+/home/tvitkin2/spenserCPU/mp4/hdl {/home/tvitkin2/spenserCPU/mp4/hdl/i_fetch.sv}
+# Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 16:47:50 on Apr 07,2022
+# vlog -reportprogress 300 -sv -work work "+incdir+/home/tvitkin2/spenserCPU/mp4/hdl" /home/tvitkin2/spenserCPU/mp4/hdl/i_fetch.sv 
+# -- Compiling package i_fetch_sv_unit
+# -- Importing package rv32i_types
+# -- Importing package structs
+# -- Compiling module i_fetch
+# 
+# Top level modules:
+# 	i_fetch
+# End time: 16:47:50 on Apr 07,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# 
+# vlog -sv -work work +incdir+/home/tvitkin2/spenserCPU/mp4/hvl {/home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv}
+# Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 16:47:50 on Apr 07,2022
+# vlog -reportprogress 300 -sv -work work "+incdir+/home/tvitkin2/spenserCPU/mp4/hvl" /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv 
+# -- Compiling module magic_memory_dp
+# 
+# Top level modules:
+# 	magic_memory_dp
+# End time: 16:47:50 on Apr 07,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -sv -work work +incdir+/home/tvitkin2/spenserCPU/mp4/hvl {/home/tvitkin2/spenserCPU/mp4/hvl/param_memory.sv}
+# Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 16:47:50 on Apr 07,2022
+# vlog -reportprogress 300 -sv -work work "+incdir+/home/tvitkin2/spenserCPU/mp4/hvl" /home/tvitkin2/spenserCPU/mp4/hvl/param_memory.sv 
+# -- Compiling module ParamMemory
+# ** Warning: /home/tvitkin2/spenserCPU/mp4/hvl/param_memory.sv(25): (vlog-2244) Variable 'iteration' is implicitly static. You must either explicitly declare it as static or automatic
+# or remove the initialization in the declaration of variable.
+# 
+# Top level modules:
+# 	ParamMemory
+# End time: 16:47:50 on Apr 07,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 1
+# vlog -sv -work work +incdir+/home/tvitkin2/spenserCPU/mp4/hvl {/home/tvitkin2/spenserCPU/mp4/hvl/rvfi_itf.sv}
+# Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 16:47:50 on Apr 07,2022
+# vlog -reportprogress 300 -sv -work work "+incdir+/home/tvitkin2/spenserCPU/mp4/hvl" /home/tvitkin2/spenserCPU/mp4/hvl/rvfi_itf.sv 
+# -- Compiling interface rvfi_itf
+# 
+# Top level modules:
+# 	--none--
+# End time: 16:47:50 on Apr 07,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -vlog01compat -work work +incdir+/home/tvitkin2/spenserCPU/mp4/hvl {/home/tvitkin2/spenserCPU/mp4/hvl/rvfimon.v}
+# Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 16:47:50 on Apr 07,2022
+# vlog -reportprogress 300 -vlog01compat -work work "+incdir+/home/tvitkin2/spenserCPU/mp4/hvl" /home/tvitkin2/spenserCPU/mp4/hvl/rvfimon.v 
+# -- Compiling module riscv_formal_monitor_rv32imc
+# -- Compiling module riscv_formal_monitor_rv32imc_rob
+# -- Compiling module riscv_formal_monitor_rv32imc_isa_spec
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_add
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_addi
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_and
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_andi
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_auipc
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_beq
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_bge
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_bgeu
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_blt
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_bltu
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_bne
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_c_add
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_c_addi
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_c_addi16sp
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_c_addi4spn
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_c_and
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_c_andi
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_c_beqz
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_c_bnez
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_c_j
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_c_jal
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_c_jalr
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_c_jr
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_c_li
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_c_lui
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_c_lw
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_c_lwsp
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_c_mv
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_c_or
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_c_slli
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_c_srai
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_c_srli
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_c_sub
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_c_sw
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_c_swsp
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_c_xor
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_div
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_divu
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_jal
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_jalr
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_lb
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_lbu
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_lh
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_lhu
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_lui
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_lw
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_mul
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_mulh
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_mulhsu
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_mulhu
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_or
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_ori
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_rem
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_remu
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_sb
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_sh
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_sll
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_slli
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_slt
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_slti
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_sltiu
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_sltu
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_sra
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_srai
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_srl
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_srli
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_sub
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_sw
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_xor
+# -- Compiling module riscv_formal_monitor_rv32imc_insn_xori
+# 
+# Top level modules:
+# 	riscv_formal_monitor_rv32imc
+# End time: 16:47:51 on Apr 07,2022, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+# vlog -sv -work work +incdir+/home/tvitkin2/spenserCPU/mp4/hvl {/home/tvitkin2/spenserCPU/mp4/hvl/shadow_memory.sv}
+# Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 16:47:51 on Apr 07,2022
+# vlog -reportprogress 300 -sv -work work "+incdir+/home/tvitkin2/spenserCPU/mp4/hvl" /home/tvitkin2/spenserCPU/mp4/hvl/shadow_memory.sv 
+# -- Compiling module shadow_memory
+# 
+# Top level modules:
+# 	shadow_memory
+# End time: 16:47:52 on Apr 07,2022, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 0
+# vlog -sv -work work +incdir+/home/tvitkin2/spenserCPU/mp4/hvl {/home/tvitkin2/spenserCPU/mp4/hvl/source_tb.sv}
+# Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 16:47:52 on Apr 07,2022
+# vlog -reportprogress 300 -sv -work work "+incdir+/home/tvitkin2/spenserCPU/mp4/hvl" /home/tvitkin2/spenserCPU/mp4/hvl/source_tb.sv 
+# -- Compiling interface tb_itf
+# -- Compiling module source_tb
+# 
+# Top level modules:
+# 	source_tb
+# End time: 16:47:52 on Apr 07,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -sv -work work +incdir+/home/tvitkin2/spenserCPU/mp4/hvl {/home/tvitkin2/spenserCPU/mp4/hvl/tb_itf.sv}
+# Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 16:47:52 on Apr 07,2022
+# vlog -reportprogress 300 -sv -work work "+incdir+/home/tvitkin2/spenserCPU/mp4/hvl" /home/tvitkin2/spenserCPU/mp4/hvl/tb_itf.sv 
+# -- Compiling interface tb_itf
+# 
+# Top level modules:
+# 	--none--
+# End time: 16:47:52 on Apr 07,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vlog -sv -work work +incdir+/home/tvitkin2/spenserCPU/mp4/hvl {/home/tvitkin2/spenserCPU/mp4/hvl/top.sv}
+# Model Technology ModelSim - Intel FPGA Edition vlog 10.5b Compiler 2016.10 Oct  5 2016
+# Start time: 16:47:52 on Apr 07,2022
+# vlog -reportprogress 300 -sv -work work "+incdir+/home/tvitkin2/spenserCPU/mp4/hvl" /home/tvitkin2/spenserCPU/mp4/hvl/top.sv 
+# -- Compiling module mp4_tb
+# 
+# Top level modules:
+# 	mp4_tb
+# End time: 16:47:52 on Apr 07,2022, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# 
+# vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L arriaii_hssi_ver -L arriaii_pcie_hip_ver -L arriaii_ver -L rtl_work -L work -voptargs="+acc"  mp4_tb
+# vsim -t 1ps -L altera_ver -L lpm_ver -L sgate_ver -L altera_mf_ver -L altera_lnsim_ver -L arriaii_hssi_ver -L arriaii_pcie_hip_ver -L arriaii_ver -L rtl_work -L work -voptargs=""+acc"" mp4_tb 
+# Start time: 16:47:52 on Apr 07,2022
+# Loading sv_std.std
+# Loading work.mp4_tb
+# Loading work.tb_itf
+# Loading work.rvfi_itf
+# Loading work.source_tb
+# Loading work.rv32i_types
+# Loading work.structs
+# Loading work.mp4_sv_unit
+# Loading work.mp4
+# Loading work.i_fetch_sv_unit
+# Loading work.i_fetch
+# Loading work.pc_register
+# Loading work.br_pred
+# Loading work.i_queue_sv_unit
+# Loading work.i_queue
+# Loading work.magic_memory_dp
+# Loading work.riscv_formal_monitor_rv32imc
+# Loading work.riscv_formal_monitor_rv32imc_isa_spec
+# Loading work.riscv_formal_monitor_rv32imc_insn_add
+# Loading work.riscv_formal_monitor_rv32imc_insn_addi
+# Loading work.riscv_formal_monitor_rv32imc_insn_and
+# Loading work.riscv_formal_monitor_rv32imc_insn_andi
+# Loading work.riscv_formal_monitor_rv32imc_insn_auipc
+# Loading work.riscv_formal_monitor_rv32imc_insn_beq
+# Loading work.riscv_formal_monitor_rv32imc_insn_bge
+# Loading work.riscv_formal_monitor_rv32imc_insn_bgeu
+# Loading work.riscv_formal_monitor_rv32imc_insn_blt
+# Loading work.riscv_formal_monitor_rv32imc_insn_bltu
+# Loading work.riscv_formal_monitor_rv32imc_insn_bne
+# Loading work.riscv_formal_monitor_rv32imc_insn_c_add
+# Loading work.riscv_formal_monitor_rv32imc_insn_c_addi
+# Loading work.riscv_formal_monitor_rv32imc_insn_c_addi16sp
+# Loading work.riscv_formal_monitor_rv32imc_insn_c_addi4spn
+# Loading work.riscv_formal_monitor_rv32imc_insn_c_and
+# Loading work.riscv_formal_monitor_rv32imc_insn_c_andi
+# Loading work.riscv_formal_monitor_rv32imc_insn_c_beqz
+# Loading work.riscv_formal_monitor_rv32imc_insn_c_bnez
+# Loading work.riscv_formal_monitor_rv32imc_insn_c_j
+# Loading work.riscv_formal_monitor_rv32imc_insn_c_jal
+# Loading work.riscv_formal_monitor_rv32imc_insn_c_jalr
+# Loading work.riscv_formal_monitor_rv32imc_insn_c_jr
+# Loading work.riscv_formal_monitor_rv32imc_insn_c_li
+# Loading work.riscv_formal_monitor_rv32imc_insn_c_lui
+# Loading work.riscv_formal_monitor_rv32imc_insn_c_lw
+# Loading work.riscv_formal_monitor_rv32imc_insn_c_lwsp
+# Loading work.riscv_formal_monitor_rv32imc_insn_c_mv
+# Loading work.riscv_formal_monitor_rv32imc_insn_c_or
+# Loading work.riscv_formal_monitor_rv32imc_insn_c_slli
+# Loading work.riscv_formal_monitor_rv32imc_insn_c_srai
+# Loading work.riscv_formal_monitor_rv32imc_insn_c_srli
+# Loading work.riscv_formal_monitor_rv32imc_insn_c_sub
+# Loading work.riscv_formal_monitor_rv32imc_insn_c_sw
+# Loading work.riscv_formal_monitor_rv32imc_insn_c_swsp
+# Loading work.riscv_formal_monitor_rv32imc_insn_c_xor
+# Loading work.riscv_formal_monitor_rv32imc_insn_div
+# Loading work.riscv_formal_monitor_rv32imc_insn_divu
+# Loading work.riscv_formal_monitor_rv32imc_insn_jal
+# Loading work.riscv_formal_monitor_rv32imc_insn_jalr
+# Loading work.riscv_formal_monitor_rv32imc_insn_lb
+# Loading work.riscv_formal_monitor_rv32imc_insn_lbu
+# Loading work.riscv_formal_monitor_rv32imc_insn_lh
+# Loading work.riscv_formal_monitor_rv32imc_insn_lhu
+# Loading work.riscv_formal_monitor_rv32imc_insn_lui
+# Loading work.riscv_formal_monitor_rv32imc_insn_lw
+# Loading work.riscv_formal_monitor_rv32imc_insn_mul
+# Loading work.riscv_formal_monitor_rv32imc_insn_mulh
+# Loading work.riscv_formal_monitor_rv32imc_insn_mulhsu
+# Loading work.riscv_formal_monitor_rv32imc_insn_mulhu
+# Loading work.riscv_formal_monitor_rv32imc_insn_or
+# Loading work.riscv_formal_monitor_rv32imc_insn_ori
+# Loading work.riscv_formal_monitor_rv32imc_insn_rem
+# Loading work.riscv_formal_monitor_rv32imc_insn_remu
+# Loading work.riscv_formal_monitor_rv32imc_insn_sb
+# Loading work.riscv_formal_monitor_rv32imc_insn_sh
+# Loading work.riscv_formal_monitor_rv32imc_insn_sll
+# Loading work.riscv_formal_monitor_rv32imc_insn_slli
+# Loading work.riscv_formal_monitor_rv32imc_insn_slt
+# Loading work.riscv_formal_monitor_rv32imc_insn_slti
+# Loading work.riscv_formal_monitor_rv32imc_insn_sltiu
+# Loading work.riscv_formal_monitor_rv32imc_insn_sltu
+# Loading work.riscv_formal_monitor_rv32imc_insn_sra
+# Loading work.riscv_formal_monitor_rv32imc_insn_srai
+# Loading work.riscv_formal_monitor_rv32imc_insn_srl
+# Loading work.riscv_formal_monitor_rv32imc_insn_srli
+# Loading work.riscv_formal_monitor_rv32imc_insn_sub
+# Loading work.riscv_formal_monitor_rv32imc_insn_sw
+# Loading work.riscv_formal_monitor_rv32imc_insn_xor
+# Loading work.riscv_formal_monitor_rv32imc_insn_xori
+# Loading work.riscv_formal_monitor_rv32imc_rob
+# ** Warning: (vsim-3015) /home/tvitkin2/spenserCPU/mp4/hvl/source_tb.sv(70): [PCDPC] - Port size (5) does not match connection size (32) for port 'rvfi_rd_addr'. The port definition is at: /home/tvitkin2/spenserCPU/mp4/hvl/rvfimon.v(19).
+#    Time: 0 ps  Iteration: 0  Instance: /mp4_tb/tb/genblk3/monitor File: /home/tvitkin2/spenserCPU/mp4/hvl/rvfimon.v
+# ** Warning: (vsim-3017) /home/tvitkin2/spenserCPU/mp4/hvl/top.sv(108): [TFMPC] - Too few port connections. Expected 7, found 6.
+#    Time: 0 ps  Iteration: 0  Instance: /mp4_tb/dut File: /home/tvitkin2/spenserCPU/mp4/hdl/mp4.sv
+# ** Warning: (vsim-3722) /home/tvitkin2/spenserCPU/mp4/hvl/top.sv(108): [TFMPC] - Missing connection for port 'inst_rdata_o'.
+# 
+# add wave *
+# view structure
+# .main_pane.structure.interior.cs.body.struct
+# view signals
+# .main_pane.objects.interior.cs.body.tree
+# run 1000 ns
+# Compilation Successful
+# ** Warning: (vsim-7) Failed to open readmem file "memory.lst" in read mode.
+# No such file or directory. (errno = ENOENT)    : /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(20)
+#    Time: 0 ps  Iteration: 0  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 10 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 10 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 10 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 10 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 20 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 20 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 20 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 20 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 30 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 30 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 30 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 30 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 40 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 40 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 40 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 40 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 50 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 50 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 50 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 50 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 60 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 60 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 60 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 60 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 70 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 70 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 70 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 70 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 80 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 80 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 80 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 80 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 90 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 90 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 90 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 90 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 100 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 100 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 100 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 100 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 110 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 110 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 110 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 110 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 120 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 120 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 120 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 120 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 130 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 130 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 130 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 130 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 140 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 140 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 140 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 140 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 150 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 150 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 150 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 150 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 160 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 160 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 160 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 160 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 170 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 170 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 170 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 170 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 180 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 180 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 180 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 180 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 190 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 190 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 190 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 190 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 200 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 200 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 200 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 200 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 210 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 210 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 210 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 210 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 220 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 220 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 220 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 220 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 230 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 230 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 230 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 230 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 240 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 240 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 240 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 240 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 250 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 250 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 250 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 250 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 260 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 260 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 260 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 260 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 270 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 270 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 270 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 270 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 280 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 280 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 280 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 280 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 290 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 290 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 290 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 290 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 300 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 300 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 300 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 300 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 310 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 310 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 310 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 310 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 320 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 320 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 320 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 320 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 330 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 330 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 330 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 330 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 340 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 340 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 340 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 340 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 350 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 350 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 350 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 350 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 360 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 360 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 360 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 360 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 370 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 370 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 370 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 370 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 380 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 380 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 380 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 380 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 390 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 390 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 390 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 390 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 400 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 400 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 400 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 400 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 410 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 410 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 410 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 410 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 420 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 420 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 420 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 420 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 430 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 430 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 430 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 430 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 440 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 440 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 440 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 440 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 450 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 450 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 450 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 450 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 460 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 460 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 460 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 460 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 470 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 470 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 470 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 470 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 480 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 480 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 480 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 480 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 490 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 490 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 490 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 490 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 500 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 500 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 500 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 500 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 510 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 510 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 510 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 510 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 520 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 520 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 520 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 520 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 530 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 530 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 530 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 530 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 540 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 540 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 540 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 540 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 550 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 550 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 550 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 550 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 560 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 560 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 560 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 560 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 570 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 570 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 570 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 570 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 580 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 580 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 580 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 580 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 590 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 590 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 590 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 590 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 600 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 600 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 600 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 600 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 610 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 610 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 610 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 610 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 620 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 620 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 620 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 620 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 630 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 630 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 630 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 630 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 640 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 640 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 640 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 640 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 650 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 650 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 650 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 650 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 660 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 660 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 660 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 660 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 670 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 670 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 670 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 670 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 680 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 680 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 680 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 680 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 690 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 690 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 690 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 690 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 700 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 700 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 700 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 700 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 710 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 710 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 710 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 710 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 720 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 720 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 720 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 720 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 730 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 730 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 730 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 730 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 740 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 740 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 740 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 740 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 750 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 750 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 750 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 750 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 760 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 760 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 760 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 760 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 770 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 770 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 770 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 770 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 780 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 780 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 780 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 780 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 790 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 790 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 790 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 790 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 800 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 800 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 800 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 800 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 810 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 810 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 810 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 810 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 820 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 820 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 820 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 820 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 830 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 830 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 830 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 830 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 840 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 840 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 840 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 840 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 850 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 850 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 850 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 850 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 860 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 860 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 860 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 860 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 870 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 870 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 870 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 870 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 880 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 880 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 880 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 880 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 890 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 890 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 890 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 890 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 900 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 900 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 900 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 900 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 910 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 910 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 910 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 910 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 920 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 920 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 920 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 920 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 930 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 930 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 930 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 930 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 940 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 940 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 940 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 940 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 950 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 950 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 950 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 950 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 960 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 960 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 960 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 960 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 970 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 970 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 970 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 970 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 980 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 980 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 980 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 980 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 990 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 990 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 990 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 990 ns  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 1 us  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 1 us  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 1 us  Iteration: 2  Instance: /mp4_tb/tb/memory/mem
+# ** Error (suppressible): (vsim-8005) /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv(28): Assoc. array key 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' must not contain X's or Z's.
+#    Time: 1 us  Iteration: 2  Instance: /mp4_tb/tb/memory/mem

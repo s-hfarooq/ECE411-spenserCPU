@@ -10,16 +10,18 @@ import rv32i_types::*;
 //     rv32i_word dest;
 // } ldst_data_t;
 
+typedef logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] tag_t;
+
 typedef struct packed {
     logic type_of_inst; // 0 = load, 1 = store
     rv32i_word vj;
     rv32i_word vk;
-    rv32i_word qj;
-    rv32i_word qk;
+    tag_t qj;
+    tag_t qk;
     rv32i_word addr;
     // logic op; // Renamed as type_of_inst
     logic [2:0] funct;
-    logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] tag;
+    tag_t tag;
 } lsb_t;
 
 typedef struct packed {
@@ -49,7 +51,7 @@ typedef struct packed {
 } rob_reg_data_t;
 
 typedef struct packed {
-    logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] entry_num;
+    tag_t entry_num;
     // logic busy;        // do we need this?
     // logic can_commit;
     logic valid;
@@ -59,15 +61,17 @@ typedef struct packed {
     rob_reg_data_t reg_data;
 } rob_values_t;
 
-typedef struct {
-    rob_values_t entry_data [(`RO_BUFFER_ENTRIES)-1:0];
-} rob_arr_t;
+// typedef struct {
+//     rob_values_t entry_data [(`RO_BUFFER_ENTRIES)-1:0];
+// } rob_arr_t;
+
+typedef rob_values_t[(`RO_BUFFER_ENTRIES)-1:0] rob_arr_t;
 
 typedef struct packed {
     logic valid;
     // logic [$clog2(RO_BUFFER_ENTRIES)-1:0] idx;
     rv32i_word value;
-    logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] tag;
+    tag_t tag;
 } rs_reg_t;
 
 // passing data in and out of the reservation station
@@ -92,7 +96,7 @@ typedef struct packed { // when alu_rs needs to send data to the alu, it uses th
     rv32i_word qk;
     rv32i_word result;
     alu_ops op;
-    logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] rob_idx;
+    tag_t rob_idx;
 } alu_rs_t;
 
 typedef struct packed { // when alu_rs needs to send data to the alu, it uses this struct
@@ -106,7 +110,7 @@ typedef struct packed { // when alu_rs needs to send data to the alu, it uses th
     rv32i_word b_imm;
     rv32i_word result;
     branch_funct3_t op;
-    logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] rob_idx;
+    tag_t rob_idx;
 } cmp_rs_t;
 
 // typedef struct packed {
@@ -121,14 +125,14 @@ typedef struct packed { // when alu_rs needs to send data to the alu, it uses th
 typedef struct packed {
     rv32i_word vj_out;
     rv32i_word vk_out;
-    logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] qi_out;
-    logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] qj_out;
-    logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] qk_out;
+    tag_t qi_out;
+    tag_t qj_out;
+    tag_t qk_out;
 } regfile_data_out_t;
 
 typedef struct packed {
     rv32i_word value;
-    logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] tag;
+    tag_t tag;
 } cdb_entry_t;
 
 typedef cdb_entry_t[`NUM_CDB_ENTRIES-1:0] cdb_t;

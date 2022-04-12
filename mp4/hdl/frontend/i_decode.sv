@@ -93,16 +93,16 @@ always_comb begin
     // if source register is not reg0, and if ROB has the value for the
     // source register, use that value for the source operand, otherwise
     // use the value from the regfile.
-    if (regfile_entry_i.qj_out != 0 && rob_in.entry_data[regfile_entry_i.qj_out].reg_data.can_commit) begin
-        vj_o = rob_in.entry_data[regfile_entry_i.qj_out].reg_data.value;
+    if (regfile_entry_i.qj_out != 0 && rob_in[regfile_entry_i.qj_out].reg_data.can_commit) begin
+        vj_o = rob_in[regfile_entry_i.qj_out].reg_data.value;
         qj_o = 3'b000;
     end else begin
         vj_o = regfile_entry_i.vj_out;
         qj_o = regfile_entry_i.qj_out;
     end
 
-    if (regfile_entry_i.qk_out != 0 && rob_in.entry_data[regfile_entry_i.qk_out].reg_data.can_commit) begin
-        vk_o = rob_in.entry_data[regfile_entry_i.qk_out].reg_data.value;
+    if (regfile_entry_i.qk_out != 0 && rob_in[regfile_entry_i.qk_out].reg_data.can_commit) begin
+        vk_o = rob_in[regfile_entry_i.qk_out].reg_data.value;
         qk_o = 3'b000;
     end else begin
         vk_o = regfile_entry_i.vk_out;
@@ -189,6 +189,8 @@ always_ff @ (posedge clk) begin
                     cmp_o.vk <= vk_o;
                     cmp_o.qj <= qj_o;
                     cmp_o.qk <= qk_o;
+                    cmp_o.pc <= instr_pc;
+                    cmp_o.b_imm <= b_imm;
                     cmp_o.op <= branch_funct3;
                     cmp_o.rob_idx <= rob_free_tag;
                     rob_write <= 1'b1;

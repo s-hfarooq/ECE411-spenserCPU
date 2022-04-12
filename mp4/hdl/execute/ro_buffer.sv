@@ -15,13 +15,9 @@ module ro_buffer (
     input i_decode_opcode_t input_i,
     // input rv32i_word instr_pc_in,
 
-    // From reservation station
-    input rv32i_word value_in_reg,
-
     // To decoder
     output rob_arr_t rob_arr_o,
     output logic [$clog2(`RO_BUFFER_ENTRIES):0] rob_free_tag,
-    output rv32i_reg reg_o,
     output logic empty,
     output logic full,
 
@@ -35,8 +31,21 @@ module ro_buffer (
     output logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] head_tag
 );
 
-// need to fix entry_num size
-rob_values_t rob_arr [`RO_BUFFER_ENTRIES-1:0];
+rob_arr_t rob_arr;
+assign rob_arr_o = rob_arr;
+
+// Set outputs to decoder equal to the ROB data
+// always_comb begin
+//     for (int i = 0; i < `RO_BUFFER_ENTRIES; ++i) begin
+//         for (int j = 0; j < `RO_BUFFER_ENTRIES; ++j) begin
+//             if(rob_arr[i].valid == 1'b1) begin // entry is being used in rob
+//                 rob_arr_o[i] = rob_arr[j];
+//             end else begin
+//                 rob_arr_o.reg_data.can_commit = 1'b0;
+//             end
+//         end
+//     end
+// end
 
 // Head and tail pointers
 logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] head_ptr = {$clog2(`RO_BUFFER_ENTRIES){1'b0}};
@@ -88,8 +97,10 @@ always_ff @ (posedge clk) begin
                 rob_arr[tail_ptr].op <= input_i;
                 rob_arr[tail_ptr].entry_num <= counter;
                 rob_arr[tail_ptr].reg_data.can_commit <= 1'b0;
+
+                // wait for computation
                 rob_arr[tail_ptr].valid <= 1'b1;
-                rob_arr[tail_ptr].reg_data.value <= value_in_reg;
+                rob_arr[tail_ptr].reg_data.value <= 32'b0;
                 // rob_arr[tail_ptr].op.instr_pc <= instr_pc_in;
 
                 // Entry 0 is reserved

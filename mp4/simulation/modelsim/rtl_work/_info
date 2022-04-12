@@ -8,308 +8,2470 @@ z2
 !i10f 100
 cModel Technology
 Z0 d/home/tvitkin2/spenserCPU/mp4/simulation/modelsim
-Xalumux
+valu
 Z1 DXx6 sv_std 3 std 0 22 AD7iAPLo6nTIKk<N0eo=D3
-Z2 !s110 1648510995
-!i10b 1
-!s100 `R?HO[I_TJP]3QNCE;?2@2
-I[[UZP@BoJYoofN3LhZIeU3
-V[[UZP@BoJYoofN3LhZIeU3
-S1
-R0
-Z3 w1648507545
-Z4 8/home/tvitkin2/spenserCPU/mp4/hdl/rv32i_mux_types.sv
-Z5 F/home/tvitkin2/spenserCPU/mp4/hdl/rv32i_mux_types.sv
-L0 23
-Z6 OV;L;10.5b;63
+Z2 DXx4 work 11 rv32i_types 0 22 Rlidz3GT1O79EUYHKeodV1
+DXx4 work 11 alu_sv_unit 0 22 Gz<ZgJJ2<4E1[0^jcCFKf2
+Z3 VDg1SIo80bB@j0V0VzS_@n1
 r1
 !s85 0
 31
-Z7 !s108 1648510995.000000
-Z8 !s107 /home/tvitkin2/spenserCPU/mp4/hdl/rv32i_mux_types.sv|
-Z9 !s90 -reportprogress|300|-sv|-work|work|+incdir+/home/tvitkin2/spenserCPU/mp4/hdl|/home/tvitkin2/spenserCPU/mp4/hdl/rv32i_mux_types.sv|
+!i10b 1
+!s100 `AIHDRNEM2SS2Eje1I^<31
+I3`BBhUmOa6NYCRD_zbUDf0
+!s105 alu_sv_unit
+S1
+R0
+Z4 w1649738735
+Z5 8/home/tvitkin2/spenserCPU/mp4/hdl/execute/alu.sv
+Z6 F/home/tvitkin2/spenserCPU/mp4/hdl/execute/alu.sv
+L0 5
+Z7 OV;L;10.5b;63
+Z8 !s108 1649790549.000000
+Z9 !s107 /home/tvitkin2/spenserCPU/mp4/hdl/execute/alu.sv|
+Z10 !s90 -reportprogress|300|-sv|-work|work|+incdir+/home/tvitkin2/spenserCPU/mp4/hdl/execute|/home/tvitkin2/spenserCPU/mp4/hdl/execute/alu.sv|
 !i113 1
-Z10 o-sv -work work
-Z11 !s92 -sv -work work +incdir+/home/tvitkin2/spenserCPU/mp4/hdl
-Z12 tCvgOpt 0
-Xcmpmux
+Z11 o-sv -work work
+Z12 !s92 -sv -work work +incdir+/home/tvitkin2/spenserCPU/mp4/hdl/execute
+Z13 tCvgOpt 0
+valu_rs
 R1
 R2
-!i10b 1
-!s100 NU_djDZ7Fg0igZd04VUa73
-ICgU8<nc`5kEYQm2B72ADM1
-VCgU8<nc`5kEYQm2B72ADM1
-S1
-R0
+Z14 DXx4 work 7 structs 0 22 >cY4O9TgM]E]BnS=`NN3H3
+DXx4 work 14 alu_rs_sv_unit 0 22 GVNfoYd9b?fW1R5aoI49M1
 R3
-R4
-R5
-L0 16
-R6
-r1
-!s85 0
-31
-R7
-R8
-R9
-!i113 1
-R10
-R11
-R12
-Xmarmux
-R1
-R2
-!i10b 1
-!s100 I@31G2`XW7bf`PF5PMM3m3
-Iam6famXOE1IQQdUjMgPcK2
-Vam6famXOE1IQQdUjMgPcK2
-S1
-R0
-R3
-R4
-R5
-L0 9
-R6
-r1
-!s85 0
-31
-R7
-R8
-R9
-!i113 1
-R10
-R11
-R12
-Xpcmux
-R1
-R2
-!i10b 1
-!s100 Md8zm;hP:X7:nTLfK[Hz>0
-IHHJAjD@G`G5iRnII>K^3>3
-VHHJAjD@G`G5iRnII>K^3>3
-S1
-R0
-R3
-R4
-R5
-L0 1
-R6
-r1
-!s85 0
-31
-R7
-R8
-R9
-!i113 1
-R10
-R11
-R12
-Xregfilemux
-R1
-R2
-!i10b 1
-!s100 l^55bbdLcH>RS8>Y]YhWf2
-I3IbZ[Xi6=AXfiB14WmfZB3
-V3IbZ[Xi6=AXfiB14WmfZB3
-S1
-R0
-R3
-R4
-R5
-L0 39
-R6
-r1
-!s85 0
-31
-R7
-R8
-R9
-!i113 1
-R10
-R11
-R12
-vreservation_station
-R1
-Z13 DXx4 work 5 pcmux 0 22 HHJAjD@G`G5iRnII>K^3>3
-Z14 DXx4 work 6 marmux 0 22 am6famXOE1IQQdUjMgPcK2
-Z15 DXx4 work 6 cmpmux 0 22 CgU8<nc`5kEYQm2B72ADM1
-Z16 DXx4 work 6 alumux 0 22 [[UZP@BoJYoofN3LhZIeU3
-Z17 DXx4 work 10 regfilemux 0 22 3IbZ[Xi6=AXfiB14WmfZB3
-Z18 DXx4 work 11 rv32i_types 0 22 TH8319Z22:mkUYbO_NUXF2
-Z19 DXx4 work 7 structs 0 22 Ifanf?SKLzLiH2C3cDRQ11
-DXx4 work 27 reservation_station_sv_unit 0 22 GQoa8E?@Tb`Lj?PO=bR4^3
-Z20 VDg1SIo80bB@j0V0VzS_@n1
 r1
 !s85 0
 31
 !i10b 1
-!s100 O9^o]dc<F5lhkX7?a7fFD1
-I@]PlSmK^mG?>B48D<To=30
-!s105 reservation_station_sv_unit
+!s100 Zi4FA2XKc>@bVDob3z]_:3
+IBO=ONegB0Ye?f19Bc:FhZ1
+!s105 alu_rs_sv_unit
 S1
 R0
-R3
-Z21 8/home/tvitkin2/spenserCPU/mp4/hdl/reservation_station.sv
-Z22 F/home/tvitkin2/spenserCPU/mp4/hdl/reservation_station.sv
-L0 4
-R6
+Z15 w1649787168
+Z16 8/home/tvitkin2/spenserCPU/mp4/hdl/execute/alu_rs.sv
+Z17 F/home/tvitkin2/spenserCPU/mp4/hdl/execute/alu_rs.sv
+L0 6
 R7
-Z23 !s107 /home/tvitkin2/spenserCPU/mp4/hdl/reservation_station.sv|
-Z24 !s90 -reportprogress|300|-sv|-work|work|+incdir+/home/tvitkin2/spenserCPU/mp4/hdl|/home/tvitkin2/spenserCPU/mp4/hdl/reservation_station.sv|
+Z18 !s108 1649790550.000000
+Z19 !s107 /home/tvitkin2/spenserCPU/mp4/hdl/execute/../macros.sv|/home/tvitkin2/spenserCPU/mp4/hdl/execute/alu_rs.sv|
+Z20 !s90 -reportprogress|300|-sv|-work|work|+incdir+/home/tvitkin2/spenserCPU/mp4/hdl/execute|/home/tvitkin2/spenserCPU/mp4/hdl/execute/alu_rs.sv|
 !i113 1
-R10
 R11
 R12
-Xreservation_station_sv_unit
-R1
 R13
+Xalu_rs_sv_unit
+R1
+R2
 R14
-R15
-R16
-R17
-R18
-R19
-VGQoa8E?@Tb`Lj?PO=bR4^3
+VGVNfoYd9b?fW1R5aoI49M1
 r1
 !s85 0
 31
 !i10b 1
-!s100 G;_QaoV4oZ9Q51Skj7HfP2
-IGQoa8E?@Tb`Lj?PO=bR4^3
+!s100 Ji335=VJ_fFA`1d2`>oBd0
+IGVNfoYd9b?fW1R5aoI49M1
 !i103 1
 S1
 R0
-R3
-R21
-R22
-L0 1
-R6
-R7
-R23
-R24
-!i113 1
-R10
-R11
-R12
-vreservation_station_tb
-R1
-R13
-R14
 R15
 R16
 R17
+Z21 F/home/tvitkin2/spenserCPU/mp4/hdl/execute/../macros.sv
+L0 3
+R7
 R18
 R19
-DXx4 work 30 reservation_station_tb_sv_unit 0 22 Q628ITN6Kled@2_5Aj]8n2
 R20
-r1
-!s85 0
-31
-!i10b 1
-!s100 joKii4KP1NdlhX9[L?Pgb2
-IoZGg58W`?C:227fa<nD3]3
-!s105 reservation_station_tb_sv_unit
-S1
-R0
-Z25 w1648510992
-Z26 8/home/tvitkin2/spenserCPU/mp4/hvl/reservation_station_tb.sv
-Z27 F/home/tvitkin2/spenserCPU/mp4/hvl/reservation_station_tb.sv
-L0 9
-R6
-Z28 !s108 1648510996.000000
-Z29 !s107 /home/tvitkin2/spenserCPU/mp4/hvl/reservation_station_tb.sv|
-Z30 !s90 -reportprogress|300|-sv|-work|work|+incdir+/home/tvitkin2/spenserCPU/mp4/hvl|/home/tvitkin2/spenserCPU/mp4/hvl/reservation_station_tb.sv|
 !i113 1
-R10
-Z31 !s92 -sv -work work +incdir+/home/tvitkin2/spenserCPU/mp4/hvl
+R11
 R12
-Xreservation_station_tb_sv_unit
-R1
 R13
-R14
-R15
-R16
-R17
-R18
-R19
-VQ628ITN6Kled@2_5Aj]8n2
+Xalu_sv_unit
+R1
+R2
+VGz<ZgJJ2<4E1[0^jcCFKf2
 r1
 !s85 0
 31
 !i10b 1
-!s100 QClo];Oki70HhhI10D8392
-IQ628ITN6Kled@2_5Aj]8n2
+!s100 ihdinJ:Iz`nhPDA5g0_fb1
+IGz<ZgJJ2<4E1[0^jcCFKf2
 !i103 1
 S1
 R0
-R25
+R4
+R5
+R6
+L0 3
+R7
+R8
+R9
+R10
+!i113 1
+R11
+R12
+R13
+vbr_pred
+R1
+Z22 !s110 1649790548
+!i10b 1
+!s100 zRWh<PH6hNZSG1A0T4Of72
+IQ@4aLd=D5i??XcF;XB;S@3
+R3
+!s105 br_pred_sv_unit
+S1
+R0
+Z23 w1649784750
+8/home/tvitkin2/spenserCPU/mp4/hdl/frontend/br_pred.sv
+F/home/tvitkin2/spenserCPU/mp4/hdl/frontend/br_pred.sv
+L0 1
+R7
+r1
+!s85 0
+31
+Z24 !s108 1649790548.000000
+!s107 /home/tvitkin2/spenserCPU/mp4/hdl/frontend/br_pred.sv|
+!s90 -reportprogress|300|-sv|-work|work|+incdir+/home/tvitkin2/spenserCPU/mp4/hdl/frontend|/home/tvitkin2/spenserCPU/mp4/hdl/frontend/br_pred.sv|
+!i113 1
+R11
+Z25 !s92 -sv -work work +incdir+/home/tvitkin2/spenserCPU/mp4/hdl/frontend
+R13
+vcmp
+R1
+R2
+DXx4 work 11 cmp_sv_unit 0 22 1fD_YB37J2[U`fnnhz[3P1
+R3
+r1
+!s85 0
+31
+!i10b 1
+!s100 :i7MFnz^W1]`djzHBb?mb1
+IZW9DJjFC[ncWj9e85bm2C3
+!s105 cmp_sv_unit
+S1
+R0
+R4
+Z26 8/home/tvitkin2/spenserCPU/mp4/hdl/execute/cmp.sv
+Z27 F/home/tvitkin2/spenserCPU/mp4/hdl/execute/cmp.sv
+L0 5
+R7
+R24
+Z28 !s107 /home/tvitkin2/spenserCPU/mp4/hdl/execute/cmp.sv|
+Z29 !s90 -reportprogress|300|-sv|-work|work|+incdir+/home/tvitkin2/spenserCPU/mp4/hdl/execute|/home/tvitkin2/spenserCPU/mp4/hdl/execute/cmp.sv|
+!i113 1
+R11
+R12
+R13
+vcmp_rs
+R1
+R2
+R14
+DXx4 work 14 cmp_rs_sv_unit 0 22 FUSP7d_?YA_hTS<h3nZED2
+R3
+r1
+!s85 0
+31
+!i10b 1
+!s100 `@b2J9z@V<Q0kf`>LVAmN1
+IikmBEa`o9=NhZ`Zf55fL;1
+!s105 cmp_rs_sv_unit
+S1
+R0
+Z30 w1649787182
+Z31 8/home/tvitkin2/spenserCPU/mp4/hdl/execute/cmp_rs.sv
+Z32 F/home/tvitkin2/spenserCPU/mp4/hdl/execute/cmp_rs.sv
+L0 6
+R7
+R18
+Z33 !s107 /home/tvitkin2/spenserCPU/mp4/hdl/execute/../macros.sv|/home/tvitkin2/spenserCPU/mp4/hdl/execute/cmp_rs.sv|
+Z34 !s90 -reportprogress|300|-sv|-work|work|+incdir+/home/tvitkin2/spenserCPU/mp4/hdl/execute|/home/tvitkin2/spenserCPU/mp4/hdl/execute/cmp_rs.sv|
+!i113 1
+R11
+R12
+R13
+Xcmp_rs_sv_unit
+R1
+R2
+R14
+VFUSP7d_?YA_hTS<h3nZED2
+r1
+!s85 0
+31
+!i10b 1
+!s100 TzNzYbKE@cV2bP9Q]hAL]3
+IFUSP7d_?YA_hTS<h3nZED2
+!i103 1
+S1
+R0
+R30
+R31
+R32
+R21
+L0 3
+R7
+R18
+R33
+R34
+!i113 1
+R11
+R12
+R13
+Xcmp_sv_unit
+R1
+R2
+V1fD_YB37J2[U`fnnhz[3P1
+r1
+!s85 0
+31
+!i10b 1
+!s100 3aUdQNHVdm3Y6dhdNiB:i2
+I1fD_YB37J2[U`fnnhz[3P1
+!i103 1
+S1
+R0
+R4
 R26
 R27
-L0 6
-R6
+L0 3
+R7
+R24
 R28
 R29
-R30
 !i113 1
-R10
-R31
+R11
 R12
-Xrv32i_types
-R1
 R13
-R14
-R15
-R16
-R17
+vi_decode
+R1
 R2
+R14
+DXx4 work 16 i_decode_sv_unit 0 22 [gFEn7Ia9:1ic0m3;46<10
+R3
+r1
+!s85 0
+31
 !i10b 1
-!s100 X1^oT157HnkLgaO;AZY2^2
-ITH8319Z22:mkUYbO_NUXF2
-VTH8319Z22:mkUYbO_NUXF2
+!s100 ^LV5FJS4][mzj>N_AfV@h1
+I<l>nV`@k99<1zalJT;fkM3
+!s105 i_decode_sv_unit
 S1
 R0
-w1647986008
+Z35 w1649785975
+Z36 8/home/tvitkin2/spenserCPU/mp4/hdl/frontend/i_decode.sv
+Z37 F/home/tvitkin2/spenserCPU/mp4/hdl/frontend/i_decode.sv
+L0 6
+R7
+Z38 !s108 1649790551.000000
+Z39 !s107 /home/tvitkin2/spenserCPU/mp4/hdl/frontend/../macros.sv|/home/tvitkin2/spenserCPU/mp4/hdl/frontend/i_decode.sv|
+Z40 !s90 -reportprogress|300|-sv|-work|work|+incdir+/home/tvitkin2/spenserCPU/mp4/hdl/frontend|/home/tvitkin2/spenserCPU/mp4/hdl/frontend/i_decode.sv|
+!i113 1
+R11
+R25
+R13
+Xi_decode_sv_unit
+R1
+R2
+R14
+V[gFEn7Ia9:1ic0m3;46<10
+r1
+!s85 0
+31
+!i10b 1
+!s100 Nz3fLWLHVV@6_Ge`5HDAO3
+I[gFEn7Ia9:1ic0m3;46<10
+!i103 1
+S1
+R0
+R35
+R36
+R37
+Z41 F/home/tvitkin2/spenserCPU/mp4/hdl/frontend/../macros.sv
+L0 3
+R7
+R38
+R39
+R40
+!i113 1
+R11
+R25
+R13
+vi_fetch
+R1
+R2
+R14
+DXx4 work 15 i_fetch_sv_unit 0 22 3[]1D<1J8Dm=Bn^:cVWT]3
+R3
+r1
+!s85 0
+31
+!i10b 1
+!s100 7L:emlBma<POR5f:BZIg_3
+IFof<n=Il=RgH_GdMcEm=J2
+!s105 i_fetch_sv_unit
+S1
+R0
+R4
+Z42 8/home/tvitkin2/spenserCPU/mp4/hdl/frontend/i_fetch.sv
+Z43 F/home/tvitkin2/spenserCPU/mp4/hdl/frontend/i_fetch.sv
+L0 4
+R7
+R18
+Z44 !s107 /home/tvitkin2/spenserCPU/mp4/hdl/frontend/i_fetch.sv|
+Z45 !s90 -reportprogress|300|-sv|-work|work|+incdir+/home/tvitkin2/spenserCPU/mp4/hdl/frontend|/home/tvitkin2/spenserCPU/mp4/hdl/frontend/i_fetch.sv|
+!i113 1
+R11
+R25
+R13
+Xi_fetch_sv_unit
+R1
+R2
+R14
+V3[]1D<1J8Dm=Bn^:cVWT]3
+r1
+!s85 0
+31
+!i10b 1
+!s100 iTldEha7OkdNhOeZ6[_=C3
+I3[]1D<1J8Dm=Bn^:cVWT]3
+!i103 1
+S1
+R0
+R4
+R42
+R43
+L0 1
+R7
+R18
+R44
+R45
+!i113 1
+R11
+R25
+R13
+vi_queue
+R1
+R2
+R14
+DXx4 work 15 i_queue_sv_unit 0 22 nXoXknW:=0eZTQI4oMRaM2
+R3
+r1
+!s85 0
+31
+!i10b 1
+!s100 5eCSK24T:Hd1oIk6E=Y3H0
+IoOoVQiggj=zaP4idafzU01
+!s105 i_queue_sv_unit
+S1
+R0
+R4
+Z46 8/home/tvitkin2/spenserCPU/mp4/hdl/frontend/i_queue.sv
+Z47 F/home/tvitkin2/spenserCPU/mp4/hdl/frontend/i_queue.sv
+Z48 L0 14
+R7
+R18
+Z49 !s107 /home/tvitkin2/spenserCPU/mp4/hdl/frontend/../macros.sv|/home/tvitkin2/spenserCPU/mp4/hdl/frontend/i_queue.sv|
+Z50 !s90 -reportprogress|300|-sv|-work|work|+incdir+/home/tvitkin2/spenserCPU/mp4/hdl/frontend|/home/tvitkin2/spenserCPU/mp4/hdl/frontend/i_queue.sv|
+!i113 1
+R11
+R25
+R13
+Xi_queue_sv_unit
+R1
+R2
+R14
+VnXoXknW:=0eZTQI4oMRaM2
+r1
+!s85 0
+31
+!i10b 1
+!s100 do1WhZ2mek_9eLU0TiMn_1
+InXoXknW:=0eZTQI4oMRaM2
+!i103 1
+S1
+R0
+R23
+R46
+R47
+R41
+L0 10
+R7
+R18
+R49
+R50
+!i113 1
+R11
+R25
+R13
+vload_store_queue
+R1
+R2
+R14
+DXx4 work 24 load_store_queue_sv_unit 0 22 1o>kQ4Uo14HoBZjH43T>T1
+R3
+r1
+!s85 0
+31
+!i10b 1
+!s100 `Q6=z4KYI<A<HdOeb4M5K3
+IYIIOkh3GiabXk;[jcmjbn1
+!s105 load_store_queue_sv_unit
+S1
+R0
+R23
+Z51 8/home/tvitkin2/spenserCPU/mp4/hdl/execute/load_store_queue.sv
+Z52 F/home/tvitkin2/spenserCPU/mp4/hdl/execute/load_store_queue.sv
+L0 6
+R7
+R18
+Z53 !s107 /home/tvitkin2/spenserCPU/mp4/hdl/execute/../macros.sv|/home/tvitkin2/spenserCPU/mp4/hdl/execute/load_store_queue.sv|
+Z54 !s90 -reportprogress|300|-sv|-work|work|+incdir+/home/tvitkin2/spenserCPU/mp4/hdl/execute|/home/tvitkin2/spenserCPU/mp4/hdl/execute/load_store_queue.sv|
+!i113 1
+R11
+R12
+R13
+Xload_store_queue_sv_unit
+R1
+R2
+R14
+V1o>kQ4Uo14HoBZjH43T>T1
+r1
+!s85 0
+31
+!i10b 1
+!s100 2<44Lhjgm5_fWNgQIYE>72
+I1o>kQ4Uo14HoBZjH43T>T1
+!i103 1
+S1
+R0
+R23
+R51
+R52
+R21
+L0 3
+R7
+R18
+R53
+R54
+!i113 1
+R11
+R12
+R13
+vmagic_memory_dp
+R1
+Z55 !s110 1649790551
+!i10b 1
+!s100 @nOl6:m[3D6XThc7@I`?50
+I<b1h<3BFkjB4=FYYQz9701
+R3
+!s105 magic_dual_port_sv_unit
+S1
+R0
+Z56 w1647983247
+8/home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv
+F/home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv
+L0 6
+R7
+r1
+!s85 0
+31
+R38
+!s107 /home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv|
+!s90 -reportprogress|300|-sv|-work|work|+incdir+/home/tvitkin2/spenserCPU/mp4/hvl|/home/tvitkin2/spenserCPU/mp4/hvl/magic_dual_port.sv|
+!i113 1
+R11
+Z57 !s92 -sv -work work +incdir+/home/tvitkin2/spenserCPU/mp4/hvl
+R13
+vmp4
+R1
+R2
+R14
+DXx4 work 11 mp4_sv_unit 0 22 Vh57lmN;6c9>OHFM7j[>e2
+R3
+r1
+!s85 0
+31
+!i10b 1
+!s100 @IC?@E342>n=ki[ENM`Qc3
+IZmKg4A2_Fh1]:TchH8;?a2
+!s105 mp4_sv_unit
+S1
+R0
+Z58 w1649786878
+Z59 8/home/tvitkin2/spenserCPU/mp4/hdl/mp4.sv
+Z60 F/home/tvitkin2/spenserCPU/mp4/hdl/mp4.sv
+L0 6
+R7
+R38
+Z61 !s107 /home/tvitkin2/spenserCPU/mp4/hdl/macros.sv|/home/tvitkin2/spenserCPU/mp4/hdl/mp4.sv|
+Z62 !s90 -reportprogress|300|-sv|-work|work|+incdir+/home/tvitkin2/spenserCPU/mp4/hdl|/home/tvitkin2/spenserCPU/mp4/hdl/mp4.sv|
+!i113 1
+R11
+Z63 !s92 -sv -work work +incdir+/home/tvitkin2/spenserCPU/mp4/hdl
+R13
+Xmp4_sv_unit
+R1
+R2
+R14
+VVh57lmN;6c9>OHFM7j[>e2
+r1
+!s85 0
+31
+!i10b 1
+!s100 lj@JFncHjFC5emzS@z?7`0
+IVh57lmN;6c9>OHFM7j[>e2
+!i103 1
+S1
+R0
+R58
+R59
+R60
+F/home/tvitkin2/spenserCPU/mp4/hdl/macros.sv
+L0 3
+R7
+R38
+R61
+R62
+!i113 1
+R11
+R63
+R13
+vmp4_tb
+R1
+R55
+!i10b 1
+!s100 QFEWcb<PSJC8LoFn2JX=;0
+IZ<m^MKnfJVk1^X4WJU2333
+R3
+!s105 top_sv_unit
+S1
+R0
+R4
+8/home/tvitkin2/spenserCPU/mp4/hvl/top.sv
+F/home/tvitkin2/spenserCPU/mp4/hvl/top.sv
+L0 1
+R7
+r1
+!s85 0
+31
+R38
+!s107 /home/tvitkin2/spenserCPU/mp4/hvl/top.sv|
+!s90 -reportprogress|300|-sv|-work|work|+incdir+/home/tvitkin2/spenserCPU/mp4/hvl|/home/tvitkin2/spenserCPU/mp4/hvl/top.sv|
+!i113 1
+R11
+R57
+R13
+vParamMemory
+R1
+R55
+!i10b 1
+!s100 oD6V^nMnnJ^H_jigmz<Q]3
+IG2?omD`][mLGik95T[`;b2
+R3
+!s105 param_memory_sv_unit
+S1
+R0
+R56
+8/home/tvitkin2/spenserCPU/mp4/hvl/param_memory.sv
+F/home/tvitkin2/spenserCPU/mp4/hvl/param_memory.sv
+L0 3
+R7
+r1
+!s85 0
+31
+R38
+!s107 /home/tvitkin2/spenserCPU/mp4/hvl/param_memory.sv|
+!s90 -reportprogress|300|-sv|-work|work|+incdir+/home/tvitkin2/spenserCPU/mp4/hvl|/home/tvitkin2/spenserCPU/mp4/hvl/param_memory.sv|
+!i113 1
+R11
+R57
+R13
+n@param@memory
+vpc_register
+R1
+Z64 !s110 1649790549
+!i10b 1
+!s100 ;9doVcM`T@e_BHTOnhXk90
+I_fBn0NbMFJ[cIo7DK1g1^1
+R3
+!s105 pc_reg_sv_unit
+S1
+R0
+R4
+8/home/tvitkin2/spenserCPU/mp4/hdl/frontend/pc_reg.sv
+F/home/tvitkin2/spenserCPU/mp4/hdl/frontend/pc_reg.sv
+L0 5
+R7
+r1
+!s85 0
+31
+R8
+!s107 /home/tvitkin2/spenserCPU/mp4/hdl/frontend/../macros.sv|/home/tvitkin2/spenserCPU/mp4/hdl/frontend/pc_reg.sv|
+!s90 -reportprogress|300|-sv|-work|work|+incdir+/home/tvitkin2/spenserCPU/mp4/hdl/frontend|/home/tvitkin2/spenserCPU/mp4/hdl/frontend/pc_reg.sv|
+!i113 1
+R11
+R25
+R13
+vregfile
+R1
+R2
+R14
+DXx4 work 15 regfile_sv_unit 0 22 U5;8S1@Z1o6:kBID?zOYA2
+R3
+r1
+!s85 0
+31
+!i10b 1
+!s100 ^]ShZ9P?zNSE=SBl5BdLS0
+I?PEF`OZ]hCUfEdkCBEj`e2
+!s105 regfile_sv_unit
+S1
+R0
+R23
+Z65 8/home/tvitkin2/spenserCPU/mp4/hdl/execute/regfile.sv
+Z66 F/home/tvitkin2/spenserCPU/mp4/hdl/execute/regfile.sv
+L0 4
+R7
+R8
+Z67 !s107 /home/tvitkin2/spenserCPU/mp4/hdl/execute/regfile.sv|
+Z68 !s90 -reportprogress|300|-sv|-work|work|+incdir+/home/tvitkin2/spenserCPU/mp4/hdl/execute|/home/tvitkin2/spenserCPU/mp4/hdl/execute/regfile.sv|
+!i113 1
+R11
+R12
+R13
+Xregfile_sv_unit
+R1
+R2
+R14
+VU5;8S1@Z1o6:kBID?zOYA2
+r1
+!s85 0
+31
+!i10b 1
+!s100 mWeOI^5ZR2PoHClmBLQN93
+IU5;8S1@Z1o6:kBID?zOYA2
+!i103 1
+S1
+R0
+R23
+R65
+R66
+L0 1
+R7
+R8
+R67
+R68
+!i113 1
+R11
+R12
+R13
+vriscv_formal_monitor_rv32imc
+Z69 !s110 1649790552
+!i10b 1
+!s100 U?]gj^aHdcEGWFYG8d]0:3
+I:UT]g_4KalCM^bl6IT3QJ1
+R3
+R0
+R56
+Z70 8/home/tvitkin2/spenserCPU/mp4/hvl/rvfimon.v
+Z71 F/home/tvitkin2/spenserCPU/mp4/hvl/rvfimon.v
+L0 5
+R7
+r1
+!s85 0
+31
+Z72 !s108 1649790552.000000
+Z73 !s107 /home/tvitkin2/spenserCPU/mp4/hvl/rvfimon.v|
+Z74 !s90 -reportprogress|300|-vlog01compat|-work|work|+incdir+/home/tvitkin2/spenserCPU/mp4/hvl|/home/tvitkin2/spenserCPU/mp4/hvl/rvfimon.v|
+!i113 1
+Z75 o-vlog01compat -work work
+Z76 !s92 -vlog01compat -work work +incdir+/home/tvitkin2/spenserCPU/mp4/hvl
+R13
+vriscv_formal_monitor_rv32imc_insn_add
+R69
+!i10b 1
+!s100 KfK2[L:AI1f4K609<HTk42
+I4bT@HMX;4jNNJ3jHZABP;1
+R3
+R0
+R56
+R70
+R71
+L0 3481
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_addi
+R69
+!i10b 1
+!s100 B:4Knj[Ia_CHPW??GiRnO3
+I;ck074e2^[9D;jNiT?ifg1
+R3
+R0
+R56
+R70
+R71
+L0 3532
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_and
+R69
+!i10b 1
+!s100 7ej7FRHcUm4YDNLofWj1@1
+IT2:EEcm6V^CWk]T`gOX2`1
+R3
+R0
+R56
+R70
+R71
+L0 3582
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_andi
+R69
+!i10b 1
+!s100 c1@UIA<T::F5f1??YkPD91
+IhR6_Gh=[5<R73AQ0SNT233
+R3
+R0
+R56
+R70
+R71
+L0 3633
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_auipc
+R69
+!i10b 1
+!s100 JGHVA^[iZOMz4AHQI^0a_3
+IMabTzaP7aOWFNUT?c75fC2
+R3
+R0
+R56
+R70
+R71
+L0 3683
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_beq
+R69
+!i10b 1
+!s100 jD`eZ8AMfU^d=HZ93nM_C2
+IE;5aEmX:NK_czf9Q>BY4U2
+R3
+R0
+R56
+R70
+R71
+L0 3730
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_bge
+R69
+!i10b 1
+!s100 33UnJ<[CbSdDMM`LGGam80
+I@@ICb?MWV]e<jSeF?AUV73
+R3
+R0
+R56
+R70
+R71
+L0 3782
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_bgeu
+R69
+!i10b 1
+!s100 DfB_2jleaJz[mddncn<VD3
+Ik^Ylh9>Da6T3PDnA2dn<<0
+R3
+R0
+R56
+R70
+R71
+L0 3834
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_blt
+R69
+!i10b 1
+!s100 1EZSZEcKC8HXPAn1GB?hT0
+IYGzVD9Y9E:RfF4MO`P;Zj2
+R3
+R0
+R56
+R70
+R71
+L0 3886
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_bltu
+R69
+!i10b 1
+!s100 Dd9gO]3?Y4YWJH7SVdGZ51
+IcnBC7l>9b7SSi[o1:CBO?1
+R3
+R0
+R56
+R70
+R71
+L0 3938
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_bne
+R69
+!i10b 1
+!s100 NlDEIZc?8aSA4dfWfn@b22
+I2:^PjbiOmQ^=ke^b99zPh3
+R3
+R0
+R56
+R70
+R71
+L0 3990
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_c_add
+R69
+!i10b 1
+!s100 K6<<4j]Aa5Q_EK46gmegR2
+Ie7m?QN6Rf_<fIg[Jm5b=B3
+R3
+R0
+R56
+R70
+R71
+L0 4042
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_c_addi
+R69
+!i10b 1
+!s100 IQ3cG[?gN@nPPl4i@ULd70
+I_m;?a<m[IkXbOjPLQ3UaK1
+R3
+R0
+R56
+R70
+R71
+L0 4091
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_c_addi16sp
+R69
+!i10b 1
+!s100 >3GdEI?CfAVNAh?M59fH70
+IhANJP1QF9iCJiFf=RQ8`K0
+R3
+R0
+R56
+R70
+R71
+L0 4140
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_c_addi4spn
+R69
+!i10b 1
+!s100 V:C<BVh>X=:Lh5ZddHo@z0
+I23zMgV1QG0LYbUSCKOaNb2
+R3
+R0
+R56
+R70
+R71
+L0 4189
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_c_and
+R69
+!i10b 1
+!s100 4o6@UYQ9e5z@DGUG1Ch]41
+I>9@azGW=J4e=PGnChM7<00
+R3
+R0
+R56
+R70
+R71
+L0 4238
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_c_andi
+R69
+!i10b 1
+!s100 ZIPAmc63OB?jXSH4mZ4``1
+I6zN7oFBPiEUM<P<_EE;JN0
+R3
+R0
+R56
+R70
+R71
+L0 4288
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_c_beqz
+R69
+!i10b 1
+!s100 ]Lm?H8MV4oE0n3bL]Sk?h0
+I4XCn3^_=YImGXG<z0X3?_2
+R3
+R0
+R56
+R70
+R71
+L0 4338
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_c_bnez
+R69
+!i10b 1
+!s100 S`MaY_J@Lai=NAWc9HWZh0
+IfzG0D>BnWa>FhAE94NWCX2
+R3
+R0
+R56
+R70
+R71
+L0 4388
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_c_j
+R69
+!i10b 1
+!s100 hFdS4X:LTYRBYODV6K`L53
+IMG@=P2C^ne59HKVcbdICg2
+R3
+R0
+R56
+R70
+R71
+L0 4438
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_c_jal
+R69
+!i10b 1
+!s100 <6m28Old5K[DPh;d6E4[30
+IF1J[E[eUjD1A_z1VUN>@13
+R3
+R0
+R56
+R70
+R71
+L0 4487
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_c_jalr
+R69
+!i10b 1
+!s100 [n5_BOoZm5k8eEX[OGR:T3
+IagbFdK8iQME4X1;`6KVJ10
+R3
+R0
+R56
+R70
+R71
+L0 4536
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_c_jr
+R69
+!i10b 1
+!s100 N`]J`T@WXHM?>;aD`VP@P1
+I3=OQCeTH`WYa[5hi@?dJI1
+R3
+R0
+R56
+R70
+R71
+L0 4585
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_c_li
+R69
+!i10b 1
+!s100 40Ug7ogJ5PCk7>6fSPZY=0
+I@DLoI2]I@1GZckzV[5MKm3
+R3
+R0
+R56
+R70
+R71
+L0 4634
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_c_lui
+R69
+!i10b 1
+!s100 Q87Bz5Gz2cVdW4ECG<V5[2
+Igokd@GVGbD?0oD7:PW<FR0
+R3
+R0
+R56
+R70
+R71
+L0 4683
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_c_lw
+R69
+!i10b 1
+!s100 kAD9o0nGYkNVg^K@fJOMV2
+Ii`A4dalh_UkA7bmB9oE[l3
+R3
+R0
+R56
+R70
+R71
+L0 4732
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_c_lwsp
+R69
+!i10b 1
+!s100 4C<S2`i<ICb^ggSEFHn9B0
+IK7SJ=aFZeScN2`hZGl7IV3
+R3
+R0
+R56
+R70
+R71
+L0 4783
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_c_mv
+R69
+!i10b 1
+!s100 ?Zdakcc?;ZWeh=Y6`5T_H3
+IB97ViE5Q^_;WO_;>I3Ge>0
+R3
+R0
+R56
+R70
+R71
+L0 4833
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_c_or
+R69
+!i10b 1
+!s100 V3@F1l7e_6Gg@:Qha:m412
+IoR?X0VT>H@__aMbPHk_nH3
+R3
+R0
+R56
+R70
+R71
+L0 4882
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_c_slli
+R69
+!i10b 1
+!s100 EhXfDaTHSj?Wl[XPCgDL_2
+IMhg:z9?45kX46eOzC_0Jz0
+R3
+R0
+R56
+R70
+R71
+L0 4932
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_c_srai
+R69
+!i10b 1
+!s100 ?OT?WR6PTOnzEnnPbKk@91
+IheJCN`]TYoZbiTgF1aRY;3
+R3
+R0
+R56
+R70
+R71
+L0 4981
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_c_srli
+R69
+!i10b 1
+!s100 F>nAlKB<3R0kDag4<C]Qb3
+I<;_l@Jom]OKSojJG:FB=L0
+R3
+R0
+R56
+R70
+R71
+L0 5031
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_c_sub
+R69
+!i10b 1
+!s100 nzTT2EV15jaQLfFE;a9ka1
+I;z9h@H`Wm:C^b?7Wa>CdR1
+R3
+R0
+R56
+R70
+R71
+L0 5081
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_c_sw
+R69
+!i10b 1
+!s100 _goURe:`<BJIPejnn2RVX0
+Iia2li3_G[l@0IV;9VU_<l3
+R3
+R0
+R56
+R70
+R71
+L0 5131
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_c_swsp
+R69
+!i10b 1
+!s100 kBmcg>WkmPj]aL=LcozBV1
+Ij2_:G518T<e7=`AOEK6]g2
+R3
+R0
+R56
+R70
+R71
+L0 5181
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_c_xor
+R69
+!i10b 1
+!s100 DHNGjQTa?LmhJWEFK:GO^2
+Ie;A_5OfV]KfmYLHQESjNz3
+R3
+R0
+R56
+R70
+R71
+L0 5230
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_div
+R69
+!i10b 1
+!s100 9C[KGDc>bffRN]^m>@RiM0
+Iad5I1EdB>oYgPToXJ[<Ag2
+R3
+R0
+R56
+R70
+R71
+L0 5280
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_divu
+R69
+!i10b 1
+!s100 8[7Dzc0`DPeFd[8iH`F4g3
+I;@n3KMc4o?JdKPV:7WFnC2
+R3
+R0
+R56
+R70
+R71
+L0 5341
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_jal
+R69
+!i10b 1
+!s100 VY[g;m=4J]a<GT9VOJ2^23
+IHJP41hWC4>[Z^m`K:Xcic3
+R3
+R0
+R56
+R70
+R71
+L0 5393
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_jalr
+R69
+!i10b 1
+!s100 oA05C0f[cchCQlCeSUNTN3
+IjG5MLGoYjWXI0zA>acfiL2
+R3
+R0
+R56
+R70
+R71
+L0 5442
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_lb
+R69
+!i10b 1
+!s100 KzPkmUI?EFmLg;a5MeJ=;3
+IieLo9DzoU0>K1T`G;c7OP1
+R3
+R0
+R56
+R70
+R71
+L0 5493
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_lbu
+R69
+!i10b 1
+!s100 dAMA6mzbk:a32iEncWf1`0
+I[>go2NQg^`V]flj3oAH=62
+R3
+R0
+R56
+R70
+R71
+L0 5544
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_lh
+R69
+!i10b 1
+!s100 ZMS1:J7zjVeL_5<;WdBoI3
+IHmkN=Uj3MLLLg<MlTXQ[T1
+R3
+R0
+R56
+R70
+R71
+L0 5595
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_lhu
+R69
+!i10b 1
+!s100 HJC90UQgY1@@4CGb@SP<Z1
+IkPU6g2EjF?^l_04i0KQ>k1
+R3
+R0
+R56
+R70
+R71
+L0 5646
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_lui
+R69
+!i10b 1
+!s100 ^oSI_AckT[f[bc?^N2Z991
+IJU@>=KlS:J^CUWC?eQDDO1
+R3
+R0
+R56
+R70
+R71
+L0 5697
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_lw
+R69
+!i10b 1
+!s100 GdTe1oh^]PL:ndFIf4zQG2
+IEfSo9?o>?3zVPaUJb6Fd33
+R3
+R0
+R56
+R70
+R71
+L0 5744
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_mul
+R69
+!i10b 1
+!s100 FjV3`Ac?bGnBDI^lnldc@3
+I^VR8Rc>MH<jCg_@Q4RXf@0
+R3
+R0
+R56
+R70
+R71
+L0 5795
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_mulh
+R69
+!i10b 1
+!s100 g@W:Q[eY?OD]`h1`YNLYN3
+IVM2QF[l8>gCnI_X:zkY:R0
+R3
+R0
+R56
+R70
+R71
+L0 5846
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_mulhsu
+R69
+!i10b 1
+!s100 U??<PT;3?`T_BcHejYce13
+IHbze]@fJ[HGGW_;SKS^dE2
+R3
+R0
+R56
+R70
+R71
+L0 5898
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_mulhu
+R69
+!i10b 1
+!s100 [LIg9^O@ScXULG5IKCinE3
+I22MULYEER`d8D]0HER>dQ1
+R3
+R0
+R56
+R70
+R71
+L0 5950
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_or
+R69
+!i10b 1
+!s100 o7:LBPNDGUIGQGkJGdISz1
+IXhB3DWN9HRk;bYGKjWQea1
+R3
+R0
+R56
+R70
+R71
+L0 6001
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_ori
+R69
+!i10b 1
+!s100 [H_nW3PgW`4Mk1:We35XW2
+IBDW`?dbo_WJSKN8eM==eV3
+R3
+R0
+R56
+R70
+R71
+L0 6052
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_rem
+R69
+!i10b 1
+!s100 mk`6o9WgBGbBJ76mmG8VQ1
+IVFj]R_hbQ3Z0WTLbHV9F@0
+R3
+R0
+R56
+R70
+R71
+L0 6102
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_remu
+R69
+!i10b 1
+!s100 IXVXmF0n0YOAR`QXn^6Nm2
+IT^@8n72gcbCQ>ISg>@^>z3
+R3
+R0
+R56
+R70
+R71
+L0 6162
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_sb
+R69
+!i10b 1
+!s100 og?fCV]cB[?e;MzHGHf6C1
+IO?Hi3j=R1_8lhc?SYVkHV1
+R3
+R0
+R56
+R70
+R71
+L0 6214
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_sh
+R69
+!i10b 1
+!s100 SEj63EWGz^[X]dfS]l`O^3
+I561m8LPR;?5Eiz::0DjY20
+R3
+R0
+R56
+R70
+R71
+L0 6264
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_sll
+R69
+!i10b 1
+!s100 ]^`93HFGZLj41NjdJdEV81
+ILOWb<AN^WWK:5`;PLU70O3
+R3
+R0
+R56
+R70
+R71
+L0 6314
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_slli
+R69
+!i10b 1
+!s100 a[]>FLXlVKXgl[2UTlRDW2
+I@fJ;5c;kn;?81264]B:Wg0
+R3
+R0
+R56
+R70
+R71
+L0 6366
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_slt
+R69
+!i10b 1
+!s100 gokZ@3ogH7XRTh`imkV9P1
+IKCYWN4Uh8Mb<<R^8l:C^23
+R3
+R0
+R56
+R70
+R71
+L0 6417
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_slti
+R69
+!i10b 1
+!s100 JPEAZhmAEM77:?N623@X40
+IeWTUj<7I82dalVg<FigOJ0
+R3
+R0
+R56
+R70
+R71
+L0 6468
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_sltiu
+R69
+!i10b 1
+!s100 V3z7^K_82UlnEi1H;jNmj3
+I[?fbPRYMN[CIV2M:]^7ln2
+R3
+R0
+R56
+R70
+R71
+L0 6518
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_sltu
+R69
+!i10b 1
+!s100 a6VKKVFaYA0@=>KY?iIBU1
+IHDaoV8Wf<S5T^^@i4QT=E0
+R3
+R0
+R56
+R70
+R71
+L0 6568
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_sra
+R69
+!i10b 1
+!s100 B>dGYMS?Sd6INJ=KKhLi20
+I_[ZCP7l;TdFT1gMARNTK<3
+R3
+R0
+R56
+R70
+R71
+L0 6619
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_srai
+R69
+!i10b 1
+!s100 >IfcP=k>O_OS[fH`]ZgSV1
+I<NHF39lN[:9=SNLoPaS[g3
+R3
+R0
+R56
+R70
+R71
+L0 6671
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_srl
+R69
+!i10b 1
+!s100 5SXR5QV[>3eI797nKb1KY3
+IQMQ97XmF_EkN520cnC:=33
+R3
+R0
+R56
+R70
+R71
+L0 6722
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_srli
+R69
+!i10b 1
+!s100 TaBAodP9jmne1_GKDE7?f0
+Igbl_E5719=XEO2U_j6kBP3
+R3
+R0
+R56
+R70
+R71
+L0 6774
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_sub
+R69
+!i10b 1
+!s100 bca5F<M=mUAzB<ifP8DA20
+IBBE1LAe[UO8nM6?EzTU;m3
+R3
+R0
+R56
+R70
+R71
+L0 6825
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_sw
+R69
+!i10b 1
+!s100 7?5OAE06eDLe8GLDhYoGm3
+I:YJBdY`UmHIelz7l0f`h>2
+R3
+R0
+R56
+R70
+R71
+L0 6876
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_xor
+R69
+!i10b 1
+!s100 XQd94==N?7^T@_iOiWmFH1
+I0@gFJOOVh4=74HIm^<?c[2
+R3
+R0
+R56
+R70
+R71
+L0 6926
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_insn_xori
+R69
+!i10b 1
+!s100 ?NkdBb2FZ>^`0D^;M^;ha0
+I9cPg0mQ_1OIWDg6nTbMFe0
+R3
+R0
+R56
+R70
+R71
+L0 6977
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_isa_spec
+R69
+!i10b 1
+!s100 5RZ>>H>3jYn7TemZ`2:VO2
+II[]21O1D`fJ0F[k>0GmQZ1
+R3
+R0
+R56
+R70
+R71
+L0 436
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vriscv_formal_monitor_rv32imc_rob
+R69
+!i10b 1
+!s100 Bad>2S9;RIg2]WlkMbNXT2
+I7O2AJS8=YZMlYM6kD8o@T1
+R3
+R0
+R56
+R70
+R71
+L0 389
+R7
+r1
+!s85 0
+31
+R72
+R73
+R74
+!i113 1
+R75
+R76
+R13
+vro_buffer
+R1
+R2
+R14
+DXx4 work 17 ro_buffer_sv_unit 0 22 oTHfIRRTUlzBz?[k2oDO12
+R3
+r1
+!s85 0
+31
+!i10b 1
+!s100 Bmi872b;d]3:TmV1aOR042
+Iz;eFz6I6zdYd`d:;>3zK70
+!s105 ro_buffer_sv_unit
+S1
+R0
+R23
+Z77 8/home/tvitkin2/spenserCPU/mp4/hdl/execute/ro_buffer.sv
+Z78 F/home/tvitkin2/spenserCPU/mp4/hdl/execute/ro_buffer.sv
+L0 6
+R7
+R18
+Z79 !s107 /home/tvitkin2/spenserCPU/mp4/hdl/execute/../macros.sv|/home/tvitkin2/spenserCPU/mp4/hdl/execute/ro_buffer.sv|
+Z80 !s90 -reportprogress|300|-sv|-work|work|+incdir+/home/tvitkin2/spenserCPU/mp4/hdl/execute|/home/tvitkin2/spenserCPU/mp4/hdl/execute/ro_buffer.sv|
+!i113 1
+R11
+R12
+R13
+Xro_buffer_sv_unit
+R1
+R2
+R14
+VoTHfIRRTUlzBz?[k2oDO12
+r1
+!s85 0
+31
+!i10b 1
+!s100 cCY_OWW4C?73>=C^hYVnO0
+IoTHfIRRTUlzBz?[k2oDO12
+!i103 1
+S1
+R0
+R23
+R77
+R78
+R21
+L0 3
+R7
+R18
+R79
+R80
+!i113 1
+R11
+R12
+R13
+Xrv32i_types
+R1
+R22
+!i10b 1
+!s100 kFFKfW6ojJ9T`O[OUUVY[0
+IRlidz3GT1O79EUYHKeodV1
+VRlidz3GT1O79EUYHKeodV1
+S1
+R0
+w1649531918
 8/home/tvitkin2/spenserCPU/mp4/hdl/rv32i_types.sv
 F/home/tvitkin2/spenserCPU/mp4/hdl/rv32i_types.sv
 L0 3
-R6
+R7
 r1
 !s85 0
 31
-R7
+R24
 !s107 /home/tvitkin2/spenserCPU/mp4/hdl/rv32i_types.sv|
 !s90 -reportprogress|300|-sv|-work|work|+incdir+/home/tvitkin2/spenserCPU/mp4/hdl|/home/tvitkin2/spenserCPU/mp4/hdl/rv32i_types.sv|
 !i113 1
-R10
 R11
-R12
-Xstructs
-R1
+R63
 R13
-R14
-R15
-R16
-R17
-R18
-R2
+Yrvfi_itf
+R1
+R55
 !i10b 1
-!s100 he@lc98[@2NcE0Kdk<Dej1
-IIfanf?SKLzLiH2C3cDRQ11
-VIfanf?SKLzLiH2C3cDRQ11
+!s100 2b=S1=JJ:=R=::Dj?g9Ee3
+I9aW@3A`KJM=Gk>L`]>hT91
+R3
+!s105 rvfi_itf_sv_unit
 S1
 R0
-w1648509253
-8/home/tvitkin2/spenserCPU/mp4/hdl/structs.sv
-F/home/tvitkin2/spenserCPU/mp4/hdl/structs.sv
-L0 1
-R6
+R56
+8/home/tvitkin2/spenserCPU/mp4/hvl/rvfi_itf.sv
+F/home/tvitkin2/spenserCPU/mp4/hvl/rvfi_itf.sv
+L0 4
+R7
 r1
 !s85 0
 31
+R38
+!s107 /home/tvitkin2/spenserCPU/mp4/hvl/rvfi_itf.sv|
+!s90 -reportprogress|300|-sv|-work|work|+incdir+/home/tvitkin2/spenserCPU/mp4/hvl|/home/tvitkin2/spenserCPU/mp4/hvl/rvfi_itf.sv|
+!i113 1
+R11
+R57
+R13
+vshadow_memory
+R1
+Z81 !s110 1649790553
+!i10b 1
+!s100 RLf6B4_8TgNHLe`G>JV>a1
+I2GR6]oEXBn[LfB7W<AT9i2
+R3
+!s105 shadow_memory_sv_unit
+S1
+R0
+R56
+8/home/tvitkin2/spenserCPU/mp4/hvl/shadow_memory.sv
+F/home/tvitkin2/spenserCPU/mp4/hvl/shadow_memory.sv
+L0 4
 R7
-!s107 /home/tvitkin2/spenserCPU/mp4/hdl/structs.sv|
+r1
+!s85 0
+31
+Z82 !s108 1649790553.000000
+!s107 /home/tvitkin2/spenserCPU/mp4/hvl/shadow_memory.sv|
+!s90 -reportprogress|300|-sv|-work|work|+incdir+/home/tvitkin2/spenserCPU/mp4/hvl|/home/tvitkin2/spenserCPU/mp4/hvl/shadow_memory.sv|
+!i113 1
+R11
+R57
+R13
+vsource_tb
+R1
+R81
+!i10b 1
+!s100 ZF]c@cGmCj5MI`hCGzkG>0
+IXT?dZ`M1MVI4LEe6_ogn52
+R3
+Z83 !s105 source_tb_sv_unit
+S1
+R0
+w1649194327
+8/home/tvitkin2/spenserCPU/mp4/hvl/source_tb.sv
+F/home/tvitkin2/spenserCPU/mp4/hvl/source_tb.sv
+R48
+R7
+r1
+!s85 0
+31
+R82
+Z84 !s107 /home/tvitkin2/spenserCPU/mp4/hvl/tb_itf.sv|/home/tvitkin2/spenserCPU/mp4/hvl/source_tb.sv|
+Z85 !s90 -reportprogress|300|-sv|-work|work|+incdir+/home/tvitkin2/spenserCPU/mp4/hvl|/home/tvitkin2/spenserCPU/mp4/hvl/source_tb.sv|
+!i113 1
+R11
+R57
+R13
+Xstructs
+R1
+R2
+R64
+!i10b 1
+!s100 R`Y2BigPoGPYD<0oU;LM;0
+I>cY4O9TgM]E]BnS=`NN3H3
+V>cY4O9TgM]E]BnS=`NN3H3
+S1
+R0
+R23
+8/home/tvitkin2/spenserCPU/mp4/hdl/structs.sv
+F/home/tvitkin2/spenserCPU/mp4/hdl/structs.sv
+L0 3
+R7
+r1
+!s85 0
+31
+R8
+!s107 /home/tvitkin2/spenserCPU/mp4/hdl/macros.sv|/home/tvitkin2/spenserCPU/mp4/hdl/structs.sv|
 !s90 -reportprogress|300|-sv|-work|work|+incdir+/home/tvitkin2/spenserCPU/mp4/hdl|/home/tvitkin2/spenserCPU/mp4/hdl/structs.sv|
 !i113 1
-R10
 R11
-R12
+R63
+R13
+Ytb_itf
+R1
+R81
+!i10b 1
+!s100 YknjM5:fCXO4jfKY2MY0l2
+IR6Z[b91OC7jiiWPJggKD83
+R3
+R83
+S1
+R0
+R56
+8/home/tvitkin2/spenserCPU/mp4/hvl/tb_itf.sv
+F/home/tvitkin2/spenserCPU/mp4/hvl/tb_itf.sv
+L0 12
+R7
+r1
+!s85 0
+31
+R82
+R84
+R85
+!i113 1
+R11
+R57
+R13

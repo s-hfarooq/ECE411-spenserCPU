@@ -158,11 +158,8 @@ ro_buffer rob (
     .cdb(cdb),
     .write(rob_write),
     .input_i(pc_and_rd),
-    // .instr_pc_in(),
-    .value_in_reg(),
     .rob_arr_o(rob_arr),
     .rob_free_tag(rob_free_tag),
-    .reg_o(),
     .empty(rob_is_empty),
     .full(rob_is_full),
     .rob_o(),
@@ -176,7 +173,6 @@ alu_rs alu_rs (
     .clk(clk),
     .rst(rst),
     .flush(flush),
-    .load(alu_o.valid),
     // From ROB
     .rob_reg_vals(),
     .rob_commit_arr(),
@@ -193,7 +189,6 @@ cmp_rs cmp_rs (
     .clk(clk),
     .rst(rst),
     .flush(flush),
-    .load(cmp_o.valid),
     // From ROB
     .rob_reg_vals(),
     .rob_commit_arr(),
