@@ -174,8 +174,9 @@ alu_rs alu_rs (
     .rst(rst),
     .flush(flush),
     // From ROB
-    .rob_reg_vals(),
-    .rob_commit_arr(),
+    // .rob_reg_vals(),
+    // .rob_commit_arr(),
+    .rob_arr_o(rob_arr),
     // From/to CDB
     .cdb_vals_i(cdb),
     .cdb_alu_vals_o(cdb[`ALU_RS_SIZE-1+2 -: `ALU_RS_SIZE]),
@@ -190,8 +191,9 @@ cmp_rs cmp_rs (
     .rst(rst),
     .flush(flush),
     // From ROB
-    .rob_reg_vals(),
-    .rob_commit_arr(),
+    // .rob_reg_vals(),
+    // .rob_commit_arr(),
+    .rob_arr_o(rob_arr),
     // From/to CDB
     .cdb_vals_i(cdb),
     .cdb_cmp_vals_o(cdb[(2*(`CMP_RS_SIZE-1))+3 -: `CMP_RS_SIZE]), // I think this is right

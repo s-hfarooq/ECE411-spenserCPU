@@ -12,8 +12,9 @@ module alu_rs (
     // input logic [$clog2(RO_BUFFER_ENTRIES)-1:0] rs_idx_in, // index of register to set valid bit
     // input logic is_valid,
     // input logic [2:0] rob_free_tag,
-    input rv32i_word rob_reg_vals [`RO_BUFFER_ENTRIES],
-    input logic rob_commit_arr [`RO_BUFFER_ENTRIES],
+    // input rv32i_word rob_reg_vals [`RO_BUFFER_ENTRIES],
+    // input logic rob_commit_arr [`RO_BUFFER_ENTRIES],
+    input rob_arr_t rob_arr_o,
     // output logic load_rob,
 
     // From/to CDB
@@ -68,11 +69,11 @@ always_ff @(posedge clk) begin
         curr_rs_data.busy <= 1'b0;
         curr_rs_data.opcode <= rv32i_opcode'(alu_o.op);
         curr_rs_data.alu_op <= alu_o.op;
-        curr_rs_data.rs1.valid <= rob_commit_arr[alu_o.qj];
-        curr_rs_data.rs1.value <= rob_reg_vals[alu_o.qj]; // need to get value from ROB (only if tag != 0)
+        curr_rs_data.rs1.valid <= rob_arr_o[alu_o.qj].reg_data.can_commit;
+        curr_rs_data.rs1.value <= rob_arr_o[alu_o.qj].reg_data.value; // need to get value from ROB (only if tag != 0)
         curr_rs_data.rs1.tag <= alu_o.qj;
-        curr_rs_data.rs2.valid <= rob_commit_arr[alu_o.qk];
-        curr_rs_data.rs2.value <= rob_reg_vals[alu_o.qk]; // need to get value from ROB (only if tag != 0)
+        curr_rs_data.rs2.valid <= rob_arr_o[alu_o.qk].reg_data.can_commit;
+        curr_rs_data.rs2.value <= rob_arr_o[alu_o.qk].reg_data.value; // need to get value from ROB (only if tag != 0)
         curr_rs_data.rs2.tag <= alu_o.qk;
         curr_rs_data.res.valid <= 1'b0;
         curr_rs_data.res.value <= 32'b0;

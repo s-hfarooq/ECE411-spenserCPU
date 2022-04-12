@@ -51,7 +51,7 @@ typedef struct packed {
 } rob_reg_data_t;
 
 typedef struct packed {
-    tag_t entry_num;
+    tag_t tag;
     // logic busy;        // do we need this?
     // logic can_commit;
     logic valid;

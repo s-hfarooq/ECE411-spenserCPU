@@ -9,9 +9,10 @@ module cmp_rs (
     input logic flush,
 
     // From ROB
-    input rv32i_word rob_reg_vals [`RO_BUFFER_ENTRIES],
-    input logic rob_commit_arr [`RO_BUFFER_ENTRIES],
+    // input rv32i_word rob_reg_vals [`RO_BUFFER_ENTRIES],
+    // input logic rob_commit_arr [`RO_BUFFER_ENTRIES],
     // output logic load_rob,
+    input rob_arr_t rob_arr_o,
 
     // From/to CDB
     input cdb_t cdb_vals_i,
@@ -60,16 +61,15 @@ always_ff @(posedge clk) begin
         curr_rs_data.busy <= 1'b0;
         curr_rs_data.opcode <= rv32i_opcode'(cmp_o.op);
         curr_rs_data.cmp_op <= cmp_o.op;
-        curr_rs_data.rs1.valid <= rob_commit_arr[cmp_o.qj];
-        curr_rs_data.rs1.value <= rob_reg_vals[cmp_o.qj]; // need to get value from ROB (only if tag != 0)
+        curr_rs_data.rs1.valid <= rob_arr_o[cmp_o.qj].reg_data.can_commit;
+        curr_rs_data.rs1.value <= rob_arr_o[cmp_o.qj].reg_data.value; // need to get value from ROB (only if tag != 0)
         curr_rs_data.rs1.tag <= cmp_o.qj;
-        curr_rs_data.rs2.valid <= rob_commit_arr[cmp_o.qk];
-        curr_rs_data.rs2.value <= rob_reg_vals[cmp_o.qk]; // need to get value from ROB (only if tag != 0)
+        curr_rs_data.rs2.valid <= rob_arr_o[cmp_o.qk].reg_data.can_commit;
+        curr_rs_data.rs2.value <= rob_arr_o[cmp_o.qk].reg_data.value; // need to get value from ROB (only if tag != 0)
         curr_rs_data.rs2.tag <= cmp_o.qk;
         curr_rs_data.res.valid <= 1'b0;
         curr_rs_data.res.value <= 32'b0;
         curr_rs_data.res.tag <= cmp_o.rob_idx;
-
 
         // load into first available rs (TODO PARAMETRIZE)
         if(is_in_use[0] == 1'b0) begin

@@ -95,7 +95,7 @@ always_ff @ (posedge clk) begin
             // Save value to ROB, enqueue
             if (counter < `RO_BUFFER_ENTRIES) begin
                 rob_arr[tail_ptr].op <= input_i;
-                rob_arr[tail_ptr].entry_num <= counter;
+                rob_arr[tail_ptr].tag <= tail_ptr;
                 rob_arr[tail_ptr].reg_data.can_commit <= 1'b0;
 
                 // wait for computation
@@ -122,7 +122,7 @@ always_ff @ (posedge clk) begin
     // Should be in always_comb?
     for(int i = 0; i < `NUM_CDB_ENTRIES - 1; ++i) begin
         // check for tag match
-        if(rob_arr[i].reg_data.can_commit == 1'b0 && rob_arr[i] && rob_arr[i].entry_num == cdb[i].tag) begin
+        if(rob_arr[i].reg_data.can_commit == 1'b0 && rob_arr[i] && rob_arr[i].tag == cdb[i].tag) begin
             rob_arr[cdb[i].tag].reg_data.value <= cdb[i].value;
             rob_arr[cdb[i].tag].reg_data.can_commit <= 1'b1;
         end
@@ -141,7 +141,7 @@ end
 
 //     for(int i = 0; i < `NUM_CDB_ENTRIES - 1; ++i) begin
 //         // check for tag match
-//         if(rob_arr[i].reg_data.can_commit == 1'b0 && rob_arr[i] && rob_arr[i].entry_num == cdb[i].tag) begin
+//         if(rob_arr[i].reg_data.can_commit == 1'b0 && rob_arr[i] && rob_arr[i].tag == cdb[i].tag) begin
 //             rob_arr[cdb[i].tag].reg_data.value = cdb[i].value;
 //             rob_arr[cdb[i].tag].reg_data.can_commit = 1'b1;
 //         end
