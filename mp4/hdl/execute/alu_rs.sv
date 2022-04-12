@@ -27,7 +27,11 @@ module alu_rs (
     // input logic alu_valid,
 
     // To decoder
-    output logic alu_rs_full
+    output logic alu_rs_full,
+
+    // To/from regfile
+    output rv32i_reg rs1_alu_rs_i, rs2_alu_rs_i,
+    input regfile_data_out_t alu_rs_d_out
 );
 
 // ROB sends valid signal (valid, rs1.ready, rs2.ready must all be high before execution)
@@ -69,11 +73,46 @@ always_ff @(posedge clk) begin
         curr_rs_data.busy <= 1'b0;
         curr_rs_data.opcode <= rv32i_opcode'(alu_o.op);
         curr_rs_data.alu_op <= alu_o.op;
-        curr_rs_data.rs1.valid <= rob_arr_o[alu_o.qj].reg_data.can_commit;
-        curr_rs_data.rs1.value <= rob_arr_o[alu_o.qj].reg_data.value; // need to get value from ROB (only if tag != 0)
+
+        // do comparison -- if tag exists in ROB, get data from ROB.
+        // else -- get data from regfile
+        for(int i = 0; i < `RO_BUFFER_ENTRIES; ++i) begin
+            if(rob_arr_o[i].tag == alu_o.qj) begin
+                if(rob_arr_o[i].valid == 1'b1) begin
+                    // copy from ROB
+                    curr_rs_data.rs1.valid <= rob_arr_o[alu_o.qj].reg_data.can_commit;
+                    curr_rs_data.rs1.value <= rob_arr_o[alu_o.qj].reg_data.value;
+                end else begin 
+                    // set entry valid to 0
+                    // copy value over so that it is not dont cares
+                    curr_rs_data.rs1.valid <= 1'b0;
+                end
+            end else begin
+                // copy from regfile
+                rs1_alu_rs_i <= alu_o.qj;
+                curr_rs_data.rs1.valid <= 1'b1;
+                curr_rs_data.rs1.value <= alu_rs_d_out.vj_out;
+            end
+
+            if(rob_arr_o[i].tag == alu_o.qk) begin
+                if(rob_arr_o[i].valid == 1'b1) begin
+                    // copy from ROB
+                    curr_rs_data.rs2.valid <= rob_arr_o[alu_o.qk].reg_data.can_commit;
+                    curr_rs_data.rs2.value <= rob_arr_o[alu_o.qk].reg_data.value;
+                end else begin 
+                    // set entry valid to 0
+                    // copy value over so that it is not dont cares
+                    curr_rs_data.rs2.valid <= 1'b0;
+                end
+            end else begin
+                // copy from regfile
+                rs2_alu_rs_i <= alu_o.qk;
+                curr_rs_data.rs2.valid <= 1'b1;
+                curr_rs_data.rs2.value <= alu_rs_d_out.vk_out;
+            end
+        end
+
         curr_rs_data.rs1.tag <= alu_o.qj;
-        curr_rs_data.rs2.valid <= rob_arr_o[alu_o.qk].reg_data.can_commit;
-        curr_rs_data.rs2.value <= rob_arr_o[alu_o.qk].reg_data.value; // need to get value from ROB (only if tag != 0)
         curr_rs_data.rs2.tag <= alu_o.qk;
         curr_rs_data.res.valid <= 1'b0;
         curr_rs_data.res.value <= 32'b0;
@@ -124,8 +163,8 @@ always_ff @(posedge clk) begin
             alu_arr[i].vk <= data[i].rs2.value;
             alu_arr[i].qj <= data[i].rs1.tag;
             alu_arr[i].qj <= data[i].rs2.tag;
-            alu_arr[i].op <= data[i].alu_op;
-            alu_arr[i].rob_idx <= data[i].res.tag;
+            alu_arr[i].op <= data[i].alu_op; // doesn't matter?
+            alu_arr[i].rob_idx <= data[i].res.tag; // doesn't matter?
 
             load_alu[i] <= 1'b1;
 

@@ -22,7 +22,11 @@ module cmp_rs (
     input cmp_rs_t cmp_o,
 
     // To decoder
-    output logic cmp_rs_full
+    output logic cmp_rs_full,
+
+    // To/from regfile
+    output rv32i_reg rs1_cmp_rs_i, rs2_cmp_rs_i,
+    input regfile_data_out_t cmp_rs_d_out
 );
 
 rs_data_t data [`CMP_RS_SIZE-1:0] /* synthesis ramstyle = "logic" */;
@@ -61,11 +65,44 @@ always_ff @(posedge clk) begin
         curr_rs_data.busy <= 1'b0;
         curr_rs_data.opcode <= rv32i_opcode'(cmp_o.op);
         curr_rs_data.cmp_op <= cmp_o.op;
-        curr_rs_data.rs1.valid <= rob_arr_o[cmp_o.qj].reg_data.can_commit;
-        curr_rs_data.rs1.value <= rob_arr_o[cmp_o.qj].reg_data.value; // need to get value from ROB (only if tag != 0)
+
+        for(int i = 0; i < `RO_BUFFER_ENTRIES; ++i) begin
+            if(rob_arr_o[i].tag == cmp_o.qj) begin
+                if(rob_arr_o[i].valid == 1'b1) begin
+                    // copy from ROB
+                    curr_rs_data.rs1.valid <= rob_arr_o[cmp_o.qj].reg_data.can_commit;
+                    curr_rs_data.rs1.value <= rob_arr_o[cmp_o.qj].reg_data.value;
+                end else begin 
+                    // set entry valid to 0
+                    // copy value over so that it is not dont cares
+                    curr_rs_data.rs1.valid <= 1'b0;
+                end
+            end else begin
+                // copy from regfile
+                rs1_cmp_rs_i <= cmp_o.qj;
+                curr_rs_data.rs1.valid <= 1'b1;
+                curr_rs_data.rs1.value <= cmp_rs_d_out.vj_out;
+            end
+
+            if(rob_arr_o[i].tag == cmp_o.qk) begin
+                if(rob_arr_o[i].valid == 1'b1) begin
+                    // copy from ROB
+                    curr_rs_data.rs2.valid <= rob_arr_o[cmp_o.qk].reg_data.can_commit;
+                    curr_rs_data.rs2.value <= rob_arr_o[cmp_o.qk].reg_data.value;
+                end else begin 
+                    // set entry valid to 0
+                    // copy value over so that it is not dont cares
+                    curr_rs_data.rs2.valid <= 1'b0;
+                end
+            end else begin
+                // copy from regfile
+                rs2_cmp_rs_i <= cmp_o.qk;
+                curr_rs_data.rs2.valid <= 1'b1;
+                curr_rs_data.rs2.value <= cmp_rs_d_out.vk_out;
+            end
+        end
+
         curr_rs_data.rs1.tag <= cmp_o.qj;
-        curr_rs_data.rs2.valid <= rob_arr_o[cmp_o.qk].reg_data.can_commit;
-        curr_rs_data.rs2.value <= rob_arr_o[cmp_o.qk].reg_data.value; // need to get value from ROB (only if tag != 0)
         curr_rs_data.rs2.tag <= cmp_o.qk;
         curr_rs_data.res.valid <= 1'b0;
         curr_rs_data.res.value <= 32'b0;

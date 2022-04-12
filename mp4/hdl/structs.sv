@@ -3,13 +3,6 @@
 package structs;
 import rv32i_types::*;
 
-// typedef struct packed {
-//     logic [3:0] rob_tag;
-//     logic busy;
-//     rv32i_word effective_addr;
-//     rv32i_word dest;
-// } ldst_data_t;
-
 typedef logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] tag_t;
 
 typedef struct packed {
@@ -22,6 +15,7 @@ typedef struct packed {
     // logic op; // Renamed as type_of_inst
     logic [2:0] funct;
     tag_t tag;
+    logic valid;
 } lsb_t;
 
 typedef struct packed {
@@ -60,12 +54,6 @@ typedef struct packed {
     // rv32i_word value;
     rob_reg_data_t reg_data;
 } rob_values_t;
-
-// typedef struct {
-//     rob_values_t entry_data [(`RO_BUFFER_ENTRIES)-1:0];
-// } rob_arr_t;
-
-typedef rob_values_t[(`RO_BUFFER_ENTRIES)-1:0] rob_arr_t;
 
 typedef struct packed {
     logic valid;
@@ -113,15 +101,6 @@ typedef struct packed { // when alu_rs needs to send data to the alu, it uses th
     tag_t rob_idx;
 } cmp_rs_t;
 
-// typedef struct packed {
-//     rv32i_word cmp_vj;
-//     rv32i_word cmp_vk;
-//     rv32i_word cmp_qj;
-//     rv32i_word cmp_qk;
-//     branch_funct3_t cmp_op;
-//     logic [2:0] cmp_tag;
-// } cmp_rs_t;
-
 typedef struct packed {
     rv32i_word vj_out;
     rv32i_word vk_out;
@@ -136,5 +115,6 @@ typedef struct packed {
 } cdb_entry_t;
 
 typedef cdb_entry_t[`NUM_CDB_ENTRIES-1:0] cdb_t;
+typedef rob_values_t[(`RO_BUFFER_ENTRIES)-1:0] rob_arr_t;
 
 endpackage : structs

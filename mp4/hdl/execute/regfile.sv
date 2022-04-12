@@ -12,6 +12,8 @@ module regfile (
     input rv32i_reg reg_id_decoder,
     // input i_decode_opcode_t op_in,
     input rv32i_reg rs1_i, rs2_i,
+    input rv32i_reg rs1_alu_rs_i, rs2_alu_rs_i,
+    input rv32i_reg rs1_cmp_rs_i, rs2_cmp_rs_i,
 
     // From ROB
     input logic load_reg,
@@ -19,8 +21,11 @@ module regfile (
     input rv32i_word reg_val,
     input rv32i_reg tag_rob,    // Tag from ROB
 
-    // To Decoder
-    output regfile_data_out_t d_out
+    // Outputs
+    output regfile_data_out_t d_out,
+    output regfile_data_out_t alu_rs_d_out,
+    output regfile_data_out_t cmp_rs_d_out
+
     // output rv32i_word vj_out, // operands, s1 and s2
     // output rv32i_word vk_out,
     // output rv32i_reg qj_out,  // tags for operands, s1 and s2
@@ -64,6 +69,18 @@ assign d_out.vj_out = (rs1_i == 0) ? 32'h0000_0000 : regfile[rs1_i];
 assign d_out.vk_out = (rs2_i == 0) ? 32'h0000_0000 : regfile[rs2_i];
 assign d_out.qj_out = tags[rs1_i];
 assign d_out.qk_out = tags[rs2_i];
+
+// to ALU units
+assign alu_rs_d_out.vj_out = (rs1_alu_rs_i == 0) ? 32'h0000_0000 : regfile[rs1_alu_rs_i];
+assign alu_rs_d_out.vk_out = (rs2_alu_rs_i == 0) ? 32'h0000_0000 : regfile[rs2_alu_rs_i];
+assign alu_rs_d_out.qj_out = tags[rs1_alu_rs_i];
+assign alu_rs_d_out.qk_out = tags[rs2_alu_rs_i];
+
+// to CMP units
+assign cmp_rs_d_out.vj_out = (rs1_cmp_rs_i == 0) ? 32'h0000_0000 : regfile[rs1_cmp_rs_i];
+assign cmp_rs_d_out.vk_out = (rs2_cmp_rs_i == 0) ? 32'h0000_0000 : regfile[rs2_cmp_rs_i];
+assign cmp_rs_d_out.qj_out = tags[rs1_cmp_rs_i];
+assign cmp_rs_d_out.qk_out = tags[rs2_cmp_rs_i];
 
 always_ff @ (posedge clk) begin
     if (rst) begin

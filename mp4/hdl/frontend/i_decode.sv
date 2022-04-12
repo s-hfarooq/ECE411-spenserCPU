@@ -120,6 +120,7 @@ always_ff @ (posedge clk) begin
         // alu_o.valid <= 1'b0;
         alu_o <= '0;
         cmp_o <= '0;
+        lsb_o <= '0;
     end else begin
         rob_write <= 1'b0;
         pc_and_rd.instr_pc <= 32'd0;
@@ -147,6 +148,7 @@ always_ff @ (posedge clk) begin
                     pc_and_rd.opcode <= rv32i_opcode'(opcode);
                     pc_and_rd.rd <= rd;
                     rob_write <= 1'b1;
+                    alu_o.valid <= 1'b1;
                     alu_o.vj <= instr_pc;
                     alu_o.vk <= u_imm;
                     alu_o.qj <= 4'd0;
@@ -182,7 +184,6 @@ always_ff @ (posedge clk) begin
                     pc_and_rd.instr_pc <= instr_pc;
                     pc_and_rd.opcode <= rv32i_opcode'(opcode);
                     pc_and_rd.rd <= rd;
-
                     cmp_o.valid <= 1'b1;
                     cmp_o.br <= 1'b1;    // High if opcode is branch, some non-branch opcodes also use
                     cmp_o.vj <= vj_o;
@@ -203,6 +204,7 @@ always_ff @ (posedge clk) begin
                     pc_and_rd.opcode <= rv32i_opcode'(opcode);
                     pc_and_rd.rd <= rd;
                     lsb_o.vj <= vj_o;
+                    lsb_o.valid <= 1'b1;
                     lsb_o.vk <= 32'd0;
                     lsb_o.qj <= qj_o;
                     lsb_o.qk <= 32'd0;
@@ -217,6 +219,7 @@ always_ff @ (posedge clk) begin
 
             op_store : begin    // KEEP
                 if (rd != 0 && lsb_full == 0) begin
+                    lsb_o.valid <= 1'b1;
                     lsb_o.vj <= vj_o;
                     lsb_o.vk <= vk_o;
                     lsb_o.qj <= qj_o;

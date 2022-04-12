@@ -95,7 +95,7 @@ always_ff @ (posedge clk) begin
             // Save value to ROB, enqueue
             if (counter < `RO_BUFFER_ENTRIES) begin
                 rob_arr[tail_ptr].op <= input_i;
-                rob_arr[tail_ptr].tag <= tail_ptr;
+                rob_arr[tail_ptr].tag <= tail_ptr; 
                 rob_arr[tail_ptr].reg_data.can_commit <= 1'b0;
 
                 // wait for computation
