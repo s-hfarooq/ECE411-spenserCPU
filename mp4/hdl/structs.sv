@@ -32,7 +32,7 @@ typedef struct packed {
     rv32i_word instr_pc;
     // logic [2:0] funct3;
     // logic [6:0] funct7;
-    // rv32i_opcode opcode;
+    rv32i_opcode opcode;
     // rv32i_word i_imm;
     // rv32i_word s_imm;
     // rv32i_word b_imm;
@@ -40,7 +40,7 @@ typedef struct packed {
     // rv32i_word j_imm;
     // rv32i_reg rs1;
     // rv32i_reg rs2;
-    rv32i_reg rd;   
+    rv32i_reg rd;
 } i_decode_opcode_t;
 
 typedef struct packed {
@@ -131,4 +131,4 @@ typedef struct packed {
 
 typedef cdb_entry_t[`NUM_CDB_ENTRIES-1:0] cdb_t;
 
-endpackage : structs
+endpackage : struct

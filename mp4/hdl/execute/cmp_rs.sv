@@ -12,7 +12,7 @@ module cmp_rs (
     // From ROB
     input rv32i_word rob_reg_vals [`RO_BUFFER_ENTRIES],
     input logic rob_commit_arr [`RO_BUFFER_ENTRIES],
-    output logic load_rob,
+    // output logic load_rob,
 
     // From/to CDB
     input cdb_t cdb_vals_i,
@@ -52,7 +52,7 @@ always_ff @(posedge clk) begin
             is_in_use[i] <= 1'b0;
         end
 
-        load_rob <= 1'b0;
+        // load_rob <= 1'b0;
     end 
     else if(load) begin
         // load data from decoder / ROB

@@ -32,7 +32,7 @@ module i_decode(
     // To Reorder Buffer
     output logic rob_write,
     // output rv32i_word rob_dest, // Tag/address
-    // output i_decode_opcode_t op,
+    output i_decode_opcode_t pc_and_rd,
 
     // From ALU Reservation Station
     input logic alu_rs_full,  // Signal is high if RS is full
@@ -60,7 +60,7 @@ logic [2:0] funct3;
 logic [6:0] funct7;
 logic [6:0] opcode;
 logic [31:0] i_imm, s_imm, b_imm, u_imm, j_imm;
-logic rv32i_reg rs1, rs2, rd;
+rv32i_reg rs1, rs2, rd;
 
 // taken from IR register
 assign instr_pc = d_in.pc;
@@ -79,15 +79,15 @@ assign rd = d_in.instr[11:7];
 load_funct3_t load_funct3;
 store_funct3_t store_funct3;
 branch_funct3_t branch_funct3;
-assign load_funct3 = load_funct3_t'(op.funct3);
-assign store_funct3 = store_funct3_t'(op.funct3);
-assign branch_funct3 = branch_funct3_t'(op.funct3);
+assign load_funct3 = load_funct3_t'(funct3);
+assign store_funct3 = store_funct3_t'(funct3);
+assign branch_funct3 = branch_funct3_t'(funct3);
 
 // Glue signals
 rv32i_word vj_o, vk_o;
 logic [2:0] qj_o, qk_o;
-assign rs1_o = op.rs1;
-assign rs2_o = op.rs2;
+assign rs1_o = rs1;
+assign rs2_o = rs2;
 
 always_comb begin
     // if source register is not reg0, and if ROB has the value for the
@@ -114,19 +114,23 @@ end
 always_ff @ (posedge clk) begin
     if (rst) begin
         rob_write <= 1'b0;
-        rob_dest <= '0;
+        pc_and_rd.instr_pc <= 32'd0;
+        pc_and_rd.opcode <= rv32i_opcode'(opcode);
+        pc_and_rd.rd <= '0;
         alu_o.valid <= 1'b0;
     end else begin
         rob_write <= 1'b0;
-        rob_dest <= '0;
+        pc_and_rd.instr_pc <= 32'd0;
+        pc_and_rd.opcode <= rv32i_opcode'(opcode);
+        pc_and_rd.rd <= '0;
         alu_o.valid <= 1'b0;
-        case (op.opcode)
+        case (opcode)
             // op_lui : begin
-            //     if (op.rd != 0 && alu_rs_full == 0 && rob_free_tag != 0) begin
-            //         rob_dest <= op.rd;
+            //     if (rd != 0 && alu_rs_full == 0 && rob_free_tag != 0) begin
+            //         rob_dest <= rd;
             //         rob_write <= 1'b1;
             //         alu_o.vj <= 32'd0;
-            //         alu_o.vk <= op.u_imm;
+            //         alu_o.vk <= u_imm;
             //         alu_o.qj <= 4'd0;
             //         alu_o.qk <= 4'd0;
             //         alu_o.op <= alu_add;
@@ -135,11 +139,13 @@ always_ff @ (posedge clk) begin
             // end
 
             op_auipc : begin // KEEP
-                if (op.rd != 0 && alu_rs_full == 0 && rob_free_tag != 0) begin
-                    rob_dest <= op.rd;
+                if (rd != 0 && alu_rs_full == 0 && rob_free_tag != 0) begin
+                    pc_and_rd.instr_pc <= instr_pc;
+                    pc_and_rd.opcode <= rv32i_opcode'(opcode);
+                    pc_and_rd.rd <= rd;
                     rob_write <= 1'b1;
-                    alu_o.vj <= op.instr_pc;
-                    alu_o.vk <= op.u_imm;
+                    alu_o.vj <= instr_pc;
+                    alu_o.vk <= u_imm;
                     alu_o.qj <= 4'd0;
                     alu_o.qk <= 4'd0;
                     alu_o.op <= alu_add;
@@ -150,9 +156,9 @@ always_ff @ (posedge clk) begin
             // op_jal : begin
             //     if (alu_rs_full == 0) begin
             //         alu_o.valid <= 1'b1;
-            //         rob_dest <= op.rd;
+            //         rob_dest <= rd;
             //         rob_write <= 1'b1;
-            //         alu_o.vj <= op.instr_pc;
+            //         alu_o.vj <= instr_pc;
             //         alu_o.vk <= 32'd4; // stores pc+4 into rd
             //         alu_o.qj <= 3'd0;
             //         alu_o.qk <= 3'd0;
@@ -170,7 +176,9 @@ always_ff @ (posedge clk) begin
 
             op_br : begin   // KEEP
                 if (cmp_rs_full == 0) begin
-                    rob_dest <= op.rd;
+                    pc_and_rd.instr_pc <= instr_pc;
+                    pc_and_rd.opcode <= rv32i_opcode'(opcode);
+                    pc_and_rd.rd <= rd;
 
                     cmp_o.valid <= 1'b1;
                     cmp_o.br <= 1'b1;    // High if opcode is branch, some non-branch opcodes also use
@@ -178,20 +186,22 @@ always_ff @ (posedge clk) begin
                     cmp_o.vk <= vk_o;
                     cmp_o.qj <= qj_o;
                     cmp_o.qk <= qk_o;
-                    cmp_o.funct <= branch_funct3;
+                    cmp_o.op <= branch_funct3;
                     cmp_o.tag <= rob_free_tag;
                     rob_write <= 1'b1;
                 end
             end
 
             op_load : begin // KEEP
-                if (op.rd != 0 && lsb_full == 0) begin
-                    rob_dest <= op.rd;
+                if (rd != 0 && lsb_full == 0) begin
+                    pc_and_rd.instr_pc <= instr_pc;
+                    pc_and_rd.opcode <= rv32i_opcode'(opcode);
+                    pc_and_rd.rd <= rd;
                     lsb_o.vj <= vj_o;
                     lsb_o.vk <= 32'd0;
                     lsb_o.qj <= qj_o;
                     lsb_o.qk <= 32'd0;
-                    lsb_o.addr <= op.i_imm;
+                    lsb_o.addr <= i_imm;
                     lsb_o.op <= 1'b0;  // 0 = load, 1 = store
                     lsb_o.funct <= load_funct3;
                     lsb_o.tag <= rob_free_tag;
@@ -201,12 +211,12 @@ always_ff @ (posedge clk) begin
             end
 
             op_store : begin    // KEEP
-                if (op.rd != 0 && lsb_full == 0) begin
+                if (rd != 0 && lsb_full == 0) begin
                     lsb_o.vj <= vj_o;
                     lsb_o.vk <= vk_o;
                     lsb_o.qj <= qj_o;
                     lsb_o.qk <= qk_o;
-                    lsb_o.addr <= op.s_imm;
+                    lsb_o.addr <= s_imm;
                     lsb_o.op <= 1'b1;  // 0 = load, 1 = store
                     lsb_o.funct <= store_funct3;
                     lsb_o.tag <= rob_free_tag;
@@ -216,10 +226,12 @@ always_ff @ (posedge clk) begin
             end
 
             op_imm : begin
-                if (op.rd != 0 && rob_free_tag != 0) begin
+                if (rd != 0 && rob_free_tag != 0) begin
                     // MAY NEED TO SEND INSTRUCTION TYPE TO ROB...
-                    rob_dest <= op.rd;
-                    case (op.funct3)
+                    pc_and_rd.instr_pc <= instr_pc;
+                    pc_and_rd.opcode <= rv32i_opcode'(opcode);
+                    pc_and_rd.rd <= rd;
+                    case (funct3)
                         // slt : begin
                         //     if (cmp_rs_full == 0) begin
                         //         // cmp_o.vj <= 
@@ -236,11 +248,11 @@ always_ff @ (posedge clk) begin
 
                         // sr : begin
                         //     if (alu_rs_full == 0) begin
-                        //         case (op.funct7[5])
+                        //         case (funct7[5])
                         //             1'b0 : begin
                         //                 alu_o.valid <= 1'b1;
                         //                 alu_o.vj <= vj_o;
-                        //                 alu_o.vk <= op.i_imm;
+                        //                 alu_o.vk <= i_imm;
                         //                 alu_o.qj <= qj_o;
                         //                 alu_o.qk <= 32'b0;
                         //                 alu_o.op <= alu_srl;
@@ -250,7 +262,7 @@ always_ff @ (posedge clk) begin
                         //             1'b1 : begin
                         //                 alu_o.valid <= 1'b1;
                         //                 alu_o.vj = vj_o;
-                        //                 alu_o.vk <= op.i_imm;
+                        //                 alu_o.vk <= i_imm;
                         //                 alu_o.qj <= qj_o;
                         //                 alu_o.qk <= 32'b0;
                         //                 alu_o.op <= alu_sra;
@@ -265,10 +277,10 @@ always_ff @ (posedge clk) begin
                             if (alu_rs_full == 0) begin
                                 alu_o.valid <= 1'b1;
                                 alu_o.vj <= vj_o;
-                                alu_o.vk <= op.i_imm;
+                                alu_o.vk <= i_imm;
                                 alu_o.qj <= qj_o;
                                 alu_o.qk <= 32'b0;
-                                alu_o.op <= alu_ops'(op.funct3);
+                                alu_o.op <= alu_ops'(funct3);
                                 alu_o.rob_idx <= rob_free_tag;
                                 rob_write <= 1'b1;
                             end
@@ -278,12 +290,14 @@ always_ff @ (posedge clk) begin
             end
 
             op_reg : begin
-                if (op.rd != 0 && rob_free_tag != 0) begin
-                    rob_dest <= op.rd;
-                    case (op.funct3)
+                if (rd != 0 && rob_free_tag != 0) begin
+                    pc_and_rd.instr_pc <= instr_pc;
+                    pc_and_rd.opcode <= rv32i_opcode'(opcode);
+                    pc_and_rd.rd <= rd;
+                    case (funct3)
                         add : begin
                             if (alu_rs_full == 0) begin
-                                case (op.funct7[5])
+                                case (funct7[5])
                                     1'b0: begin
                                         alu_o.valid <= 1'b1;
                                         alu_o.vj <= vj_o;
@@ -337,7 +351,7 @@ always_ff @ (posedge clk) begin
 
                         // sr : begin
                         //     if (alu_rs_full == 0) begin
-                        //         case (op.funct7[5])
+                        //         case (funct7[5])
                         //             1'b0: begin
                         //                 alu_o.valid <= 1'b1;
                         //                 alu_o.vj <= vj_o;
@@ -365,7 +379,7 @@ always_ff @ (posedge clk) begin
                         default : begin  // sll, axor, aor, aand
                             if (alu_rs_full == 0) begin
                                 alu_o.valid <= 1'b1;
-                                alu_o.op <= alu_ops'(op.funct3);
+                                alu_o.op <= alu_ops'(funct3);
                             end
                         end
                     endcase
@@ -379,19 +393,19 @@ end
 always_comb begin
     if (rst) begin
         iqueue_read = 1'b1;
-        rd_o = op.rd;
+        rd_o = rd;
         load_tag = 1'b0;
         tag = '0;
     end else begin
         iqueue_read = 1'b1;
-        rd_o = op.rd;
+        rd_o = rd;
         load_tag = 1'b0;
         tag = '0;
-        case (op.opcode)
+        case (opcode)
             op_lui, op_auipc, op_jal : begin
                 if (alu_rs_full == 0 && rob_free_tag != 0) begin
                     iqueue_read = 1'b1;
-                    rd_o = op.rd;
+                    rd_o = rd;
                     load_tag = 1'b1;
                     tag = rob_free_tag;
                 end
@@ -407,7 +421,7 @@ always_comb begin
             op_load : begin
                 if (lsb_full == 0 && rob_free_tag != 0) begin
                     iqueue_read = 1'b1;
-                    rd = op.rd;
+                    rd = rd;
                     load_tag = 1'b1;
                     tag = rob_free_tag;
                 end
@@ -420,14 +434,14 @@ always_comb begin
 
             op_imm : begin
                 if (rob_free_tag != 0) begin
-                    if (op.rd == 0)
+                    if (rd == 0)
                         iqueue_read = 1'b1;
                     else begin
-                        case (op.funct3)
+                        case (funct3)
                             slt, sltu : begin
                                 if (cmp_rs_full == 0) begin
                                     iqueue_read = 1'b1;
-                                    rd = op.rd;
+                                    rd = rd;
                                     load_tag = 1'b1;
                                     tag = rob_free_tag;
                                 end
@@ -436,7 +450,7 @@ always_comb begin
                             sr, add, sll, axor, aor, aand: begin
                                 if (alu_rs_full == 0) begin
                                     iqueue_read = 1'b1;
-                                    rd = op.rd;
+                                    rd = rd;
                                     load_tag = 1'b1;
                                     tag = rob_free_tag;
                                 end
@@ -449,14 +463,14 @@ always_comb begin
 
             op_reg : begin
                 if (rob_free_tag != 0) begin
-                    if (op.rd == 0)
+                    if (rd == 0)
                         iqueue_read = 1'b1;
                     else begin
-                        case (op.funct3)
+                        case (funct3)
                             slt, sltu : begin
                                 if (cmp_rs_full == 0) begin
                                     iqueue_read = 1'b1;
-                                    rd = op.rd;
+                                    rd = rd;
                                     load_tag = 1'b1;
                                     tag = rob_free_tag;
                                 end
@@ -465,7 +479,7 @@ always_comb begin
                             sr, add, sll, axor, aor, aand : begin
                                 if (alu_rs_full == 0) begin
                                     iqueue_read = 1'b1;
-                                    rd = op.rd;
+                                    rd = rd;
                                     load_tag = 1'b1;
                                     tag = rob_free_tag;
                                 end
