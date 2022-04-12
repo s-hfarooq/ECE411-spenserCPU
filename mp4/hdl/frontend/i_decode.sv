@@ -117,13 +117,16 @@ always_ff @ (posedge clk) begin
         pc_and_rd.instr_pc <= 32'd0;
         pc_and_rd.opcode <= rv32i_opcode'(opcode);
         pc_and_rd.rd <= '0;
-        alu_o.valid <= 1'b0;
+        // alu_o.valid <= 1'b0;
+        alu_o <= '0;
+        cmp_o <= '0;
     end else begin
         rob_write <= 1'b0;
         pc_and_rd.instr_pc <= 32'd0;
         pc_and_rd.opcode <= rv32i_opcode'(opcode);
         pc_and_rd.rd <= '0;
         alu_o.valid <= 1'b0;
+        cmp_o.valid <= 1'b0;
         case (opcode)
             // op_lui : begin
             //     if (rd != 0 && alu_rs_full == 0 && rob_free_tag != 0) begin

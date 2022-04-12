@@ -102,6 +102,8 @@ typedef struct packed { // when alu_rs needs to send data to the alu, it uses th
     rv32i_word vk;
     rv32i_word qj;
     rv32i_word qk;
+    rv32i_word pc;
+    rv32i_word b_imm;
     rv32i_word result;
     branch_funct3_t op;
     logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] rob_idx;

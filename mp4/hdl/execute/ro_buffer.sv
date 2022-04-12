@@ -107,6 +107,15 @@ always_ff @ (posedge clk) begin
             end
         end
     end
+
+    // Should be in always_comb?
+    for(int i = 0; i < `NUM_CDB_ENTRIES - 1; ++i) begin
+        // check for tag match
+        if(rob_arr[i].reg_data.can_commit == 1'b0 && rob_arr[i] && rob_arr[i].entry_num == cdb[i].tag) begin
+            rob_arr[cdb[i].tag].reg_data.value <= cdb[i].value;
+            rob_arr[cdb[i].tag].reg_data.can_commit <= 1'b1;
+        end
+    end
 end
 
 always_comb begin
@@ -117,15 +126,15 @@ always_comb begin
     endcase
 end
 
-always_comb begin : look_for_tags
+// always_comb begin : look_for_tags
 
-    for(int i = 0; i < `NUM_CDB_ENTRIES - 1; ++i) begin
-        // check for tag match
-            if(rob_arr[i].reg_data.can_commit == 1'b0 && rob_arr[i] && rob_arr[i].entry_num == cdb[i].tag) begin
-                rob_arr[cdb[i].tag].reg_data.value = cdb[i].value;
-                rob_arr[cdb[i].tag].reg_data.can_commit = 1'b1;
-            end
-        end
-end
+//     for(int i = 0; i < `NUM_CDB_ENTRIES - 1; ++i) begin
+//         // check for tag match
+//         if(rob_arr[i].reg_data.can_commit == 1'b0 && rob_arr[i] && rob_arr[i].entry_num == cdb[i].tag) begin
+//             rob_arr[cdb[i].tag].reg_data.value = cdb[i].value;
+//             rob_arr[cdb[i].tag].reg_data.can_commit = 1'b1;
+//         end
+//     end
+// end
 
 endmodule : ro_buffer

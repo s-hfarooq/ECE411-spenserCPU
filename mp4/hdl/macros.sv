@@ -29,4 +29,4 @@
 // i_decode.sv
 `define EMPTY_REG 32'b0
 
-`define NUM_CDB_ENTRIES 9
+`define NUM_CDB_ENTRIES 10

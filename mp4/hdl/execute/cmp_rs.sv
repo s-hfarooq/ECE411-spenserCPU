@@ -119,7 +119,7 @@ always_ff @(posedge clk) begin
             cmp_arr[i].qj <= data[i].rs2.tag;
             cmp_arr[i].op <= data[i].cmp_op;
             cmp_arr[i].rob_idx <= data[i].res.tag;
-
+            
             load_cmp[i] <= 1'b1;
 
             is_in_use[i] <= 1'b0;

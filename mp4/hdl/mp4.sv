@@ -45,8 +45,6 @@ i_decode_opcode_t pc_and_rd;
 regfile_data_out_t regfile_d_out;
 logic load_reg;
 logic load_ldst;
-logic load_alu_rs;
-logic load_cmp_rs;
 
 logic rob_read;
 logic flush = 1'b0;
@@ -178,7 +176,7 @@ alu_rs alu_rs (
     .clk(clk),
     .rst(rst),
     .flush(flush),
-    .load(load_alu_rs), // need to set high somewhere
+    .load(alu_o.valid),
     // From ROB
     .rob_reg_vals(),
     .rob_commit_arr(),
@@ -195,13 +193,13 @@ cmp_rs cmp_rs (
     .clk(clk),
     .rst(rst),
     .flush(flush),
-    .load(load_cmp_rs), // need to set high somewhere
+    .load(cmp_o.valid),
     // From ROB
     .rob_reg_vals(),
     .rob_commit_arr(),
     // From/to CDB
     .cdb_vals_i(cdb),
-    .cdb_cmp_vals_o(cdb[(2*(`ALU_RS_SIZE-1))+2 -: `ALU_RS_SIZE]), // I think this is right
+    .cdb_cmp_vals_o(cdb[(2*(`CMP_RS_SIZE-1))+3 -: `CMP_RS_SIZE]), // I think this is right
     // From decoder
     .cmp_o(cmp_o),
     // To decoder
