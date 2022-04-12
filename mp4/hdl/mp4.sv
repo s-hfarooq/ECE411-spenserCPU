@@ -157,7 +157,7 @@ ro_buffer rob (
     .clk(clk),
     .rst(rst),
     .flush(flush),
-    .read(),
+    .cdb(cdb),
     .write(rob_write),
     .input_i(pc_and_rd),
     // .instr_pc_in(),
@@ -178,7 +178,7 @@ alu_rs alu_rs (
     .clk(clk),
     .rst(rst),
     .flush(flush),
-    .load(load_alu_rs),
+    .load(load_alu_rs), // need to set high somewhere
     // From ROB
     .rob_reg_vals(),
     .rob_commit_arr(),
@@ -195,7 +195,7 @@ cmp_rs cmp_rs (
     .clk(clk),
     .rst(rst),
     .flush(flush),
-    .load(load_cmp_rs),
+    .load(load_cmp_rs), // need to set high somewhere
     // From ROB
     .rob_reg_vals(),
     .rob_commit_arr(),

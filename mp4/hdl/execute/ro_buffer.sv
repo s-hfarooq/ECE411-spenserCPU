@@ -7,8 +7,9 @@ module ro_buffer (
     input logic clk,
     input logic rst,
     input logic flush,
-    input logic read,
     input logic write,
+
+    input cdb_t cdb,
 
     // From decoder
     input i_decode_opcode_t input_i,
@@ -108,20 +109,23 @@ always_ff @ (posedge clk) begin
     end
 end
 
-// always_comb begin
-//     if (write == 1'b1) begin
-//         rob_free_tag = (rob_arr[tail_next_ptr].valid == 1) ? '0 : tail_next_ptr;
-//     end else begin
-//         rob_free_tag = (rob_arr[tail_ptr] == 1) ? '0 : tail_ptr;
-//     end
-// end
-
 always_comb begin
     case (write)
-        1'b0 : rob_free_tag = (rob_arr[tail_ptr] == 1) ? '0 : tail_ptr;
+        1'b0 : rob_free_tag = (rob_arr[tail_ptr].valid == 1) ? '0 : tail_ptr;
         1'b1 : rob_free_tag = (rob_arr[tail_next_ptr].valid == 1) ? '0 : tail_next_ptr;
         default : ;
     endcase
+end
+
+always_comb begin : look_for_tags
+
+    for(int i = 0; i < `NUM_CDB_ENTRIES - 1; ++i) begin
+        // check for tag match
+            if(rob_arr[i].reg_data.can_commit == 1'b0 && rob_arr[i] && rob_arr[i].entry_num == cdb[i].tag) begin
+                rob_arr[cdb[i].tag].reg_data.value = cdb[i].value;
+                rob_arr[cdb[i].tag].reg_data.can_commit = 1'b1;
+            end
+        end
 end
 
 endmodule : ro_buffer
