@@ -80,7 +80,10 @@ always_ff @(posedge clk) begin
         // else -- get data from regfile
         for(int i = 0; i < `RO_BUFFER_ENTRIES; ++i) begin
             if(rob_arr_o[i].tag == alu_o.qj) begin
-                if(rob_arr_o[i].valid == 1'b1) begin
+                if(alu_o.qj == 0) begin
+                    curr_rs_data.rs1.valid <= 1'b1;
+                    curr_rs_data.rs1.value <= alu_o.vj;
+                end else if(rob_arr_o[i].valid == 1'b1) begin
                     // copy from ROB
                     curr_rs_data.rs1.valid <= rob_arr_o[alu_o.qj].reg_data.can_commit;
                     curr_rs_data.rs1.value <= rob_arr_o[alu_o.qj].reg_data.value;
@@ -97,7 +100,10 @@ always_ff @(posedge clk) begin
             end
 
             if(rob_arr_o[i].tag == alu_o.qk) begin
-                if(rob_arr_o[i].valid == 1'b1) begin
+                if(alu_o.qk == 0) begin
+                    curr_rs_data.rs1.valid <= 1'b1;
+                    curr_rs_data.rs2.value <= alu_o.vk;
+                end if(rob_arr_o[i].valid == 1'b1) begin
                     // copy from ROB
                     curr_rs_data.rs2.valid <= rob_arr_o[alu_o.qk].reg_data.can_commit;
                     curr_rs_data.rs2.value <= rob_arr_o[alu_o.qk].reg_data.value;
@@ -143,11 +149,11 @@ always_ff @(posedge clk) begin
     for(int i = 0; i < `ALU_RS_SIZE; ++i) begin
         // check for tag match
         for(int j = 0; j < `NUM_CDB_ENTRIES; ++j) begin
-            if(data[i].rs1.tag == cdb_vals_i[j].tag) begin
+            if(data[i].rs1.valid == 1'b0 && data[i].rs1.tag == cdb_vals_i[j].tag) begin
                 data[i].rs1.value <= cdb_vals_i[j].value;
                 data[i].rs1.valid <= 1'b1;
             end
-            if(data[i].rs2.tag == cdb_vals_i[j].tag) begin
+            if(data[i].rs2.valid == 1'b0 &&  data[i].rs2.tag == cdb_vals_i[j].tag) begin
                 data[i].rs2.value <= cdb_vals_i[j].value;
                 data[i].rs2.valid <= 1'b1;
             end
@@ -176,7 +182,7 @@ always_ff @(posedge clk) begin
         // Send data to CDB
         if(load_cdb[i] == 1'b1) begin
             cdb_alu_vals_o[i].value <= alu_res_arr[i];
-            cdb_alu_vals_o[i].tag <= data[i].res.tag;
+            cdb_alu_vals_o[i].tag <= alu_arr[i].rob_idx;
         end
     end
 end
