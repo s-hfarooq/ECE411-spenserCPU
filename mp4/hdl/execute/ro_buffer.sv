@@ -17,7 +17,7 @@ module ro_buffer (
 
     // To decoder
     output rob_arr_t rob_arr_o,
-    output logic [$clog2(`RO_BUFFER_ENTRIES):0] rob_free_tag,
+    output logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] rob_free_tag,
     output logic empty,
     output logic full,
 
