@@ -69,6 +69,7 @@ assign d_out.vj_out = (rs1_i == 0) ? 32'h0000_0000 : regfile[rs1_i];
 assign d_out.vk_out = (rs2_i == 0) ? 32'h0000_0000 : regfile[rs2_i];
 assign d_out.qj_out = tags[rs1_i];
 assign d_out.qk_out = tags[rs2_i];
+assign d_out.qi_out = 0;
 
 // to ALU units
 assign alu_rs_d_out.vj_out = (rs1_alu_rs_i == 0) ? 32'h0000_0000 : regfile[rs1_alu_rs_i];
