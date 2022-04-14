@@ -120,11 +120,13 @@ always_ff @ (posedge clk) begin
     end
 
     // Should be in always_comb?
-    for(int i = 0; i < `NUM_CDB_ENTRIES - 1; ++i) begin
+    for(int i = 0; i < `NUM_CDB_ENTRIES; ++i) begin
         // check for tag match
-        if(rob_arr[i].reg_data.can_commit == 1'b0 && rob_arr[i] && rob_arr[i].tag == cdb[i].tag) begin
-            rob_arr[cdb[i].tag].reg_data.value <= cdb[i].value;
-            rob_arr[cdb[i].tag].reg_data.can_commit <= 1'b1;
+        for(int j = 0; j < `RO_BUFFER_ENTRIES; ++j) begin
+            if(rob_arr[j].reg_data.can_commit == 1'b0 && rob_arr[j] && rob_arr[j].tag == cdb[i].tag) begin
+                rob_arr[cdb[i].tag].reg_data.value <= cdb[i].value;
+                rob_arr[cdb[i].tag].reg_data.can_commit <= 1'b1;
+            end
         end
     end
 end

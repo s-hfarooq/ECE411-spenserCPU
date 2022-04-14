@@ -16,10 +16,8 @@ module regfile (
     input rv32i_reg rs1_cmp_rs_i, rs2_cmp_rs_i,
 
     // From ROB
-    input logic load_reg,
-    input rv32i_reg reg_id_rob, // Destination reg from ROB
-    input rv32i_word reg_val,
-    input rv32i_reg tag_rob,    // Tag from ROB
+    input rob_values_t rob_o,
+    input logic rob_is_committing,
 
     // Outputs
     output regfile_data_out_t d_out,
@@ -84,24 +82,21 @@ assign cmp_rs_d_out.qj_out = tags[rs1_cmp_rs_i];
 assign cmp_rs_d_out.qk_out = tags[rs2_cmp_rs_i];
 
 always_ff @ (posedge clk) begin
-    if (rst) begin
+    if (rst || flush) begin
         for (int i = 0; i < 32; ++i) begin
             regfile[i] <= 32'h0000_0000;
             tags[i] <= 5'b00000;
         end
     end
-    else if (flush) begin
-        // ????????????
-    end
     // Load register value from ROB
-    else if (load_reg == 1'b1 && reg_id_rob != 5'b00000) begin
-        regfile[reg_id_rob] <= reg_val;
+    else if (rob_is_committing == 1'b1 && rob_o.tag != 5'b00000) begin
+        regfile[rob_o.op.rd] <= rob_o.reg_data.value;
 
         /* Clear tag for the register being of ROB commit when the tag of
         the register being modified matches the tag of the ROB entry that
         was just committed */
-        if (tags[reg_id_rob] == tag_rob)
-            tags[reg_id_rob] <= 5'b00000;
+        if (tags[rob_o.op.rd] == rob_o.tag)
+            tags[rob_o.op.rd] <= 5'b00000;
     end
 
     // Load register tag from decoder
