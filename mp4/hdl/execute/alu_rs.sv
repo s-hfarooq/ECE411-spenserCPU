@@ -79,11 +79,12 @@ always_ff @(posedge clk) begin
         // do comparison -- if tag exists in ROB, get data from ROB.
         // else -- get data from regfile
         for(int i = 0; i < `RO_BUFFER_ENTRIES; ++i) begin
-            if(rob_arr_o[i].tag == alu_o.qj) begin
-                if(alu_o.qj == 0) begin
-                    curr_rs_data.rs1.valid <= 1'b1;
-                    curr_rs_data.rs1.value <= alu_o.vj;
-                end else if(rob_arr_o[i].valid == 1'b1) begin
+            if(alu_o.qj == 0) begin
+                // Copy from alu_o input
+                curr_rs_data.rs1.valid <= 1'b1;
+                curr_rs_data.rs1.value <= alu_o.vj;
+            end else if(rob_arr_o[i].tag == alu_o.qj) begin
+                if(rob_arr_o[i].valid == 1'b1) begin
                     // copy from ROB
                     curr_rs_data.rs1.valid <= rob_arr_o[alu_o.qj].reg_data.can_commit;
                     curr_rs_data.rs1.value <= rob_arr_o[alu_o.qj].reg_data.value;
@@ -99,11 +100,13 @@ always_ff @(posedge clk) begin
                 curr_rs_data.rs1.value <= alu_rs_d_out.vj_out;
             end
 
-            if(rob_arr_o[i].tag == alu_o.qk) begin
-                if(alu_o.qk == 0) begin
-                    curr_rs_data.rs1.valid <= 1'b1;
-                    curr_rs_data.rs2.value <= alu_o.vk;
-                end if(rob_arr_o[i].valid == 1'b1) begin
+
+            if(alu_o.qk == 0) begin
+                // Copy from alu_o input
+                curr_rs_data.rs2.valid <= 1'b1;
+                curr_rs_data.rs2.value <= alu_o.vk;
+            end else if(rob_arr_o[i].tag == alu_o.qk) begin
+                if(rob_arr_o[i].valid == 1'b1) begin
                     // copy from ROB
                     curr_rs_data.rs2.valid <= rob_arr_o[alu_o.qk].reg_data.can_commit;
                     curr_rs_data.rs2.value <= rob_arr_o[alu_o.qk].reg_data.value;
@@ -129,12 +132,16 @@ always_ff @(posedge clk) begin
         // load into first available rs (TODO PARAMETRIZE)
         if(is_in_use[0] == 1'b0) begin
             data[0] <= curr_rs_data;
+            is_in_use[0] <= 1'b1;
         end else if(is_in_use[1] == 1'b0) begin
             data[1] <= curr_rs_data;
+            is_in_use[1] <= 1'b1;
         end else if(is_in_use[2] == 1'b0) begin
             data[2] <= curr_rs_data;
+            is_in_use[2] <= 1'b1;
         end else if(is_in_use[3] == 1'b0) begin
             data[3] <= curr_rs_data;
+            is_in_use[3] <= 1'b1;
         end else begin
             alu_rs_full <= 1'b1;
         end
@@ -175,14 +182,13 @@ always_ff @(posedge clk) begin
             alu_arr[i].rob_idx <= data[i].res.tag; // doesn't matter?
 
             load_alu[i] <= 1'b1;
-
-            is_in_use[i] <= 1'b0;
         end
 
         // Send data to CDB
         if(load_cdb[i] == 1'b1) begin
             cdb_alu_vals_o[i].value <= alu_res_arr[i];
             cdb_alu_vals_o[i].tag <= alu_arr[i].rob_idx;
+            is_in_use[i] <= 1'b0;
         end
     end
 end

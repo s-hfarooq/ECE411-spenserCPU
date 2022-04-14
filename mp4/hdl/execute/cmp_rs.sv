@@ -67,7 +67,11 @@ always_ff @(posedge clk) begin
         curr_rs_data.cmp_op <= cmp_o.op;
 
         for(int i = 0; i < `RO_BUFFER_ENTRIES; ++i) begin
-            if(rob_arr_o[i].tag == cmp_o.qj) begin
+            if(cmp_o.qj == 0) begin
+                // Copy from cmp_o input
+                curr_rs_data.rs1.valid <= 1'b1;
+                curr_rs_data.rs1.value <= cmp_o.vj;
+            end else if(rob_arr_o[i].tag == cmp_o.qj) begin
                 if(rob_arr_o[i].valid == 1'b1) begin
                     // copy from ROB
                     curr_rs_data.rs1.valid <= rob_arr_o[cmp_o.qj].reg_data.can_commit;
@@ -84,7 +88,11 @@ always_ff @(posedge clk) begin
                 curr_rs_data.rs1.value <= cmp_rs_d_out.vj_out;
             end
 
-            if(rob_arr_o[i].tag == cmp_o.qk) begin
+            if(cmp_o.qk == 0) begin
+                // Copy from cmp_o input
+                curr_rs_data.rs2.valid <= 1'b1;
+                curr_rs_data.rs2.value <= cmp_o.vk;
+            end else if(rob_arr_o[i].tag == cmp_o.qk) begin
                 if(rob_arr_o[i].valid == 1'b1) begin
                     // copy from ROB
                     curr_rs_data.rs2.valid <= rob_arr_o[cmp_o.qk].reg_data.can_commit;
@@ -111,12 +119,16 @@ always_ff @(posedge clk) begin
         // load into first available rs (TODO PARAMETRIZE)
         if(is_in_use[0] == 1'b0) begin
             data[0] <= curr_rs_data;
+            is_in_use[0] <= 1'b1;
         end else if(is_in_use[1] == 1'b0) begin
             data[1] <= curr_rs_data;
+            is_in_use[1] <= 1'b1;
         end else if(is_in_use[2] == 1'b0) begin
             data[2] <= curr_rs_data;
+            is_in_use[2] <= 1'b1;
         end else if(is_in_use[3] == 1'b0) begin
             data[3] <= curr_rs_data;
+            is_in_use[3] <= 1'b1;
         end else begin
             cmp_rs_full <= 1'b1;
         end
@@ -157,14 +169,13 @@ always_ff @(posedge clk) begin
             cmp_arr[i].rob_idx <= data[i].res.tag;
             
             load_cmp[i] <= 1'b1;
-
-            is_in_use[i] <= 1'b0;
         end
 
         // Send data to CDB
         if(load_cdb[i] == 1'b1) begin
             cdb_cmp_vals_o[i].value <= cmp_res_arr[i];
             cdb_cmp_vals_o[i].tag <= data[i].res.tag;
+            is_in_use[i] <= 1'b0;
         end
     end
 end
