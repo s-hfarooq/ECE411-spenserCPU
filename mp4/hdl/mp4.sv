@@ -145,12 +145,10 @@ load_store_queue ldstbuf (
     .store_res(cdb[0]),
     .load_res(cdb[1]),
     .ldst_full(ldst_full),
-
     //() To/from ROB
     .rob_store_complete(rob_store_complete),
     .curr_is_store(rob_curr_is_store),
     .head_tag(rob_head_tag),
-    
     // From/to d-cache
     .data_read(data_read),
     .data_write(data_write),
@@ -184,8 +182,6 @@ alu_rs alu_rs (
     .rst(rst),
     .flush(flush),
     // From ROB
-    // .rob_reg_vals(),
-    // .rob_commit_arr(),
     .rob_arr_o(rob_arr),
     // From/to CDB
     .cdb_vals_i(cdb),
@@ -205,8 +201,6 @@ cmp_rs cmp_rs (
     .rst(rst),
     .flush(flush),
     // From ROB
-    // .rob_reg_vals(),
-    // .rob_commit_arr(),
     .rob_arr_o(rob_arr),
     // From/to CDB
     .cdb_vals_i(cdb),
