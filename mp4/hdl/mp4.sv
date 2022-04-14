@@ -44,7 +44,6 @@ i_decode_opcode_t pc_and_rd;
 
 regfile_data_out_t regfile_d_out, alu_rs_d_out;
 logic load_reg;
-logic load_ldst;
 
 logic rob_read;
 logic flush = 1'b0;
@@ -139,7 +138,6 @@ load_store_queue ldstbuf (
     .clk(clk),
     .rst(rst),
     .flush(flush),
-    .load(load_ldst),
     .cdb(cdb),
     .lsb_entry(lsb_decode_o), // from ROB/decode
     .store_res(cdb[0]),

@@ -8,7 +8,6 @@ module load_store_queue
     input clk,
     input rst,
     input logic flush,
-    input logic load,
 
     input cdb_t cdb,
 
@@ -64,7 +63,7 @@ always_ff @(posedge clk) begin : store_rs
         tail_ptr <= {$clog2(`LDST_SIZE){1'b0}};
         entries <= {$clog2(`LDST_SIZE){1'b0}};
     end else begin
-        if(load == 1'b1 && entries < `LDST_SIZE) begin
+        if(lsb_entry.valid == 1'b1 && entries < `LDST_SIZE) begin
             queue[tail_ptr] <= lsb_entry;
             tail_ptr <= tail_ptr + 1;
             entries <= entries + 1;
@@ -74,17 +73,17 @@ always_ff @(posedge clk) begin : store_rs
     if(entries > 0) begin
         case(queue[head_ptr].type_of_inst)
             1'b0: begin // load
-                // broadcast data received on CDB
-                // calculate effective address and set tag
-                load_res.value <= data_rdata;
-                load_res.tag <= queue[head_ptr].qj;
-
                 // request data from d_cache
                 data_read <= 1'b1;
                 data_addr <= queue[head_ptr].addr + queue[head_ptr].vj;
 
                 // remove entry from queue
                 if(data_resp == 1'b1) begin // only once cache has responded
+                    // broadcast data received on CDB
+                    // calculate effective address and set tag
+                    load_res.value <= data_rdata;
+                    load_res.tag <= queue[head_ptr].qj;
+
                     head_ptr <= head_ptr + 1;
                     entries <= entries - 1;
                 end
@@ -96,14 +95,10 @@ always_ff @(posedge clk) begin : store_rs
                         queue[head_ptr].vj <= cdb[i].value;
                         // set register to valid
                         queue[head_ptr].qj <= 3'b0;
-                    end
-                    else if (cdb[i].tag == queue[head_ptr].qk) begin
+                    end else if (cdb[i].tag == queue[head_ptr].qk) begin
                         queue[head_ptr].vk <= cdb[i].value;
                         // set register to valid
                         queue[head_ptr].qk <= 3'b0;
-                    end
-                    else begin
-                        // keep waiting
                     end
                 end
 
@@ -119,7 +114,7 @@ always_ff @(posedge clk) begin : store_rs
                     data_write <= 1'b1;
                     data_addr <= queue[head_ptr].addr + queue[head_ptr].vj;
                     // SHOULD THIS BE VJ OR VK
-                    data_wdata <= queue[head_ptr].vk;
+                    data_wdata <= queue[head_ptr].vj;
 
                     // need to dequeue
                     if(data_resp == 1'b1) begin // only once cache has responded
