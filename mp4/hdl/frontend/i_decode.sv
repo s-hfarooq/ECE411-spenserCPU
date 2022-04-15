@@ -213,6 +213,7 @@ always_ff @ (posedge clk) begin
                     lsb_o.funct <= load_funct3;
                     lsb_o.tag <= rob_free_tag;
                     lsb_o.type_of_inst <= 1'b0;
+                    lsb_o.can_finish <= 1'b0;
                     rob_write <= 1'b1;
                 end
             end
@@ -229,6 +230,7 @@ always_ff @ (posedge clk) begin
                     lsb_o.funct <= store_funct3;
                     lsb_o.tag <= rob_free_tag;
                     lsb_o.type_of_inst <= 1'b1;
+                    lsb_o.can_finish <= 1'b0;
                     rob_write <= 1'b1;
                 end
             end
