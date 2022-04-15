@@ -102,7 +102,7 @@ always_ff @(posedge clk) begin : store_rs
                         // broadcast data received on CDB
                         // calculate effective address and set tag
                         load_res.value <= data_rdata;
-                        load_res.tag <= queue[head_ptr].qj;
+                        load_res.tag <= queue[head_ptr].tag;
 
                         head_ptr <= head_ptr + 1;
                         entries <= entries - 1;
