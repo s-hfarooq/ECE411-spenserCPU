@@ -54,15 +54,12 @@ always_ff @(posedge clk) begin
             data[i] <= '{default: 0};
             cmp_arr[i] <= '{default: 0};
             is_in_use[i] <= 1'b0;
-            // cdb_cmp_vals_o[i] <= '{default: 0};
         end
 
         // load_rob <= 1'b0;
     end 
     else if(cmp_o.valid) begin
         // load data from decoder / ROB
-        // for(int i = 0; i < `CMP_RS_SIZE; ++i)
-        //     cdb_cmp_vals_o[i] <= '{default: 0};
 
         curr_rs_data.valid <= 1'b0;
         curr_rs_data.busy <= 1'b0;

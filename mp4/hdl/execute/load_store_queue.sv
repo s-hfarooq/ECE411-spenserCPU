@@ -13,7 +13,6 @@ module load_store_queue
 
     input lsb_t lsb_entry, // from ROB
 
-    // output cdb_entry_t store_res,
     output cdb_entry_t load_res,
 
     output logic ldst_full,
@@ -72,6 +71,7 @@ always_ff @(posedge clk) begin : store_rs
     end
 
     if(entries > 0) begin
+        // Check CDB to see if needed values have been broadcasted
         for(int i = 0; i < `LDST_SIZE; ++i) begin
             for(int j = 0; j < `NUM_CDB_ENTRIES; ++j) begin
                 if(queue[i].qj != 0 && queue[i].qj == cdb[j].tag) begin
@@ -86,6 +86,7 @@ always_ff @(posedge clk) begin : store_rs
             end
         end
 
+        // Set can finish if we have valid register values
         if(queue[head_ptr].qj == 0 && queue[head_ptr].qk == 0) begin
             queue[head_ptr].can_finish <= 1'b1;
         end
