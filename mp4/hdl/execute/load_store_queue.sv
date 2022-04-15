@@ -13,7 +13,7 @@ module load_store_queue
 
     input lsb_t lsb_entry, // from ROB
 
-    output cdb_entry_t store_res,
+    // output cdb_entry_t store_res,
     output cdb_entry_t load_res,
 
     output logic ldst_full,
@@ -81,8 +81,8 @@ always_ff @(posedge clk) begin : store_rs
                 if(data_resp == 1'b1) begin // only once cache has responded
                     // broadcast data received on CDB
                     // calculate effective address and set tag
-                    load_res.value <= data_rdata;
-                    load_res.tag <= queue[head_ptr].qj;
+                    // load_res.value <= data_rdata;
+                    // load_res.tag <= queue[head_ptr].qj;
 
                     head_ptr <= head_ptr + 1;
                     entries <= entries - 1;
@@ -105,10 +105,10 @@ always_ff @(posedge clk) begin : store_rs
                 // check if both registers are valid and current store instruction at top of ROB, then output addr
                 if (queue[head_ptr].qj == 3'b0 && queue[head_ptr].qk == 3'b0 && 
                      curr_is_store == 1'b1 && head_tag == queue[head_ptr].tag) begin
-                    store_res.tag <= queue[head_ptr].tag;
+                    // store_res.tag <= queue[head_ptr].tag;
                     // add addresses together
-                    store_res.value <= queue[head_ptr].vj; // SHOULD THIS BE VJ OR VK
-                    store_res.tag <= queue[head_ptr].qj;
+                    // store_res.value <= queue[head_ptr].vj; // SHOULD THIS BE VJ OR VK
+                    // store_res.tag <= queue[head_ptr].qj;
 
                     // store to cache
                     data_write <= 1'b1;
