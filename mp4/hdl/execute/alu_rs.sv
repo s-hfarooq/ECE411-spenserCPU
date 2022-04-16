@@ -174,6 +174,7 @@ always_ff @(posedge clk) begin
         // if data[i].valid == 1'b1 then update alu_arr value and 
         // set load_rob high 1 cycle later
         if(data[i].valid == 1'b1) begin
+            curr_rs_data.busy <= 1'b1;
             alu_arr[i].vj <= data[i].rs1.value;
             alu_arr[i].vk <= data[i].rs2.value;
             alu_arr[i].qj <= data[i].rs1.tag;

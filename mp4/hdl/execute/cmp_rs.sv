@@ -24,12 +24,18 @@ module cmp_rs (
     // To decoder
     output logic cmp_rs_full,
 
+    // To fetch
+    output logic take_br,   // 1 = take branch, 0 = don't take branch
+    output rv32i_word curr_pc,  // Do we need this???
+    output rv32i_word next_pc,  // This IS NOT PC + 4
+
     // To/from regfile
     output rv32i_reg rs1_cmp_rs_i, rs2_cmp_rs_i,
     input regfile_data_out_t cmp_rs_d_out
 );
 
 rs_data_t data [`CMP_RS_SIZE-1:0] /* synthesis ramstyle = "logic" */;
+// cmp_rs_t data [`CMP_RS_SIZE-1:0] /* synthesis ramstyle = "logic" */;
 logic is_in_use [3:0];
 logic [`CMP_RS_SIZE-1:0] load_cmp;
 
@@ -195,5 +201,25 @@ generate
         );
     end
 endgenerate
+
+// always_ff @ (posedge clk) begin
+//     for (int i = 0; i < NUM_CMP_RS; ++i) begin
+//         // Checks only current entries that have valid values
+//         if (is_in_use[i] == 1 && Qj[i] == 0 && Qk[i] == 0) begin
+//             if (data[i].br) begin   // If instruction is a branch
+//                 // Tell fetch to add immediate to current PC instead
+//                 // of going to PC + 4
+//                 take_br <= cmp_res_arr[i];
+//                 if (res[i]) begin
+//                     next_pc[i] <= pc[i] + data[i].b_imm;
+//                 end else begin
+//                     next_pc[i] <= pc[i] + 4;
+//                 end
+//             end else begin   // If instruction is not a branchs
+//                 // stuff
+//             end
+//         end
+//     end
+// end
 
 endmodule : cmp_rs

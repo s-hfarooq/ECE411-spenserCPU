@@ -104,6 +104,8 @@ always_ff @(posedge clk) begin : store_rs
                         // calculate effective address and set tag
                         load_res.value <= data_rdata;
                         load_res.tag <= queue[head_ptr].tag;
+                        
+                        queue[head_ptr].valid <= 1'b0;
 
                         head_ptr <= head_ptr + 1;
                         entries <= entries - 1;
@@ -139,6 +141,8 @@ always_ff @(posedge clk) begin : store_rs
 
                         // need to dequeue
                         if(data_resp == 1'b1) begin // only once cache has responded
+                            queue[head_ptr].valid <= 1'b0;
+
                             head_ptr <= head_ptr + 1;
                             entries <= entries - 1;
                             rob_store_complete <= 1'b1;
