@@ -128,6 +128,7 @@ always_ff @ (posedge clk) begin
         pc_and_rd.rd <= '0;
         alu_o.valid <= 1'b0;
         cmp_o.valid <= 1'b0;
+        lsb_o.valid <= 1'b0;
         case (opcode)
             // op_lui : begin
             //     if (rd != 0 && alu_rs_full == 0 && rob_free_tag != 0) begin
@@ -213,6 +214,7 @@ always_ff @ (posedge clk) begin
                     lsb_o.funct <= load_funct3;
                     lsb_o.tag <= rob_free_tag;
                     lsb_o.type_of_inst <= 1'b0;
+                    lsb_o.can_finish <= 1'b0;
                     rob_write <= 1'b1;
                 end
             end
@@ -229,6 +231,7 @@ always_ff @ (posedge clk) begin
                     lsb_o.funct <= store_funct3;
                     lsb_o.tag <= rob_free_tag;
                     lsb_o.type_of_inst <= 1'b1;
+                    lsb_o.can_finish <= 1'b0;
                     rob_write <= 1'b1;
                 end
             end

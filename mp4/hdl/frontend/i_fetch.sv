@@ -33,7 +33,7 @@ always_comb begin
     else
         mem_read = 1'b1;
 end
-//assign mem_write = 1'b0;
+assign mem_write = 1'b0;
 assign i_queue_write = 1'b1;
 
 pc_register pc (

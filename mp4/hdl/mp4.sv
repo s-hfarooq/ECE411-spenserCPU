@@ -140,7 +140,7 @@ load_store_queue ldstbuf (
     .flush(flush),
     .cdb(cdb),
     .lsb_entry(lsb_decode_o), // from ROB/decode
-    .store_res(cdb[0]),
+    // .store_res(cdb[0]),
     .load_res(cdb[1]),
     .ldst_full(ldst_full),
     //() To/from ROB

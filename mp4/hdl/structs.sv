@@ -16,6 +16,7 @@ typedef struct packed {
     logic [2:0] funct;
     tag_t tag;
     logic valid;
+    logic can_finish;
 } lsb_t;
 
 typedef struct packed {
