@@ -128,6 +128,7 @@ always_ff @ (posedge clk) begin
         pc_and_rd.rd <= '0;
         alu_o.valid <= 1'b0;
         cmp_o.valid <= 1'b0;
+        lsb_o.valid <= 1'b0;
         case (opcode)
             // op_lui : begin
             //     if (rd != 0 && alu_rs_full == 0 && rob_free_tag != 0) begin
