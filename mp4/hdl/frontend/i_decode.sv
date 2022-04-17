@@ -134,7 +134,7 @@ always_ff @ (posedge clk) begin
             //     if (rd != 0 && alu_rs_full == 0 && rob_free_tag != 0) begin
             //         rob_dest <= rd;
             //         rob_write <= 1'b1;
-            //         alu_o.vj <= 32'd0;
+            //         alu_o.vj <= 32'd0; // TODO: use new stuct variables
             //         alu_o.vk <= u_imm;
             //         alu_o.qj <= 4'd0;
             //         alu_o.qk <= 4'd0;
@@ -150,10 +150,12 @@ always_ff @ (posedge clk) begin
                     pc_and_rd.rd <= rd;
                     rob_write <= 1'b1;
                     alu_o.valid <= 1'b1;
-                    alu_o.vj <= instr_pc;
-                    alu_o.vk <= u_imm;
-                    alu_o.qj <= 4'd0;
-                    alu_o.qk <= 4'd0;
+                    alu_o.rs1.value <= instr_pc;
+                    alu_o.rs1.valid <= 1'b1;
+                    alu_o.rs2.value <= u_imm;
+                    alu_o.rs2.valid <= 1'b1;
+                    alu_o.rs1.tag <= 4'd0;
+                    alu_o.rs2.tag <= 4'd0;
                     alu_o.op <= alu_add;
                     alu_o.rob_idx <= rob_free_tag;
                 end
@@ -164,7 +166,7 @@ always_ff @ (posedge clk) begin
             //         alu_o.valid <= 1'b1;
             //         rob_dest <= rd;
             //         rob_write <= 1'b1;
-            //         alu_o.vj <= instr_pc;
+            //         alu_o.vj <= instr_pc; // TODO: use new stuct variables
             //         alu_o.vk <= 32'd4; // stores pc+4 into rd
             //         alu_o.qj <= 3'd0;
             //         alu_o.qk <= 3'd0;
@@ -261,7 +263,7 @@ always_ff @ (posedge clk) begin
                         //     if (alu_rs_full == 0) begin
                         //         case (funct7[5])
                         //             1'b0 : begin
-                        //                 alu_o.valid <= 1'b1;
+                        //                 alu_o.valid <= 1'b1; // TODO: use new stuct variables
                         //                 alu_o.vj <= vj_o;
                         //                 alu_o.vk <= i_imm;
                         //                 alu_o.qj <= qj_o;
@@ -271,7 +273,7 @@ always_ff @ (posedge clk) begin
                         //             end
 
                         //             1'b1 : begin
-                        //                 alu_o.valid <= 1'b1;
+                        //                 alu_o.valid <= 1'b1; // TODO: use new stuct variables
                         //                 alu_o.vj = vj_o;
                         //                 alu_o.vk <= i_imm;
                         //                 alu_o.qj <= qj_o;
@@ -287,10 +289,13 @@ always_ff @ (posedge clk) begin
                         default : begin  // add, sll, axor, aor, aand
                             if (alu_rs_full == 0) begin
                                 alu_o.valid <= 1'b1;
-                                alu_o.vj <= vj_o;
-                                alu_o.vk <= i_imm;
-                                alu_o.qj <= qj_o;
+                                alu_o.rs1.value <= vj_o;
+                                alu_o.rs1.valid <= (qj_o == 0);
+                                alu_o.rs2.value <= i_imm;
+                                alu_o.rs2.valid <= 1'b1;
+                                alu_o.rs1.tag <= qj_o;
                                 alu_o.qk <= 32'b0;
+                                alu_o.rs2.tag <= qj_o;
                                 alu_o.op <= alu_ops'(funct3);
                                 alu_o.rob_idx <= rob_free_tag;
                                 rob_write <= 1'b1;
@@ -311,10 +316,12 @@ always_ff @ (posedge clk) begin
                                 case (funct7[5])
                                     1'b0: begin
                                         alu_o.valid <= 1'b1;
-                                        alu_o.vj <= vj_o;
-                                        alu_o.vk <= vk_o;
-                                        alu_o.qj <= qj_o;
-                                        alu_o.qk <= qk_o;
+                                        alu_o.rs1.value <= vj_o;
+                                        alu_o.rs1.valid <= (qj_o == 0);
+                                        alu_o.rs2.value <= vk_o;
+                                        alu_o.rs2.valid <= (qk_o == 0);
+                                        alu_o.rs1.tag <= qj_o;
+                                        alu_o.rs2.tag <= qk_o;
                                         alu_o.op <= alu_add;
                                         rob_write <= 1'b1;
                                         
@@ -322,10 +329,12 @@ always_ff @ (posedge clk) begin
 
                                     1'b1: begin
                                         alu_o.valid <= 1'b1;
-                                        alu_o.vj <= vj_o;
-                                        alu_o.vk <= vj_o;
-                                        alu_o.qj <= qj_o;
-                                        alu_o.qk <= qk_o;
+                                        alu_o.rs1.value <= vj_o;
+                                        alu_o.rs1.valid <= (qj_o == 0);
+                                        alu_o.rs2.value <= vj_o;
+                                        alu_o.rs2.valid <= (qk_o == 0);
+                                        alu_o.rs1.tag <= qj_o;
+                                        alu_o.rs2.tag <= qk_o;
                                         alu_o.op <= alu_sub;
                                         rob_write <= 1'b1;
                                     end
@@ -364,8 +373,8 @@ always_ff @ (posedge clk) begin
                         //     if (alu_rs_full == 0) begin
                         //         case (funct7[5])
                         //             1'b0: begin
-                        //                 alu_o.valid <= 1'b1;
-                        //                 alu_o.vj <= vj_o;
+                        //                 alu_o.valid <= 1'b1; // TODO: use new stuct variables
+                        //                 alu_o.vj <= vj_o; 
                         //                 alu_o.vk <= vk_o;
                         //                 alu_o.qj <= qj_o;
                         //                 alu_o.qk <= qk_o;
@@ -374,7 +383,7 @@ always_ff @ (posedge clk) begin
                         //             end
 
                         //             1'b1: begin
-                        //                 alu_o.valid <= 1'b1;
+                        //                 alu_o.valid <= 1'b1; // TODO: use new stuct variables
                         //                 alu_o.vj <= vj_o;
                         //                 alu_o.vk <= vk_o;
                         //                 alu_o.qj <= qj_o;

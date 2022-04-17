@@ -96,6 +96,8 @@ always_ff @(posedge clk) begin
             end
         end
 
+        alu_o.res.valid <= 1'b0;
+
         // load into first available rs (TODO PARAMETRIZE)
         if(is_in_use[0] == 1'b0) begin
             data[0] <= alu_o;
