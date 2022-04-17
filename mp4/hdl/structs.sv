@@ -79,11 +79,14 @@ typedef struct packed {
 // for doing internal calculations in the alu reservation station
 typedef struct packed { // when alu_rs needs to send data to the alu, it uses this struct
     logic valid;
-    rv32i_word vj;
-    rv32i_word vk;
-    rv32i_word qj;
-    rv32i_word qk;
-    rv32i_word result;
+    rs_reg_t rs1;
+    rs_reg_t rs2;
+    rs_reg_t res;
+    // rv32i_word vj;
+    // rv32i_word vk;
+    // rv32i_word qj;
+    // rv32i_word qk;
+    // rv32i_word result;
     alu_ops op;
     tag_t rob_idx;
 } alu_rs_t;
