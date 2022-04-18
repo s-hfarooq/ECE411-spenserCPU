@@ -54,6 +54,7 @@ typedef struct packed {
 
     // rv32i_word value;
     rob_reg_data_t reg_data;
+    rv32i_word target_pc;
 } rob_values_t;
 
 typedef struct packed {
@@ -106,6 +107,7 @@ typedef struct packed {
 typedef struct packed {
     rv32i_word value;
     tag_t tag;
+    rv32i_word target_pc;
 } cdb_entry_t;
 
 typedef cdb_entry_t[`NUM_CDB_ENTRIES-1:0] cdb_t;

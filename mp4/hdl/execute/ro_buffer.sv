@@ -136,12 +136,8 @@ always_ff @ (posedge clk) begin
         // check for tag match
         for(int j = 0; j < `RO_BUFFER_ENTRIES; ++j) begin
             if(rob_arr[j].reg_data.can_commit == 1'b0 && rob_arr[j] && rob_arr[j].tag == cdb[i].tag) begin
-                if(cdb[i].value == 32'h13) begin
-                        $display("0x13 added to ROB");
-                        $displayh("%p\n", cdb);
-                        $displayh("%p\n", rob_arr);
-                end
                 rob_arr[cdb[i].tag].reg_data.value <= cdb[i].value;
+                // rob_arr[cdb[i].]
                 rob_arr[cdb[i].tag].reg_data.can_commit <= 1'b1;
             end
         end
