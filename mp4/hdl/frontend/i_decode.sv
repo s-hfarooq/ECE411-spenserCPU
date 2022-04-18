@@ -296,7 +296,7 @@ always_ff @ (posedge clk) begin
                                 alu_o.rs2.value <= i_imm;
                                 alu_o.rs2.valid <= 1'b1;
                                 alu_o.rs1.tag <= qj_o;
-                                alu_o.qk <= 32'b0;
+                                alu_o.rs2.tag <= 32'b0;
                                 alu_o.rs2.tag <= qj_o;
                                 alu_o.op <= alu_ops'(funct3);
                                 alu_o.rob_idx <= rob_free_tag;

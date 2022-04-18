@@ -42,6 +42,50 @@ logic [`CMP_RS_SIZE-1:0] load_cdb;
 // for whatever reason we got a multiple drivers error when writing directly to alu_arr[i].value
 logic [`CMP_RS_SIZE-1:0] cmp_res_arr;
 
+task updateFromROB(int idx);
+    for(int i = 0; i < `RO_BUFFER_ENTRIES; ++i) begin
+        if(data[idx].rs1.valid == 1'b1) begin
+            // do nothing
+        end else if(rob_arr_o[i].tag == data[idx].rs1.tag) begin
+            if(rob_arr_o[i].valid == 1'b1) begin
+                // copy from ROB
+                data[idx].rs1.valid <= rob_arr_o[data[idx].rs1.tag].reg_data.can_commit;
+                data[idx].rs1.value <= rob_arr_o[data[idx].rs1.tag].reg_data.value;
+            end else begin 
+                // set entry valid to 0
+                // copy value over so that it is not dont cares
+                data[idx].rs1.valid <= 1'b0;
+            end
+        end else begin
+            // copy from regfile
+            rs1_cmp_rs_i <= data[idx].rs1.tag;
+            data[idx].rs1.valid <= 1'b1;
+            data[idx].rs1.value <= cmp_rs_d_out.vj_out;
+        end
+
+        if(data[idx].rs2.valid == 1'b1) begin
+            // do nothing
+        end else if(rob_arr_o[i].tag == data[idx].rs2.tag) begin
+            if(rob_arr_o[i].valid == 1'b1) begin
+                // copy from ROB
+                data[idx].rs2.valid <= rob_arr_o[data[idx].rs2.tag].reg_data.can_commit;
+                data[idx].rs2.value <= rob_arr_o[data[idx].rs2.tag].reg_data.value;
+            end else begin 
+                // set entry valid to 0
+                // copy value over so that it is not dont cares
+                data[idx].rs2.valid <= 1'b0;
+            end
+        end else begin
+            // copy from regfile
+            rs2_cmp_rs_i <= data[idx].rs2.tag;
+            data[idx].rs2.valid <= 1'b1;
+            data[idx].rs2.value <= cmp_rs_d_out.vk_out;
+        end
+    end
+
+    data[idx].res.valid <= 1'b0;
+endtask
+
 always_ff @(posedge clk) begin
     // Can probably make more efficient - worry about later
     cmp_rs_full <= 1'b1;
@@ -53,73 +97,73 @@ always_ff @(posedge clk) begin
     if(rst || flush) begin
         for(int i = 0; i < `CMP_RS_SIZE; ++i) begin
             data[i] <= '{default: 0};
-            cmp_arr[i] <= '{default: 0};
             is_in_use[i] <= 1'b0;
         end
-
-        // load_rob <= 1'b0;
     end 
     else if(cmp_o.valid) begin
         // load data from decoder / ROB
 
-        for(int i = 0; i < `RO_BUFFER_ENTRIES; ++i) begin
-            if(cmp_o.rs1.valid == 1'b1) begin
-                // do nothing
-            end else if(rob_arr_o[i].tag == cmp_o.rs1.tag) begin
-                if(rob_arr_o[i].valid == 1'b1) begin
-                    // copy from ROB
-                    cmp_o.rs1.valid <= rob_arr_o[cmp_o.rs1.tag].reg_data.can_commit;
-                    cmp_o.rs1.value <= rob_arr_o[cmp_o.rs1.tag].reg_data.value;
-                end else begin 
-                    // set entry valid to 0
-                    // copy value over so that it is not dont cares
-                    cmp_o.rs1.valid <= 1'b0;
-                end
-            end else begin
-                // copy from regfile
-                rs1_cmp_rs_i <= cmp_o.rs1.tag;
-                cmp_o.rs1.valid <= 1'b1;
-                cmp_o.rs1.value <= cmp_rs_d_out.vj_out;
-            end
-
-            if(cmp_o.rs2.valid == 1'b1) begin
-                // do nothing
-            end else if(rob_arr_o[i].tag == cmp_o.rs2.tag) begin
-                if(rob_arr_o[i].valid == 1'b1) begin
-                    // copy from ROB
-                    cmp_o.rs2.valid <= rob_arr_o[cmp_o.rs2.tag].reg_data.can_commit;
-                    cmp_o.rs2.value <= rob_arr_o[cmp_o.rs2.tag].reg_data.value;
-                end else begin 
-                    // set entry valid to 0
-                    // copy value over so that it is not dont cares
-                    cmp_o.rs2.valid <= 1'b0;
-                end
-            end else begin
-                // copy from regfile
-                rs2_cmp_rs_i <= cmp_o.rs2.tag;
-                cmp_o.rs2.valid <= 1'b1;
-                cmp_o.rs2.value <= cmp_rs_d_out.vk_out;
-            end
-        end
-
-        cmp_o.res.valid <= 1'b0;
-
-        // load into first available rs (TODO PARAMETRIZE)
         if(is_in_use[0] == 1'b0) begin
             data[0] <= cmp_o;
+            updateFromROB(0);
             is_in_use[0] <= 1'b1;
         end else if(is_in_use[1] == 1'b0) begin
             data[1] <= cmp_o;
+            updateFromROB(1);
             is_in_use[1] <= 1'b1;
         end else if(is_in_use[2] == 1'b0) begin
             data[2] <= cmp_o;
+            updateFromROB(2);
             is_in_use[2] <= 1'b1;
         end else if(is_in_use[3] == 1'b0) begin
             data[3] <= cmp_o;
+            updateFromROB(3);
             is_in_use[3] <= 1'b1;
         end else begin
             cmp_rs_full <= 1'b1;
         end
+
+        // for(int i = 0; i < `RO_BUFFER_ENTRIES; ++i) begin
+        //     if(cmp_o.rs1.valid == 1'b1) begin
+        //         // do nothing
+        //     end else if(rob_arr_o[i].tag == cmp_o.rs1.tag) begin
+        //         if(rob_arr_o[i].valid == 1'b1) begin
+        //             // copy from ROB
+        //             cmp_o.rs1.valid <= rob_arr_o[cmp_o.rs1.tag].reg_data.can_commit;
+        //             cmp_o.rs1.value <= rob_arr_o[cmp_o.rs1.tag].reg_data.value;
+        //         end else begin 
+        //             // set entry valid to 0
+        //             // copy value over so that it is not dont cares
+        //             cmp_o.rs1.valid <= 1'b0;
+        //         end
+        //     end else begin
+        //         // copy from regfile
+        //         rs1_cmp_rs_i <= cmp_o.rs1.tag;
+        //         cmp_o.rs1.valid <= 1'b1;
+        //         cmp_o.rs1.value <= cmp_rs_d_out.vj_out;
+        //     end
+
+        //     if(cmp_o.rs2.valid == 1'b1) begin
+        //         // do nothing
+        //     end else if(rob_arr_o[i].tag == cmp_o.rs2.tag) begin
+        //         if(rob_arr_o[i].valid == 1'b1) begin
+        //             // copy from ROB
+        //             cmp_o.rs2.valid <= rob_arr_o[cmp_o.rs2.tag].reg_data.can_commit;
+        //             cmp_o.rs2.value <= rob_arr_o[cmp_o.rs2.tag].reg_data.value;
+        //         end else begin 
+        //             // set entry valid to 0
+        //             // copy value over so that it is not dont cares
+        //             cmp_o.rs2.valid <= 1'b0;
+        //         end
+        //     end else begin
+        //         // copy from regfile
+        //         rs2_cmp_rs_i <= cmp_o.rs2.tag;
+        //         cmp_o.rs2.valid <= 1'b1;
+        //         cmp_o.rs2.value <= cmp_rs_d_out.vk_out;
+        //     end
+        // end
+
+        // load into first available rs (TODO PARAMETRIZE)
     end
     
     // if is_valid sent as input, iterate though all items and set valid bit high for rs1/rs2

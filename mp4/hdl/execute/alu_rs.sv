@@ -38,6 +38,50 @@ logic [`ALU_RS_SIZE-1:0] load_cdb;
 // for whatever reason we got a multiple drivers error when writing directly to alu_arr[i].value
 rv32i_word [`ALU_RS_SIZE-1:0] alu_res_arr;
 
+task updateFromROB(int idx);
+    for(int i = 0; i < `RO_BUFFER_ENTRIES; ++i) begin
+        if(data[idx].rs1.valid == 1'b1) begin
+            // do nothing
+        end else if(rob_arr_o[i].tag == data[idx].rs1.tag) begin
+            if(rob_arr_o[i].valid == 1'b1) begin
+                // copy from ROB
+                data[idx].rs1.valid <= rob_arr_o[data[idx].rs1.tag].reg_data.can_commit;
+                data[idx].rs1.value <= rob_arr_o[data[idx].rs1.tag].reg_data.value;
+            end else begin
+                // set entry valid to 0
+                // copy value over so that it is not dont cares
+                data[idx].rs1.valid <= 1'b0;
+            end
+        end else begin
+            // copy from regfile
+            rs1_alu_rs_i <= data[idx].rs1.tag;
+            data[idx].rs1.valid <= 1'b1;
+            data[idx].rs1.value <= alu_rs_d_out.vj_out;
+        end
+
+        if(data[idx].rs2.valid == 1'b1) begin
+            // do nothing
+        end else if(rob_arr_o[i].tag == data[idx].rs2.tag) begin
+            if(rob_arr_o[i].valid == 1'b1) begin
+                // copy from ROB
+                data[idx].rs2.valid <= rob_arr_o[data[idx].rs2.tag].reg_data.can_commit;
+                data[idx].rs2.value <= rob_arr_o[data[idx].rs2.tag].reg_data.value;
+            end else begin 
+                // set entry valid to 0
+                // copy value over so that it is not dont cares
+                data[idx].rs2.valid <= 1'b0;
+            end
+        end else begin
+            // copy from regfile
+            rs2_alu_rs_i <= data[idx].rs2.tag;
+            data[idx].rs2.valid <= 1'b1;
+            data[idx].rs2.value <= alu_rs_d_out.vk_out;
+        end
+    end
+
+    data[idx].res.valid <= 1'b0;
+endtask
+
 always_ff @(posedge clk) begin
     // Can probably make more efficient - worry about later
     alu_rs_full <= 1'b1;
@@ -54,62 +98,22 @@ always_ff @(posedge clk) begin
     end else if (alu_o.valid) begin
         // load data from decoder / ROB
 
-        // do comparison -- if tag exists in ROB, get data from ROB.
-        // else -- get data from regfile
-        for(int i = 0; i < `RO_BUFFER_ENTRIES; ++i) begin
-            if(alu_o.rs1.valid == 1'b1) begin
-                // do nothing
-            end else if(rob_arr_o[i].tag == alu_o.rs1.tag) begin
-                if(rob_arr_o[i].valid == 1'b1) begin
-                    // copy from ROB
-                    alu_o.rs1.valid <= rob_arr_o[alu_o.rs1.tag].reg_data.can_commit;
-                    alu_o.rs1.value <= rob_arr_o[alu_o.rs1.tag].reg_data.value;
-                end else begin
-                    // set entry valid to 0
-                    // copy value over so that it is not dont cares
-                    alu_o.rs1.valid <= 1'b0;
-                end
-            end else begin
-                // copy from regfile
-                rs1_alu_rs_i <= alu_o.rs1.tag;
-                alu_o.rs1.valid <= 1'b1;
-                alu_o.rs1.value <= alu_rs_d_out.vj_out;
-            end
-
-            if(alu_o.rs2.valid == 1'b1) begin
-                // do nothing
-            end else if(rob_arr_o[i].tag == alu_o.rs2.tag) begin
-                if(rob_arr_o[i].valid == 1'b1) begin
-                    // copy from ROB
-                    alu_o.rs2.valid <= rob_arr_o[alu_o.rs2.tag].reg_data.can_commit;
-                    alu_o.rs2.value <= rob_arr_o[alu_o.rs2.tag].reg_data.value;
-                end else begin 
-                    // set entry valid to 0
-                    // copy value over so that it is not dont cares
-                    alu_o.rs2.valid <= 1'b0;
-                end
-            end else begin
-                // copy from regfile
-                rs2_alu_rs_i <= alu_o.rs2.tag;
-                alu_o.rs2.valid <= 1'b1;
-                alu_o.rs2.value <= alu_rs_d_out.vk_out;
-            end
-        end
-
-        alu_o.res.valid <= 1'b0;
-
         // load into first available rs (TODO PARAMETRIZE)
         if(is_in_use[0] == 1'b0) begin
             data[0] <= alu_o;
+            // updateFromROB(0);
             is_in_use[0] <= 1'b1;
         end else if(is_in_use[1] == 1'b0) begin
             data[1] <= alu_o;
+            // updateFromROB(1);
             is_in_use[1] <= 1'b1;
         end else if(is_in_use[2] == 1'b0) begin
             data[2] <= alu_o;
+            // updateFromROB(2);
             is_in_use[2] <= 1'b1;
         end else if(is_in_use[3] == 1'b0) begin
             data[3] <= alu_o;
+            // updateFromROB(3);
             is_in_use[3] <= 1'b1;
         end else begin
             alu_rs_full <= 1'b1;
@@ -139,7 +143,7 @@ always_ff @(posedge clk) begin
         // if data[i].valid == 1'b1 then update alu_arr value and 
         // set load_rob high 1 cycle later
         if(data[i].rs1.valid == 1'b1 && data[i].rs2.valid == 1'b1) begin
-            curr_rs_data.busy <= 1'b1;
+            // data[i].busy <= 1'b1;
             load_alu[i] <= 1'b1;
         end
 
