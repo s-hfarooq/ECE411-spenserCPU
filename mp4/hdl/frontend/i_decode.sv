@@ -189,10 +189,12 @@ always_ff @ (posedge clk) begin
                     pc_and_rd.rd <= rd;
                     cmp_o.valid <= 1'b1;
                     cmp_o.br <= 1'b1;    // High if opcode is branch, some non-branch opcodes also use
-                    cmp_o.vj <= vj_o;
-                    cmp_o.vk <= vk_o;
-                    cmp_o.qj <= qj_o;
-                    cmp_o.qk <= qk_o;
+                    cmp_o.rs1.value <= vj_o;
+                    cmp_o.rs1.valid <= (qj_o == 0);
+                    cmp_o.rs2.value <= vk_o;
+                    cmp_o.rs2.valid <= (qk_o == 0);
+                    cmp_o.rs1.tag <= qj_o;
+                    cmp_o.rs2.tag <= qk_o;
                     cmp_o.pc <= instr_pc;
                     cmp_o.b_imm <= b_imm;
                     cmp_o.op <= branch_funct3;
@@ -323,6 +325,7 @@ always_ff @ (posedge clk) begin
                                         alu_o.rs1.tag <= qj_o;
                                         alu_o.rs2.tag <= qk_o;
                                         alu_o.op <= alu_add;
+                                        alu_o.rob_idx <= rob_free_tag;
                                         rob_write <= 1'b1;
                                         
                                     end
@@ -336,6 +339,7 @@ always_ff @ (posedge clk) begin
                                         alu_o.rs1.tag <= qj_o;
                                         alu_o.rs2.tag <= qk_o;
                                         alu_o.op <= alu_sub;
+                                        alu_o.rob_idx <= rob_free_tag;
                                         rob_write <= 1'b1;
                                     end
                                     default : ;
@@ -346,7 +350,7 @@ always_ff @ (posedge clk) begin
                         // slt : begin // send data to cmp rs somehow
                         //     if (cmp_rs_full == 0) begin
                         //         // cmp_o.br <= 1'b1;    // High if opcode is branch, non-branch opcodes also use
-                        //         // cmp_o.cmp_vj <= ;
+                        //         // cmp_o.cmp_vj <= ; // TODO: use new stuct variables 
                         //         // cmp_o.cmp_vk <= ;
                         //         // cmp_o.cmp_qj <= ;
                         //         // cmp_o.cmp_qk <= ;
@@ -360,7 +364,7 @@ always_ff @ (posedge clk) begin
 
                         // sltu : begin
                         //     if (cmp_rs_full == 0) begin
-                        //         // cmp_o.cmp_vj <= ;
+                        //         // cmp_o.cmp_vj <= ; // TODO: use new stuct variables
                         //         // cmp_o.cmp_vk <= ;
                         //         // cmp_o.cmp_qj <= ;
                         //         // cmp_o.cmp_qk <= ;
