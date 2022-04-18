@@ -102,7 +102,25 @@ always_ff @(posedge clk) begin : store_rs
                     if(data_resp == 1'b1) begin // only once cache has responded
                         // broadcast data received on CDB
                         // calculate effective address and set tag
-                        load_res.value <= data_rdata;
+
+                        case(load_funct3_t'(queue[head_ptr].funct))
+                            lb: begin 
+                                load_res.value <= {{24{data_rdata[7]}}, data_rdata[7:0]};
+                            end
+                            lh: begin
+                                load_res.value <= {{16{data_rdata[15]}}, data_rdata[15:0]};
+                            end
+                            lw: begin 
+                                load_res.value <= data_rdata;
+                            end
+                            lbu: begin 
+                                load_res.value <= {24'b0, data_rdata[7:0]};
+                            end
+                            lhu: begin 
+                                load_res.value <= {16'b0, data_rdata[15:0]};
+                            end
+                        endcase
+
                         load_res.tag <= queue[head_ptr].tag;
                         
                         queue[head_ptr].valid <= 1'b0;
