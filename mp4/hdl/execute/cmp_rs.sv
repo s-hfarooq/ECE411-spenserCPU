@@ -103,67 +103,26 @@ always_ff @(posedge clk) begin
     else if(cmp_o.valid) begin
         // load data from decoder / ROB
 
+        // load into first available rs (TODO PARAMETRIZE)
         if(is_in_use[0] == 1'b0) begin
             data[0] <= cmp_o;
-            updateFromROB(0);
+            // updateFromROB(0);
             is_in_use[0] <= 1'b1;
         end else if(is_in_use[1] == 1'b0) begin
             data[1] <= cmp_o;
-            updateFromROB(1);
+            // updateFromROB(1);
             is_in_use[1] <= 1'b1;
         end else if(is_in_use[2] == 1'b0) begin
             data[2] <= cmp_o;
-            updateFromROB(2);
+            // updateFromROB(2);
             is_in_use[2] <= 1'b1;
         end else if(is_in_use[3] == 1'b0) begin
             data[3] <= cmp_o;
-            updateFromROB(3);
+            // updateFromROB(3);
             is_in_use[3] <= 1'b1;
         end else begin
             cmp_rs_full <= 1'b1;
         end
-
-        // for(int i = 0; i < `RO_BUFFER_ENTRIES; ++i) begin
-        //     if(cmp_o.rs1.valid == 1'b1) begin
-        //         // do nothing
-        //     end else if(rob_arr_o[i].tag == cmp_o.rs1.tag) begin
-        //         if(rob_arr_o[i].valid == 1'b1) begin
-        //             // copy from ROB
-        //             cmp_o.rs1.valid <= rob_arr_o[cmp_o.rs1.tag].reg_data.can_commit;
-        //             cmp_o.rs1.value <= rob_arr_o[cmp_o.rs1.tag].reg_data.value;
-        //         end else begin 
-        //             // set entry valid to 0
-        //             // copy value over so that it is not dont cares
-        //             cmp_o.rs1.valid <= 1'b0;
-        //         end
-        //     end else begin
-        //         // copy from regfile
-        //         rs1_cmp_rs_i <= cmp_o.rs1.tag;
-        //         cmp_o.rs1.valid <= 1'b1;
-        //         cmp_o.rs1.value <= cmp_rs_d_out.vj_out;
-        //     end
-
-        //     if(cmp_o.rs2.valid == 1'b1) begin
-        //         // do nothing
-        //     end else if(rob_arr_o[i].tag == cmp_o.rs2.tag) begin
-        //         if(rob_arr_o[i].valid == 1'b1) begin
-        //             // copy from ROB
-        //             cmp_o.rs2.valid <= rob_arr_o[cmp_o.rs2.tag].reg_data.can_commit;
-        //             cmp_o.rs2.value <= rob_arr_o[cmp_o.rs2.tag].reg_data.value;
-        //         end else begin 
-        //             // set entry valid to 0
-        //             // copy value over so that it is not dont cares
-        //             cmp_o.rs2.valid <= 1'b0;
-        //         end
-        //     end else begin
-        //         // copy from regfile
-        //         rs2_cmp_rs_i <= cmp_o.rs2.tag;
-        //         cmp_o.rs2.valid <= 1'b1;
-        //         cmp_o.rs2.value <= cmp_rs_d_out.vk_out;
-        //     end
-        // end
-
-        // load into first available rs (TODO PARAMETRIZE)
     end
     
     // if is_valid sent as input, iterate though all items and set valid bit high for rs1/rs2
