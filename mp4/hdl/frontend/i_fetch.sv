@@ -15,7 +15,10 @@ module i_fetch (
 
     output logic mem_read,
     output logic mem_write,
-    output rv32i_word pc_o
+    output rv32i_word pc_o,
+
+    input logic take_br,
+    input rv32i_word next_pc
 );
 
 // i_queue signals
@@ -76,9 +79,9 @@ always_comb begin
 end
 
 always_comb begin : MUXES
-    case (branch_pred_pc_sel)
+    case (take_br)
         1'b0: pc_in = pc_out + 4;
-        1'b1: pc_in = alu_out;
+        1'b1: pc_in = next_pc;
         // default: `BAD_MUX_SEL;
     endcase
 end

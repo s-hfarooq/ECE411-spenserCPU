@@ -63,19 +63,6 @@ typedef struct packed {
     tag_t tag;
 } rs_reg_t;
 
-// passing data in and out of the reservation station
-typedef struct packed {
-    logic valid; // ready to commit
-    logic busy;
-    rv32i_opcode opcode;
-    alu_ops alu_op;
-    branch_funct3_t cmp_op;
-    rs_reg_t rs1;
-    rs_reg_t rs2;
-    rs_reg_t res;
-    // logic [ALU_RS_SIZE-1:0] idx;
-} rs_data_t;
-
 // for doing internal calculations in the alu reservation station
 typedef struct packed { // when alu_rs needs to send data to the alu, it uses this struct
     logic valid;

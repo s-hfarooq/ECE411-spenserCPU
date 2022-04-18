@@ -30,6 +30,9 @@ module alu_rs (
 // set busy to high, send to ALU
 // ALU broadcasts on CDB when done, add to ROB, clear from RS
 
+// TODO: edge case - what happens if tag value needed is broadcasted on cdb at the same 
+// time as data is loading into RS? Don't think data would ever load into RS
+
 alu_rs_t data [`ALU_RS_SIZE-1:0] /* synthesis ramstyle = "logic" */;
 logic is_in_use [3:0];
 logic [`ALU_RS_SIZE-1:0] load_alu;

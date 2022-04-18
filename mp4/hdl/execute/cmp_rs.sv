@@ -25,9 +25,8 @@ module cmp_rs (
     output logic cmp_rs_full,
 
     // To fetch
-    output logic take_br,   // 1 = take branch, 0 = don't take branch
-    output rv32i_word curr_pc,  // Do we need this???
-    output rv32i_word next_pc,  // This IS NOT PC + 4
+    // output logic take_br,   // 1 = take branch, 0 = don't take branch
+    // output rv32i_word next_pc,  // This IS NOT PC + 4
 
     // To/from regfile
     output rv32i_reg rs1_cmp_rs_i, rs2_cmp_rs_i,
@@ -156,6 +155,7 @@ always_ff @(posedge clk) begin
             cdb_cmp_vals_o[i].value <= cmp_res_arr[i];
             cdb_cmp_vals_o[i].tag <= data[i].rob_idx;
             is_in_use[i] <= 1'b0;
+            data[i].res.valid <= 1'b1;
         end
     end
 end
@@ -177,17 +177,18 @@ generate
 endgenerate
 
 // always_ff @ (posedge clk) begin
-//     for (int i = 0; i < NUM_CMP_RS; ++i) begin
+//     take_br <= 1'b0;
+//     for (int i = 0; i < `CMP_RS_SIZE; ++i) begin
 //         // Checks only current entries that have valid values
-//         if (is_in_use[i] == 1 && Qj[i] == 0 && Qk[i] == 0) begin
+//         if (is_in_use[i] == 1 && data[i].rs1.tag == 0 && data[i].rs2.tag == 0) begin
 //             if (data[i].br) begin   // If instruction is a branch
 //                 // Tell fetch to add immediate to current PC instead
 //                 // of going to PC + 4
 //                 take_br <= cmp_res_arr[i];
-//                 if (res[i]) begin
-//                     next_pc[i] <= pc[i] + data[i].b_imm;
+//                 if (data[i].res.valid == 1'b1) begin
+//                     next_pc[i] <= data[i].pc + data[i].b_imm;
 //                 end else begin
-//                     next_pc[i] <= pc[i] + 4;
+//                     next_pc[i] <= data[i].pc + 4;
 //                 end
 //             end else begin   // If instruction is not a branchs
 //                 // stuff

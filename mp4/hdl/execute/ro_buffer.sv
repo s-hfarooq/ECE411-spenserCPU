@@ -82,9 +82,11 @@ always_ff @ (posedge clk) begin
             rob_arr[head_ptr].valid <= 4'b0;
             is_committing <= 1'b1;
 
+            rob_arr[head_ptr].reg_data.can_commit <= 1'b0;
+
             if(curr_is_store == 1'b0 || rob_store_complete == 1'b1) begin
                 // Entry 0 is reserved
-                if(head_ptr >= `RO_BUFFER_ENTRIES)
+                if(head_ptr >= (`RO_BUFFER_ENTRIES - 1))
                     head_ptr <= 1;
                 else
                     head_ptr <= head_ptr + 1'b1;
@@ -93,7 +95,7 @@ always_ff @ (posedge clk) begin
             end
         end else if (write == 1'b1) begin
             // Save value to ROB, enqueue
-            if (counter < `RO_BUFFER_ENTRIES) begin
+            if (counter < (`RO_BUFFER_ENTRIES - 1)) begin
                 rob_arr[tail_ptr].op <= input_i;
                 rob_arr[tail_ptr].tag <= tail_ptr; 
                 rob_arr[tail_ptr].reg_data.can_commit <= 1'b0;
@@ -104,12 +106,12 @@ always_ff @ (posedge clk) begin
                 // rob_arr[tail_ptr].op.instr_pc <= instr_pc_in;
 
                 // Entry 0 is reserved
-                if(tail_ptr >= `RO_BUFFER_ENTRIES)
+                if(tail_ptr >= (`RO_BUFFER_ENTRIES - 1))
                     tail_ptr <= 1;
                 else
                     tail_ptr <= tail_ptr + 1'b1;
 
-                if (tail_next_ptr >= `RO_BUFFER_ENTRIES)
+                if (tail_next_ptr >= (`RO_BUFFER_ENTRIES - 1))
                     tail_next_ptr <= 1;
                 else
                     tail_next_ptr <= tail_next_ptr + 1;
