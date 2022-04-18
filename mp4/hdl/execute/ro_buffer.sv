@@ -82,7 +82,8 @@ always_ff @ (posedge clk) begin
             rob_arr[head_ptr].valid <= 4'b0;
             is_committing <= 1'b1;
 
-            rob_arr[head_ptr].reg_data.can_commit <= 1'b0;
+            // rob_arr[head_ptr].reg_data.can_commit <= 1'b0;
+            rob_arr[head_ptr] <= '{default: 0};
 
             if(curr_is_store == 1'b0 || rob_store_complete == 1'b1) begin
                 // Entry 0 is reserved
