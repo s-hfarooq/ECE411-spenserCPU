@@ -86,12 +86,21 @@ always_ff @ (posedge clk) begin
 
             if(curr_is_store == 1'b0 || rob_store_complete == 1'b1) begin
                 // Entry 0 is reserved
-                if(head_ptr >= (`RO_BUFFER_ENTRIES - 1))
+                if(counter <= 0) begin
+                    // do nothing
+                end else if(head_ptr >= (`RO_BUFFER_ENTRIES - 1)) begin
                     head_ptr <= 1;
-                else
+                end else begin
                     head_ptr <= head_ptr + 1'b1;
+                end
 
-                counter <= counter - 1'b1;
+
+                if(counter <= 0) begin
+                    tail_ptr <= tail_ptr;
+                    counter <= 0;
+                end else begin
+                    counter <= counter - 1'b1;
+                end
             end
         end else if (write == 1'b1) begin
             // Save value to ROB, enqueue
