@@ -58,7 +58,7 @@ module i_decode(
 rv32i_word instr_pc;
 logic [2:0] funct3;
 logic [6:0] funct7;
-logic [6:0] opcode;
+rv32i_opcode opcode;
 logic [31:0] i_imm, s_imm, b_imm, u_imm, j_imm;
 rv32i_reg rs1, rs2, rd;
 
