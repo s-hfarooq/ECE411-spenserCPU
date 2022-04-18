@@ -49,7 +49,7 @@ function void set_defaults();
     data_read = 1'b0;
     data_write = 1'b0;
     data_mbe = 4'b1111;
-    // load_res = '{default: 0};
+    load_res = '{default: 0};
 endfunction
 // store rs
 always_ff @(posedge clk) begin : store_rs

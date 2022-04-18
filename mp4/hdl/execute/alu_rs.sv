@@ -91,6 +91,8 @@ always_ff @(posedge clk) begin
     for(int i = 0; i < `ALU_RS_SIZE; ++i) begin
         if(is_in_use[i] == 1'b0)
             alu_rs_full <= 1'b0;
+
+        cdb_alu_vals_o[i] <= '{default: 0};
     end
     
     if(rst || flush) begin
@@ -151,7 +153,7 @@ always_ff @(posedge clk) begin
         end
 
         // Send data to CDB
-        if(load_cdb[i] == 1'b1) begin
+        if(is_in_use[i] == 1'b1 && load_cdb[i] == 1'b1) begin
             cdb_alu_vals_o[i].value <= alu_res_arr[i];
             cdb_alu_vals_o[i].tag <= data[i].rob_idx;
             is_in_use[i] <= 1'b0;
