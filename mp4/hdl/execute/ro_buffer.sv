@@ -64,6 +64,25 @@ logic [$clog2(`RO_BUFFER_ENTRIES):0] counter = 0;
 assign empty = (counter == 0);
 assign full = (counter >= (`RO_BUFFER_ENTRIES - 1));
 
+task incrementToNextInstr();
+    // dont commit
+    if(counter <= 0) begin
+        // do nothing
+    end else if(head_ptr >= (`RO_BUFFER_ENTRIES - 1)) begin
+        head_ptr <= 1;
+    end else begin
+        head_ptr <= head_ptr + 1'b1;
+    end
+
+
+    if(counter <= 0) begin
+        tail_ptr <= tail_ptr;
+        counter <= 0;
+    end else begin
+        counter <= counter - 1'b1;
+    end
+endtask;
+
 always_ff @ (posedge clk) begin
     is_committing <= 1'b0;
 
@@ -92,30 +111,20 @@ always_ff @ (posedge clk) begin
             //     target_pc = 32'd0;
             // end
 
-            // Output to regfile, dequeue
-            rob_o <= rob_arr[head_ptr];
-            rob_arr[head_ptr].valid <= 4'b0;
-            is_committing <= 1'b1;
+            if(rob_arr[head_ptr].op.opcode == op_br) begin
+                rob_arr[head_ptr] <= '{default: 0};
+                incrementToNextInstr();
+            end else begin
+                // Output to regfile, dequeue
+                rob_o <= rob_arr[head_ptr];
+                rob_arr[head_ptr].valid <= 4'b0;
+                is_committing <= 1'b1;
 
-            // rob_arr[head_ptr].reg_data.can_commit <= 1'b0;
-            rob_arr[head_ptr] <= '{default: 0};
+                // rob_arr[head_ptr].reg_data.can_commit <= 1'b0;
+                rob_arr[head_ptr] <= '{default: 0};
 
-            if(curr_is_store == 1'b0 || rob_store_complete == 1'b1) begin
-                // Entry 0 is reserved
-                if(counter <= 0) begin
-                    // do nothing
-                end else if(head_ptr >= (`RO_BUFFER_ENTRIES - 1)) begin
-                    head_ptr <= 1;
-                end else begin
-                    head_ptr <= head_ptr + 1'b1;
-                end
-
-
-                if(counter <= 0) begin
-                    tail_ptr <= tail_ptr;
-                    counter <= 0;
-                end else begin
-                    counter <= counter - 1'b1;
+                if(curr_is_store == 1'b0 || rob_store_complete == 1'b1) begin
+                    incrementToNextInstr();
                 end
             end
         end else if (write == 1'b1) begin

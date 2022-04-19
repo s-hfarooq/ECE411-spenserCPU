@@ -72,10 +72,10 @@ i_queue i_queue (
     .full(i_queue_full)
 );
 
-always_ff @ (posedge clk) begin
-    i_queue_data_in.pc <= pc_out;
-    i_queue_data_in.next_pc <= pc_out + 4; // branching will be different
-    i_queue_data_in.instr <= mem_rdata;
+always_comb begin
+    i_queue_data_in.pc = pc_out;
+    i_queue_data_in.next_pc = pc_out + 4; // branching will be different
+    i_queue_data_in.instr = mem_rdata;
 end
 
 always_comb begin : MUXES
