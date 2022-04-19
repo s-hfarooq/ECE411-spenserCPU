@@ -433,26 +433,26 @@ always_ff @ (posedge clk) begin
 end
 
 // Let iQueue know we want new values
-always_comb begin
+always_ff @(posedge clk) begin
     if (rst) begin
-        iqueue_read = 1'b1;
-        rd_o = rd;
-        load_tag = 1'b0;
-        tag = '0;
+        iqueue_read <= 1'b1;
+        rd_o <= rd;
+        load_tag <= 1'b0;
+        tag <= '0;
     end else if (rob_is_full == 1'b1) begin
-        iqueue_read = 1'b0;
+        iqueue_read <= 1'b0;
     end else begin
-        iqueue_read = 1'b1;
-        rd_o = rd;
-        load_tag = 1'b0;
-        tag = '0;
+        iqueue_read <= 1'b1;
+        rd_o <= rd;
+        load_tag <= 1'b0;
+        tag <= '0;
         case (opcode)
             op_lui, op_auipc, op_jal : begin
                 if (alu_rs_full == 0 && rob_free_tag != 0) begin
-                    iqueue_read = 1'b1;
-                    rd_o = rd;
-                    load_tag = 1'b1;
-                    tag = rob_free_tag;
+                    iqueue_read <= 1'b1;
+                    rd_o <= rd;
+                    load_tag <= 1'b1;
+                    tag <= rob_free_tag;
                 end
             end
 
@@ -460,45 +460,45 @@ always_comb begin
 
             op_br : begin
                 if (cmp_rs_full == 0 && rob_free_tag != 0)
-                    iqueue_read = 1'b1;
+                    iqueue_read <= 1'b1;
             end
 
             op_load : begin
                 if (lsb_full == 0 && rob_free_tag != 0) begin
-                    iqueue_read = 1'b1;
-                    rd_o = rd;
-                    load_tag = 1'b1;
-                    tag = rob_free_tag;
+                    iqueue_read <= 1'b1;
+                    rd_o <= rd;
+                    load_tag <= 1'b1;
+                    tag <= rob_free_tag;
                     $displayh("Tag=%p, rd=%p", rob_free_tag, rd);
                 end
             end
 
             op_store : begin
                 if (lsb_full == 0 && rob_free_tag != 0)
-                    iqueue_read = 1'b1;
+                    iqueue_read <= 1'b1;
             end
 
             op_imm : begin
                 if (rob_free_tag != 0) begin
                     if (rd == 0)
-                        iqueue_read = 1'b1;
+                        iqueue_read <= 1'b1;
                     else begin
                         case (funct3)
                             slt, sltu : begin
                                 if (cmp_rs_full == 0) begin
-                                    iqueue_read = 1'b1;
-                                    rd_o = rd;
-                                    load_tag = 1'b1;
-                                    tag = rob_free_tag;
+                                    iqueue_read <= 1'b1;
+                                    rd_o <= rd;
+                                    load_tag <= 1'b1;
+                                    tag <= rob_free_tag;
                                 end
                             end
 
                             sr, add, sll, axor, aor, aand: begin
                                 if (alu_rs_full == 0) begin
-                                    iqueue_read = 1'b1;
-                                    rd_o = rd;
-                                    load_tag = 1'b1;
-                                    tag = rob_free_tag;
+                                    iqueue_read <= 1'b1;
+                                    rd_o <= rd;
+                                    load_tag <= 1'b1;
+                                    tag <= rob_free_tag;
                                 end
                             end
                             default : ;
@@ -510,24 +510,24 @@ always_comb begin
             op_reg : begin
                 if (rob_free_tag != 0) begin
                     if (rd == 0)
-                        iqueue_read = 1'b1;
+                        iqueue_read <= 1'b1;
                     else begin
                         case (funct3)
                             slt, sltu : begin
                                 if (cmp_rs_full == 0) begin
-                                    iqueue_read = 1'b1;
-                                    rd_o = rd;
-                                    load_tag = 1'b1;
-                                    tag = rob_free_tag;
+                                    iqueue_read <= 1'b1;
+                                    rd_o <= rd;
+                                    load_tag <= 1'b1;
+                                    tag <= rob_free_tag;
                                 end
                             end
 
                             sr, add, sll, axor, aor, aand : begin
                                 if (alu_rs_full == 0) begin
-                                    iqueue_read = 1'b1;
-                                    rd_o = rd;
-                                    load_tag = 1'b1;
-                                    tag = rob_free_tag;
+                                    iqueue_read <= 1'b1;
+                                    rd_o <= rd;
+                                    load_tag <= 1'b1;
+                                    tag <= rob_free_tag;
                                 end
                             end
                             default : ;
