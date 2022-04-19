@@ -91,6 +91,8 @@ always_ff @(posedge clk) begin
     for(int i = 0; i < `CMP_RS_SIZE; ++i) begin
         if(is_in_use[i] == 1'b0)
             cmp_rs_full <= 1'b0;
+
+        cdb_cmp_vals_o[i] <= '{default: 0};
     end
     
     if(rst || flush) begin
@@ -151,7 +153,7 @@ always_ff @(posedge clk) begin
         end
 
         // Send data to CDB
-        if(load_cdb[i] == 1'b1) begin
+        if(is_in_use[i] && load_cdb[i] == 1'b1) begin
             // If instruction is a branch
             if (data[i].br == 1) begin
                 // if CMP output is 1 or 0, decide to take branch or not

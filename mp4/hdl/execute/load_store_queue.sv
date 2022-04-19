@@ -49,7 +49,7 @@ function void set_defaults();
     data_read = 1'b0;
     data_write = 1'b0;
     data_mbe = 4'b1111;
-    // load_res = '{default: 0};
+    load_res = '{default: 0};
 endfunction
 // store rs
 always_ff @(posedge clk) begin : store_rs
@@ -102,7 +102,25 @@ always_ff @(posedge clk) begin : store_rs
                     if(data_resp == 1'b1) begin // only once cache has responded
                         // broadcast data received on CDB
                         // calculate effective address and set tag
-                        load_res.value <= data_rdata;
+
+                        case(load_funct3_t'(queue[head_ptr].funct))
+                            lb: begin 
+                                load_res.value <= {{24{data_rdata[7]}}, data_rdata[7:0]};
+                            end
+                            lh: begin
+                                load_res.value <= {{16{data_rdata[15]}}, data_rdata[15:0]};
+                            end
+                            lw: begin 
+                                load_res.value <= data_rdata;
+                            end
+                            lbu: begin 
+                                load_res.value <= {24'b0, data_rdata[7:0]};
+                            end
+                            lhu: begin 
+                                load_res.value <= {16'b0, data_rdata[15:0]};
+                            end
+                        endcase
+
                         load_res.tag <= queue[head_ptr].tag;
                         
                         queue[head_ptr].valid <= 1'b0;
@@ -128,16 +146,25 @@ always_ff @(posedge clk) begin : store_rs
                     // check if both registers are valid and current store instruction at top of ROB, then output addr
                     if (queue[head_ptr].qj == 3'b0 && queue[head_ptr].qk == 3'b0 && 
                         curr_is_store == 1'b1 && head_tag == queue[head_ptr].tag) begin
-                        // store_res.tag <= queue[head_ptr].tag;
-                        // add addresses together
-                        // store_res.value <= queue[head_ptr].vj; // SHOULD THIS BE VJ OR VK
-                        // store_res.tag <= queue[head_ptr].qj;
-
                         // store to cache
                         data_write <= 1'b1;
                         data_addr <= queue[head_ptr].addr + queue[head_ptr].vj;
                         // SHOULD THIS BE VJ OR VK
                         data_wdata <= queue[head_ptr].vj;
+
+                        case(store_funct3_t'(queue[head_ptr].funct))
+                            // TODO Verify: THIS ASSUMES THAT THIS IS ALWAYS THLOWEST BITS.
+                            // WE NEED TO MAKE SURE THAT EVERYTHING IS 4-BYTE ALIGNED
+                            sb: begin
+                                data_mbe <= 4'b0001;
+                            end
+                            sh: begin
+                                data_mbe <= 4'b0011;
+                            end
+                            sw: begin
+                                data_mbe <= 4'b1111;
+                            end
+                        endcase
 
                         // need to dequeue
                         if(data_resp == 1'b1) begin // only once cache has responded
