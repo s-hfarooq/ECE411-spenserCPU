@@ -76,6 +76,9 @@ regfile_data_out_t alu_rs_d_outl;
 rv32i_reg rs1_cmp_rs_i, rs2_cmp_rs_i;
 regfile_data_out_t cmp_rs_d_out;
 
+logic take_br = 1'b0; // TODO: change this
+rv32i_word next_pc;
+
 i_fetch i_fetch (
     .clk(clk),
     .rst(rst),
@@ -85,7 +88,9 @@ i_fetch i_fetch (
     .iqueue_read(iqueue_read),
     .mem_read(inst_read),
     .mem_write(),
-    .pc_o(inst_addr)
+    .pc_o(inst_addr),
+    .take_br(take_br),
+    .next_pc(next_pc)
 );
 
 i_decode decode (

@@ -82,18 +82,30 @@ always_ff @ (posedge clk) begin
             rob_arr[head_ptr].valid <= 4'b0;
             is_committing <= 1'b1;
 
+            // rob_arr[head_ptr].reg_data.can_commit <= 1'b0;
+            rob_arr[head_ptr] <= '{default: 0};
+
             if(curr_is_store == 1'b0 || rob_store_complete == 1'b1) begin
                 // Entry 0 is reserved
-                if(head_ptr >= `RO_BUFFER_ENTRIES)
+                if(counter <= 0) begin
+                    // do nothing
+                end else if(head_ptr >= (`RO_BUFFER_ENTRIES - 1)) begin
                     head_ptr <= 1;
-                else
+                end else begin
                     head_ptr <= head_ptr + 1'b1;
+                end
 
-                counter <= counter - 1'b1;
+
+                if(counter <= 0) begin
+                    tail_ptr <= tail_ptr;
+                    counter <= 0;
+                end else begin
+                    counter <= counter - 1'b1;
+                end
             end
         end else if (write == 1'b1) begin
             // Save value to ROB, enqueue
-            if (counter < `RO_BUFFER_ENTRIES) begin
+            if (counter < (`RO_BUFFER_ENTRIES - 1)) begin
                 rob_arr[tail_ptr].op <= input_i;
                 rob_arr[tail_ptr].tag <= tail_ptr; 
                 rob_arr[tail_ptr].reg_data.can_commit <= 1'b0;
@@ -104,12 +116,12 @@ always_ff @ (posedge clk) begin
                 // rob_arr[tail_ptr].op.instr_pc <= instr_pc_in;
 
                 // Entry 0 is reserved
-                if(tail_ptr >= `RO_BUFFER_ENTRIES)
+                if(tail_ptr >= (`RO_BUFFER_ENTRIES - 1))
                     tail_ptr <= 1;
                 else
                     tail_ptr <= tail_ptr + 1'b1;
 
-                if (tail_next_ptr >= `RO_BUFFER_ENTRIES)
+                if (tail_next_ptr >= (`RO_BUFFER_ENTRIES - 1))
                     tail_next_ptr <= 1;
                 else
                     tail_next_ptr <= tail_next_ptr + 1;
@@ -124,12 +136,8 @@ always_ff @ (posedge clk) begin
         // check for tag match
         for(int j = 0; j < `RO_BUFFER_ENTRIES; ++j) begin
             if(rob_arr[j].reg_data.can_commit == 1'b0 && rob_arr[j] && rob_arr[j].tag == cdb[i].tag) begin
-                if(cdb[i].value == 32'h13) begin
-                        $display("0x13 added to ROB");
-                        $displayh("%p\n", cdb);
-                        $displayh("%p\n", rob_arr);
-                end
                 rob_arr[cdb[i].tag].reg_data.value <= cdb[i].value;
+                // rob_arr[cdb[i].]
                 rob_arr[cdb[i].tag].reg_data.can_commit <= 1'b1;
             end
         end

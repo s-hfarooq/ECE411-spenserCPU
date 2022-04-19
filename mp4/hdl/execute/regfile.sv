@@ -89,7 +89,7 @@ always_ff @ (posedge clk) begin
         end
     end
     // Load register value from ROB
-    else if (rob_is_committing == 1'b1 && rob_o.tag != 5'b00000) begin
+    else if (rob_is_committing == 1'b1 && rob_o.op.rd != 0) begin
         regfile[rob_o.op.rd] <= rob_o.reg_data.value;
 
         /* Clear tag for the register being of ROB commit when the tag of

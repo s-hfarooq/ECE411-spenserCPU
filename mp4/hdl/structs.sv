@@ -54,6 +54,7 @@ typedef struct packed {
 
     // rv32i_word value;
     rob_reg_data_t reg_data;
+    rv32i_word target_pc;
 } rob_values_t;
 
 typedef struct packed {
@@ -63,27 +64,17 @@ typedef struct packed {
     tag_t tag;
 } rs_reg_t;
 
-// passing data in and out of the reservation station
-typedef struct packed {
-    logic valid; // ready to commit
-    logic busy;
-    rv32i_opcode opcode;
-    alu_ops alu_op;
-    branch_funct3_t cmp_op;
-    rs_reg_t rs1;
-    rs_reg_t rs2;
-    rs_reg_t res;
-    // logic [ALU_RS_SIZE-1:0] idx;
-} rs_data_t;
-
 // for doing internal calculations in the alu reservation station
 typedef struct packed { // when alu_rs needs to send data to the alu, it uses this struct
     logic valid;
-    rv32i_word vj;
-    rv32i_word vk;
-    rv32i_word qj;
-    rv32i_word qk;
-    rv32i_word result;
+    rs_reg_t rs1;
+    rs_reg_t rs2;
+    rs_reg_t res;
+    // rv32i_word vj;
+    // rv32i_word vk;
+    // rv32i_word qj;
+    // rv32i_word qk;
+    // rv32i_word result;
     alu_ops op;
     tag_t rob_idx;
 } alu_rs_t;
@@ -91,10 +82,13 @@ typedef struct packed { // when alu_rs needs to send data to the alu, it uses th
 typedef struct packed { // when alu_rs needs to send data to the alu, it uses this struct
     logic valid;
     logic br;   // high if opcode is a branch, some non-branch opcodes also use cmp
-    rv32i_word vj;
-    rv32i_word vk;
-    rv32i_word qj;
-    rv32i_word qk;
+    // rv32i_word vj;
+    // rv32i_word vk;
+    // rv32i_word qj;
+    // rv32i_word qk;
+    rs_reg_t rs1;
+    rs_reg_t rs2;
+    rs_reg_t res;
     rv32i_word pc;
     rv32i_word b_imm;
     rv32i_word result;
@@ -113,6 +107,7 @@ typedef struct packed {
 typedef struct packed {
     rv32i_word value;
     tag_t tag;
+    rv32i_word target_pc;
 } cdb_entry_t;
 
 typedef cdb_entry_t[`NUM_CDB_ENTRIES-1:0] cdb_t;
