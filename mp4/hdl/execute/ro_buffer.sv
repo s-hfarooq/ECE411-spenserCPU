@@ -86,6 +86,9 @@ endtask
 always_ff @ (posedge clk) begin
     is_committing <= 1'b0;
 
+    if(input_i.rd == 8)
+        $display("rd 8 exists out");
+
     if(rst || flush) begin
         for (int i = 0; i < `RO_BUFFER_ENTRIES; ++i) begin
             rob_arr[i] <= '{default: 0};
@@ -127,8 +130,12 @@ always_ff @ (posedge clk) begin
                     incrementToNextInstr();
                 end
             end
-        end else if (write == 1'b1) begin
+        end 
+        
+        if (write == 1'b1) begin
             // Save value to ROB, enqueue
+            if(input_i.rd == 8)
+                $display("rd 8 exists2");
             if (counter < (`RO_BUFFER_ENTRIES - 1)) begin
                 rob_arr[tail_ptr].op <= input_i;
                 rob_arr[tail_ptr].tag <= tail_ptr; 
