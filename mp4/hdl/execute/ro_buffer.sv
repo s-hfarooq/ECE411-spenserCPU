@@ -81,7 +81,7 @@ task incrementToNextInstr();
     end else begin
         counter <= counter - 1'b1;
     end
-endtask;
+endtask
 
 always_ff @ (posedge clk) begin
     is_committing <= 1'b0;

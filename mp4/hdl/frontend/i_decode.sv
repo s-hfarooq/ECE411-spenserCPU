@@ -312,7 +312,7 @@ always_ff @ (posedge clk) begin
                     pc_and_rd.instr_pc <= instr_pc;
                     pc_and_rd.opcode <= rv32i_opcode'(opcode);
                     pc_and_rd.rd <= rd;
-                    case (funct3)
+                    case (arith_funct3_t'(funct3))
                         add : begin
                             if (alu_rs_full == 0) begin
                                 case (funct7[5])
@@ -334,7 +334,7 @@ always_ff @ (posedge clk) begin
                                         alu_o.valid <= 1'b1;
                                         alu_o.rs1.value <= vj_o;
                                         alu_o.rs1.valid <= (qj_o == 0);
-                                        alu_o.rs2.value <= vj_o;
+                                        alu_o.rs2.value <= vk_o;
                                         alu_o.rs2.valid <= (qk_o == 0);
                                         alu_o.rs1.tag <= qj_o;
                                         alu_o.rs2.tag <= qk_o;
@@ -403,7 +403,15 @@ always_ff @ (posedge clk) begin
                         default : begin  // sll, axor, aor, aand
                             if (alu_rs_full == 0) begin
                                 alu_o.valid <= 1'b1;
+                                alu_o.rs1.value <= vj_o;
+                                alu_o.rs2.value <= vk_o;
+                                alu_o.rs1.valid <= (qj_o == 0);
+                                alu_o.rs2.valid <= (qk_o == 0);
+                                alu_o.rs1.tag <= qj_o;
+                                alu_o.rs2.tag <= qk_o;
                                 alu_o.op <= alu_ops'(funct3);
+                                alu_o.rob_idx <= rob_free_tag;
+                                rob_write <= 1'b1;
                             end
                         end
                     endcase
