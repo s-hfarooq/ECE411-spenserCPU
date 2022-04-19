@@ -107,6 +107,7 @@ i_decode decode (
     .rob_free_tag(rob_free_tag),
     .rob_in(rob_arr),
     .rob_write(rob_write),
+    .rob_is_full(rob_is_full),
     // I'm going to use the i_decode_opcode_t version
     // .rob_dest(),           // dest_reg, send to ROB to load it in
     .pc_and_rd(pc_and_rd),

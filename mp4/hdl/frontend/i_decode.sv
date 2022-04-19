@@ -25,9 +25,8 @@ module i_decode(
 
     // From Reorder Buffer
     input logic [3:0] rob_free_tag,
-    // input rv32i_word rob_reg_vals [RO_BUFFER_ENTRIES],
-    // input logic rob_commit_arr [RO_BUFFER_ENTRIES],
     input rob_arr_t rob_in,
+    input logic rob_is_full,
 
     // To Reorder Buffer
     output logic rob_write,
@@ -112,6 +111,8 @@ end
 
 // Decode + Issue
 always_ff @ (posedge clk) begin
+    if(rd == 8)
+        $displayh("rd is 8, d_in is %p, opcode is %p", d_in, opcode);
     if (rst) begin
         rob_write <= 1'b0;
         pc_and_rd.instr_pc <= 32'd0;
@@ -121,7 +122,7 @@ always_ff @ (posedge clk) begin
         alu_o <= '0;
         cmp_o <= '0;
         lsb_o <= '0;
-    end else begin
+    end else if(iqueue_read == 1'b1) begin
         rob_write <= 1'b0;
         pc_and_rd.instr_pc <= 32'd0;
         pc_and_rd.opcode <= rv32i_opcode'(opcode);
@@ -297,7 +298,6 @@ always_ff @ (posedge clk) begin
                                 alu_o.rs2.valid <= 1'b1;
                                 alu_o.rs1.tag <= qj_o;
                                 alu_o.rs2.tag <= 32'b0;
-                                alu_o.rs2.tag <= qj_o;
                                 alu_o.op <= alu_ops'(funct3);
                                 alu_o.rob_idx <= rob_free_tag;
                                 rob_write <= 1'b1;
@@ -309,14 +309,22 @@ always_ff @ (posedge clk) begin
 
             op_reg : begin
                 if (rd != 0 && rob_free_tag != 0) begin
+                    if(rd == 8)
+                        $displayh("rd 8 in if, funct3 = %p", funct3);
                     pc_and_rd.instr_pc <= instr_pc;
                     pc_and_rd.opcode <= rv32i_opcode'(opcode);
                     pc_and_rd.rd <= rd;
                     case (arith_funct3_t'(funct3))
                         add : begin
+                            if(rd == 8)
+                                $display("in add case");
                             if (alu_rs_full == 0) begin
+                                if(rd == 8)
+                                    $displayh("in second if, funct7[5] = %p", funct7[5]);
                                 case (funct7[5])
                                     1'b0: begin
+                                        if(rd == 8)
+                                            $display("in fuct7[5]=0");
                                         alu_o.valid <= 1'b1;
                                         alu_o.rs1.value <= vj_o;
                                         alu_o.rs1.valid <= (qj_o == 0);
@@ -327,7 +335,9 @@ always_ff @ (posedge clk) begin
                                         alu_o.op <= alu_add;
                                         alu_o.rob_idx <= rob_free_tag;
                                         rob_write <= 1'b1;
-                                        
+
+                                        if(rd == 8)
+                                            $displayh("rs1val: %p, rs1valid: %p, rs2val: %p, rs2valid: %p, rs1tag: %p, rs2tag: %p, freetag: %p", vj_o, (qj_o==0), vk_o, (qk_o==0), qj_o, qk_o, rob_free_tag);
                                     end
 
                                     1'b1: begin
@@ -422,12 +432,15 @@ always_ff @ (posedge clk) begin
     end
 end
 
+// Let iQueue know we want new values
 always_comb begin
     if (rst) begin
         iqueue_read = 1'b1;
         rd_o = rd;
         load_tag = 1'b0;
         tag = '0;
+    end else if (rob_is_full == 1'b1) begin
+        iqueue_read = 1'b0;
     end else begin
         iqueue_read = 1'b1;
         rd_o = rd;
@@ -456,6 +469,7 @@ always_comb begin
                     rd_o = rd;
                     load_tag = 1'b1;
                     tag = rob_free_tag;
+                    $displayh("Tag=%p, rd=%p", rob_free_tag, rd);
                 end
             end
 
