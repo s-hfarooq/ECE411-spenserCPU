@@ -76,7 +76,7 @@ regfile_data_out_t alu_rs_d_outl;
 rv32i_reg rs1_cmp_rs_i, rs2_cmp_rs_i;
 regfile_data_out_t cmp_rs_d_out;
 
-logic take_br = 1'b0; // TODO: change this
+logic take_br;
 rv32i_word next_pc;
 
 i_fetch i_fetch (
@@ -177,7 +177,9 @@ ro_buffer rob (
     .is_committing(rob_is_committing),
     .rob_store_complete(rob_store_complete),
     .curr_is_store(rob_curr_is_store),
-    .head_tag(rob_head_tag)
+    .head_tag(rob_head_tag),
+    .pcmux_sel(take_br),
+    .target_pc(next_pc)
 );
 
 alu_rs alu_rs (

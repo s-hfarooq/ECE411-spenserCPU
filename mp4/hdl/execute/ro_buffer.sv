@@ -28,7 +28,11 @@ module ro_buffer (
     // To/from load store queue
     input logic rob_store_complete,
     output logic curr_is_store,
-    output logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] head_tag
+    output logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] head_tag,
+
+    // Output to PC
+    output logic pcmux_sel,
+    output rv32i_word target_pc
 );
 
 rob_arr_t rob_arr;
@@ -77,6 +81,17 @@ always_ff @ (posedge clk) begin
     end else begin
         // Check if we should commit head value
         if (rob_arr[head_ptr].reg_data.can_commit == 1'b1) begin
+            // if (rob_arr[head_ptr].op.opcode == op_br) begin
+            //     pcmux_sel <= 
+            // end
+            // if (rob_arr[head_ptr].op.opcode == op_br) begin
+            //     pcmux_sel = 1'b1;
+            //     target_pc = rob_arr[head_ptr].target_pc;
+            // end else begin
+            //     pcmux_sel = 1'b0;
+            //     target_pc = 32'd0;
+            // end
+
             // Output to regfile, dequeue
             rob_o <= rob_arr[head_ptr];
             rob_arr[head_ptr].valid <= 4'b0;
@@ -137,10 +152,25 @@ always_ff @ (posedge clk) begin
         for(int j = 0; j < `RO_BUFFER_ENTRIES; ++j) begin
             if(rob_arr[j].reg_data.can_commit == 1'b0 && rob_arr[j] && rob_arr[j].tag == cdb[i].tag) begin
                 rob_arr[cdb[i].tag].reg_data.value <= cdb[i].value;
-                // rob_arr[cdb[i].]
+                rob_arr[cdb[i].tag].target_pc <= cdb[i].target_pc;
                 rob_arr[cdb[i].tag].reg_data.can_commit <= 1'b1;
             end
         end
+    end
+end
+
+always_comb begin
+    if (rob_arr[head_ptr].reg_data.can_commit == 1'b1) begin
+        if (rob_arr[head_ptr].op.opcode == op_br) begin
+            pcmux_sel = 1'b1;
+            target_pc = rob_arr[head_ptr].target_pc;
+        end else begin
+            pcmux_sel = 1'b0;
+            target_pc = 32'd0;
+        end
+    end else begin
+        pcmux_sel = 1'b0;
+        target_pc = 32'd0;
     end
 end
 
