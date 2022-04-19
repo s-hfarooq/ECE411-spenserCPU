@@ -146,16 +146,25 @@ always_ff @(posedge clk) begin : store_rs
                     // check if both registers are valid and current store instruction at top of ROB, then output addr
                     if (queue[head_ptr].qj == 3'b0 && queue[head_ptr].qk == 3'b0 && 
                         curr_is_store == 1'b1 && head_tag == queue[head_ptr].tag) begin
-                        // store_res.tag <= queue[head_ptr].tag;
-                        // add addresses together
-                        // store_res.value <= queue[head_ptr].vj; // SHOULD THIS BE VJ OR VK
-                        // store_res.tag <= queue[head_ptr].qj;
-
                         // store to cache
                         data_write <= 1'b1;
                         data_addr <= queue[head_ptr].addr + queue[head_ptr].vj;
                         // SHOULD THIS BE VJ OR VK
                         data_wdata <= queue[head_ptr].vj;
+
+                        case(store_funct3_t'(queue[head_ptr].funct))
+                            // TODO Verify: THIS ASSUMES THAT THIS IS ALWAYS THLOWEST BITS.
+                            // WE NEED TO MAKE SURE THAT EVERYTHING IS 4-BYTE ALIGNED
+                            sb: begin
+                                data_mbe <= 4'b0001;
+                            end
+                            sh: begin
+                                data_mbe <= 4'b0011;
+                            end
+                            sw: begin
+                                data_mbe <= 4'b1111;
+                            end
+                        endcase
 
                         // need to dequeue
                         if(data_resp == 1'b1) begin // only once cache has responded
