@@ -448,7 +448,9 @@ always_ff @(posedge clk) begin
         tag <= '0;
         case (opcode)
             op_lui, op_auipc, op_jal : begin
-                if (alu_rs_full == 0 && rob_free_tag != 0) begin
+                if (rd == 0)
+                    iqueue_read <= 1'b1;
+                else if (alu_rs_full == 0 && rob_free_tag != 0) begin
                     iqueue_read <= 1'b1;
                     rd_o <= rd;
                     load_tag <= 1'b1;
@@ -464,7 +466,9 @@ always_ff @(posedge clk) begin
             end
 
             op_load : begin
-                if (lsb_full == 0 && rob_free_tag != 0) begin
+                if (rd == 0)
+                    iqueue_read <= 1'b1;
+                else if (lsb_full == 0 && rob_free_tag != 0) begin
                     iqueue_read <= 1'b1;
                     rd_o <= rd;
                     load_tag <= 1'b1;
