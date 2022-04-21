@@ -122,7 +122,15 @@ always_ff @ (posedge clk) begin
         alu_o <= '0;
         cmp_o <= '0;
         lsb_o <= '0;
-    end else if(iqueue_read == 1'b1) begin
+    end else if(rob_is_full == 1'b1) begin
+        rob_write <= 1'b0;
+        pc_and_rd.instr_pc <= 32'd0;
+        pc_and_rd.opcode <= rv32i_opcode'(opcode);
+        pc_and_rd.rd <= '0;
+        alu_o.valid <= 1'b0;
+        cmp_o.valid <= 1'b0;
+        lsb_o.valid <= 1'b0;
+    end else begin
         rob_write <= 1'b0;
         pc_and_rd.instr_pc <= 32'd0;
         pc_and_rd.opcode <= rv32i_opcode'(opcode);

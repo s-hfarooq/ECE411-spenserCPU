@@ -62,7 +62,7 @@ assign head_tag = head_ptr;
 // Glue logic
 logic [$clog2(`RO_BUFFER_ENTRIES):0] counter = 0;
 assign empty = (counter == 0);
-assign full = (counter == (`RO_BUFFER_ENTRIES - 2));
+assign full = (counter >= (`RO_BUFFER_ENTRIES - 3)); // TODO: may be able to set to -2
 
 task incrementToNextInstr();
     // dont commit
@@ -76,9 +76,9 @@ task incrementToNextInstr();
 
 
     if(counter <= 0) begin
-        tail_ptr <= tail_ptr;
+        // tail_ptr <= tail_ptr;
         counter <= 0;
-    end else begin
+    end else if(write == 1'b0) begin
         counter <= counter - 1'b1;
     end
 endtask
@@ -157,7 +157,8 @@ always_ff @ (posedge clk) begin
                 else
                     tail_next_ptr <= tail_next_ptr + 1;
 
-                counter <= counter + 1'b1;
+                if(rob_arr[head_ptr].reg_data.can_commit == 1'b0)
+                    counter <= counter + 1'b1;
 
                 if(input_i.rd == 8)
                     $display("rd 8 exists");
@@ -196,13 +197,7 @@ end
 always_comb begin
     case (write)
         1'b0 : rob_free_tag = (rob_arr[tail_ptr].valid == 1) ? '0 : tail_ptr;
-        1'b1 : begin
-            if(full == 1'b1) begin
-                rob_free_tag = 0;
-            end else begin
-                rob_free_tag = (rob_arr[tail_next_ptr].valid == 1) ? '0 : tail_next_ptr;
-            end
-        end
+        1'b1 : rob_free_tag = (rob_arr[tail_next_ptr].valid == 1) ? '0 : tail_next_ptr;
         default : ;
     endcase
 end
