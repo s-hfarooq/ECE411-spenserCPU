@@ -39,7 +39,7 @@ logic [$clog2(`LDST_SIZE):0] entries = 0;
 
 lsb_t queue [`LDST_SIZE-1:0];
 
-assign ldst_full = (entries == `LDST_SIZE);
+assign ldst_full = (entries >= `LDST_SIZE);
 
 always_ff @(posedge clk) begin
 
@@ -66,6 +66,7 @@ always_ff @(posedge clk) begin : store_rs
         if(lsb_entry.valid == 1'b1 && entries < `LDST_SIZE) begin
             queue[tail_ptr] <= lsb_entry;
             tail_ptr <= tail_ptr + 1;
+            // if(data_resp == 1'b0)
             entries <= entries + 1;
         end
     end
@@ -126,7 +127,9 @@ always_ff @(posedge clk) begin : store_rs
                         queue[head_ptr].valid <= 1'b0;
 
                         head_ptr <= head_ptr + 1;
-                        entries <= entries - 1;
+
+                        if(lsb_entry.valid == 1'b0)
+                            entries <= entries - 1;
                     end
                 end
                 1'b1: begin // store
@@ -171,7 +174,8 @@ always_ff @(posedge clk) begin : store_rs
                             queue[head_ptr].valid <= 1'b0;
 
                             head_ptr <= head_ptr + 1;
-                            entries <= entries - 1;
+                            if(lsb_entry.valid == 1'b0)
+                                entries <= entries - 1;
                             rob_store_complete <= 1'b1;
                         end
                     end
