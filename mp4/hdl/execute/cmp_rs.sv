@@ -155,16 +155,17 @@ always_ff @(posedge clk) begin
                 // if CMP output is 1 or 0, decide to take branch or not
                 if (cmp_res_arr[i] == 1) begin
                     cdb_cmp_vals_o[i].target_pc <= data[i].pc + data[i].b_imm;
+
                 end else begin
                     cdb_cmp_vals_o[i].target_pc <= data[i].pc + 4;
                 end
             end
             // SLT/SLTI/SLTU/SLTIU
-            else begin
-                cdb_cmp_vals_o[i].value <= {31'd0, cmp_res_arr[i]};
-            end
+            // else begin
+            //     cdb_cmp_vals_o[i].value <= {31'd0, cmp_res_arr[i]};
+            // end
 
-            cdb_cmp_vals_o[i].value <= cmp_res_arr[i];
+            cdb_cmp_vals_o[i].value <= {31'd0, cmp_res_arr[i]};
             cdb_cmp_vals_o[i].tag <= data[i].rob_idx;
             is_in_use[i] <= 1'b0;
             data[i].res.valid <= 1'b1;

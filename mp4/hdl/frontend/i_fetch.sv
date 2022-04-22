@@ -5,6 +5,8 @@ module i_fetch (
     input logic clk,
     input logic rst,
 
+    input logic flush,
+
     input logic mem_resp,
     input rv32i_word mem_rdata,
 
@@ -22,7 +24,7 @@ module i_fetch (
 );
 
 // i_queue signals
-logic i_queue_empty, i_queue_full, i_queue_flush, i_queue_write;
+logic i_queue_empty, i_queue_full, i_queue_write;
 i_queue_data_t i_queue_data_in;
 
 // PC signals
@@ -63,7 +65,7 @@ br_pred predictor (
 i_queue i_queue (
     .clk(clk),
     .rst(rst),
-    .flush(i_queue_flush),
+    .flush(flush),
     .read(iqueue_read),
     .write(i_queue_write),
     .data_in(i_queue_data_in),

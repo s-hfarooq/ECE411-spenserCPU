@@ -6,10 +6,13 @@ import structs::*;
 module ro_buffer (
     input logic clk,
     input logic rst,
-    input logic flush,
+    output logic flush,
     input logic write,
 
     input cdb_t cdb,
+
+    // from branch predictor
+    input logic take_br,
 
     // From decoder
     input i_decode_opcode_t input_i,
@@ -86,6 +89,10 @@ endtask
 always_ff @ (posedge clk) begin
     is_committing <= 1'b0;
 
+    pcmux_sel <= 1'b0;
+    target_pc <= 32'b0;
+    flush <= 1'b0;
+
     if(input_i.rd == 8)
         $display("rd 8 exists out");
 
@@ -115,6 +122,12 @@ always_ff @ (posedge clk) begin
             // end
 
             if(rob_arr[head_ptr].op.opcode == op_br) begin
+                if(rob_arr[head_ptr].reg_data.value != take_br) begin
+                    pcmux_sel <= 1'b1;
+                    target_pc <= rob_arr[head_ptr].target_pc;
+                    flush <= 1'b1;
+                end
+
                 rob_arr[head_ptr] <= '{default: 0};
                 incrementToNextInstr();
             end else begin
@@ -184,20 +197,28 @@ always_ff @ (posedge clk) begin
     // if it doesn't exist look in regfil 
 end
 
-always_comb begin
-    if (rob_arr[head_ptr].reg_data.can_commit == 1'b1) begin
-        if (rob_arr[head_ptr].op.opcode == op_br && rob_arr[head_ptr].reg_data.value == 1) begin
-            pcmux_sel = 1'b1;
-            target_pc = rob_arr[head_ptr].target_pc;
-        end else begin
-            pcmux_sel = 1'b0;
-            target_pc = 32'd0;
-        end
-    end else begin
-        pcmux_sel = 1'b0;
-        target_pc = 32'd0;
-    end
-end
+// Branching
+// always_comb begin
+//     flush = 1'b0;
+//     if (rob_arr[head_ptr].reg_data.can_commit == 1'b1) begin
+//         if (rob_arr[head_ptr].op.opcode == op_br && 
+//             (rob_arr[head_ptr].reg_data.value != take_br)) begin
+
+//             pcmux_sel = 1'b1;
+//             target_pc = rob_arr[head_ptr].target_pc;
+
+//             // FLush everything, branch mispredict
+//             flush = 1'b1;
+
+//         end else begin
+//             pcmux_sel = 1'b0;
+//             target_pc = 32'd0;
+//         end
+//     end else begin
+//         pcmux_sel = 1'b0;
+//         target_pc = 32'd0;
+//     end
+// end
 
 always_comb begin
     case (write)
