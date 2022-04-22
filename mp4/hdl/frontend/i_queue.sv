@@ -39,7 +39,7 @@ assign empty = (counter == 0);
 assign full = (counter == `I_QUEUE_ENRTRIES);
 
 always_ff @ (posedge clk) begin
-    data_out <= '{default: 0};
+    // data_out <= '{default: 0};
     if (rst || flush) begin
         head_ptr <= {$clog2(`I_QUEUE_ENRTRIES){1'b0}};
         tail_ptr <= {$clog2(`I_QUEUE_ENRTRIES){1'b0}};

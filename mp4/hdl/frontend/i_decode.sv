@@ -214,7 +214,7 @@ always_ff @ (posedge clk) begin
             end
 
             op_load : begin // KEEP
-                if (rd != 0 && (lsb_full == 0  && lsb_almost_full == 0)) begin
+                if (rd != 0 && (lsb_full == 0)) begin
                     pc_and_rd.instr_pc <= instr_pc;
                     pc_and_rd.opcode <= rv32i_opcode'(opcode);
                     pc_and_rd.rd <= rd;
@@ -234,7 +234,7 @@ always_ff @ (posedge clk) begin
             end
 
             op_store : begin    // KEEP
-                if (rd != 0 && (lsb_full == 0  && lsb_almost_full == 0)) begin
+                if (rd != 0 && (lsb_full == 0)) begin
                     lsb_o.valid <= 1'b1;
                     lsb_o.vj <= vj_o;
                     lsb_o.vk <= vk_o;
@@ -479,7 +479,7 @@ always_ff @(posedge clk) begin
             op_load : begin
                 if (rd == 0)
                     iqueue_read <= 1'b1;
-                else if ((lsb_full == 0  && lsb_almost_full == 0) && rob_free_tag != 0) begin
+                else if ((lsb_full == 0) && rob_free_tag != 0) begin
                     iqueue_read <= 1'b1;
                     rd_o <= rd;
                     load_tag <= 1'b1;
@@ -489,7 +489,7 @@ always_ff @(posedge clk) begin
             end
 
             op_store : begin
-                if ((lsb_full == 0  && lsb_almost_full == 0)  && rob_free_tag != 0)
+                if ((lsb_full == 0 )  && rob_free_tag != 0)
                     iqueue_read <= 1'b1;
             end
 
