@@ -82,9 +82,14 @@ assign cmp_rs_d_out.qj_out = tags[rs1_cmp_rs_i];
 assign cmp_rs_d_out.qk_out = tags[rs2_cmp_rs_i];
 
 always_ff @ (posedge clk) begin
-    if (rst || flush) begin
+    if (rst) begin
         for (int i = 0; i < 32; ++i) begin
             regfile[i] <= 32'h0000_0000;
+            tags[i] <= 5'b00000;
+        end
+    end
+    else if (flush) begin
+        for (int i = 0; i < 32; ++i) begin
             tags[i] <= 5'b00000;
         end
     end

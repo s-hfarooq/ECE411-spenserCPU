@@ -46,7 +46,7 @@ regfile_data_out_t regfile_d_out, alu_rs_d_out;
 logic load_reg;
 
 logic rob_read;
-logic flush = 1'b0;
+logic flush;
 
 rob_values_t rob_o;
 logic rob_is_committing;
@@ -82,6 +82,7 @@ rv32i_word next_pc;
 i_fetch i_fetch (
     .clk(clk),
     .rst(rst),
+    .flush(flush),
     .mem_resp(inst_resp),
     .mem_rdata(inst_rdata), // 32-bit instruction input
     .i_queue_data_out(iqueue_o),
@@ -182,7 +183,8 @@ ro_buffer rob (
     .curr_is_store(rob_curr_is_store),
     .head_tag(rob_head_tag),
     .pcmux_sel(take_br),
-    .target_pc(next_pc)
+    .target_pc(next_pc),
+    .take_br(take_br)
 );
 
 alu_rs alu_rs (
