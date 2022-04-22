@@ -45,13 +45,13 @@ assign almost_full = (entries >= (`LDST_SIZE-2));
 
 assign entries = (head_ptr > tail_ptr) ? (tail_ptr + `LDST_SIZE - head_ptr) : (tail_ptr - head_ptr);
 
-function void set_defaults();
-    rob_store_complete = 1'b0;
-    data_read = 1'b0;
-    data_write = 1'b0;
-    data_mbe = 4'b1111;
-    load_res = '{default: 0};
-endfunction
+task set_defaults();
+    rob_store_complete <= 1'b0;
+    data_read <= 1'b0;
+    data_write <= 1'b0;
+    data_mbe <= 4'b1111;
+    load_res <= '{default: 0};
+endtask
 
 // store rs
 always_ff @(posedge clk) begin : store_rs
@@ -136,17 +136,17 @@ always_ff @(posedge clk) begin : store_rs
                 end
                 1'b1: begin // store
                     // search CDB for valid tags
-                    for (int i = 0; i < `NUM_CDB_ENTRIES; ++i) begin
-                        if (cdb[i].tag == queue[head_ptr].qj) begin
-                            queue[head_ptr].vj <= cdb[i].value;
-                            // set register to valid
-                            queue[head_ptr].qj <= 3'b0;
-                        end else if (cdb[i].tag == queue[head_ptr].qk) begin
-                            queue[head_ptr].vk <= cdb[i].value;
-                            // set register to valid
-                            queue[head_ptr].qk <= 3'b0;
-                        end
-                    end
+                    // for (int i = 0; i < `NUM_CDB_ENTRIES; ++i) begin
+                    //     if (cdb[i].tag == queue[head_ptr].qj) begin
+                    //         queue[head_ptr].vj <= cdb[i].value;
+                    //         // set register to valid
+                    //         queue[head_ptr].qj <= 3'b0;
+                    //     end else if (cdb[i].tag == queue[head_ptr].qk) begin
+                    //         queue[head_ptr].vk <= cdb[i].value;
+                    //         // set register to valid
+                    //         queue[head_ptr].qk <= 3'b0;
+                    //     end
+                    // end
 
                     // check if both registers are valid and current store instruction at top of ROB, then output addr
                     if (queue[head_ptr].qj == 3'b0 && queue[head_ptr].qk == 3'b0 && 
@@ -154,8 +154,8 @@ always_ff @(posedge clk) begin : store_rs
                         // store to cache
                         data_write <= 1'b1;
                         data_addr <= queue[head_ptr].addr + queue[head_ptr].vj;
-                        // SHOULD THIS BE VJ OR VK
-                        data_wdata <= queue[head_ptr].vj;
+                        // SHOULD THIS BE VJ OR VK (IT SHOULD BE VK)
+                        data_wdata <= queue[head_ptr].vk;
 
                         case(store_funct3_t'(queue[head_ptr].funct))
                             // TODO Verify: THIS ASSUMES THAT THIS IS ALWAYS THLOWEST BITS.
