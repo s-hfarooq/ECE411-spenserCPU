@@ -62,7 +62,7 @@ logic cmp_rs_full;
 cmp_rs_t cmp_o;
 alu_rs_t alu_o;
 lsb_t lsb_decode_o;
-logic ldst_full;
+logic ldst_full, ldst_almost_full;
 
 logic rob_store_complete;
 logic rob_curr_is_store;
@@ -76,7 +76,7 @@ regfile_data_out_t alu_rs_d_outl;
 rv32i_reg rs1_cmp_rs_i, rs2_cmp_rs_i;
 regfile_data_out_t cmp_rs_d_out;
 
-logic take_br = 1'b0; // TODO: change this
+logic take_br;
 rv32i_word next_pc;
 
 i_fetch i_fetch (
@@ -107,6 +107,7 @@ i_decode decode (
     .rob_free_tag(rob_free_tag),
     .rob_in(rob_arr),
     .rob_write(rob_write),
+    .rob_is_full(rob_is_full),
     // I'm going to use the i_decode_opcode_t version
     // .rob_dest(),           // dest_reg, send to ROB to load it in
     .pc_and_rd(pc_and_rd),
@@ -115,6 +116,7 @@ i_decode decode (
     .cmp_rs_full(cmp_rs_full),
     .cmp_o(cmp_o),
     .lsb_full(ldst_full),
+    .lsb_almost_full(ldst_almost_full),
     .lsb_o(lsb_decode_o)
 );
 
@@ -148,6 +150,7 @@ load_store_queue ldstbuf (
     // .store_res(cdb[0]),
     .load_res(cdb[1]),
     .ldst_full(ldst_full),
+    .almost_full(ldst_almost_full),
     //() To/from ROB
     .rob_store_complete(rob_store_complete),
     .curr_is_store(rob_curr_is_store),
@@ -177,7 +180,9 @@ ro_buffer rob (
     .is_committing(rob_is_committing),
     .rob_store_complete(rob_store_complete),
     .curr_is_store(rob_curr_is_store),
-    .head_tag(rob_head_tag)
+    .head_tag(rob_head_tag),
+    .pcmux_sel(take_br),
+    .target_pc(next_pc)
 );
 
 alu_rs alu_rs (

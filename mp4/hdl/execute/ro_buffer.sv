@@ -28,7 +28,11 @@ module ro_buffer (
     // To/from load store queue
     input logic rob_store_complete,
     output logic curr_is_store,
-    output logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] head_tag
+    output logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] head_tag,
+
+    // Output to PC
+    output logic pcmux_sel,
+    output rv32i_word target_pc
 );
 
 rob_arr_t rob_arr;
@@ -52,16 +56,38 @@ logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] head_ptr = {$clog2(`RO_BUFFER_ENTRIES){1'
 logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] tail_ptr = {$clog2(`RO_BUFFER_ENTRIES){1'b0}};
 logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] tail_next_ptr = {$clog2(`RO_BUFFER_ENTRIES){1'b0}};
 
-assign curr_is_store = (input_i.opcode == op_store);
+assign curr_is_store = (rob_arr[head_ptr].op.opcode == op_store);
 assign head_tag = head_ptr;
 
 // Glue logic
 logic [$clog2(`RO_BUFFER_ENTRIES):0] counter = 0;
 assign empty = (counter == 0);
-assign full = (counter >= (`RO_BUFFER_ENTRIES - 1));
+assign full = (counter >= (`RO_BUFFER_ENTRIES - 3)); // TODO: may be able to set to -2
+
+task incrementToNextInstr();
+    // dont commit
+    if(counter <= 0) begin
+        // do nothing
+    end else if(head_ptr >= (`RO_BUFFER_ENTRIES - 1)) begin
+        head_ptr <= 1;
+    end else begin
+        head_ptr <= head_ptr + 1'b1;
+    end
+
+
+    if(counter <= 0) begin
+        // tail_ptr <= tail_ptr;
+        counter <= 0;
+    end else if(write == 1'b0) begin
+        counter <= counter - 1'b1;
+    end
+endtask
 
 always_ff @ (posedge clk) begin
     is_committing <= 1'b0;
+
+    if(input_i.rd == 8)
+        $display("rd 8 exists out");
 
     if(rst || flush) begin
         for (int i = 0; i < `RO_BUFFER_ENTRIES; ++i) begin
@@ -76,35 +102,42 @@ always_ff @ (posedge clk) begin
         tail_next_ptr <= {$clog2(`RO_BUFFER_ENTRIES){1'b0}} + 2;
     end else begin
         // Check if we should commit head value
-        if (rob_arr[head_ptr].reg_data.can_commit == 1'b1) begin
-            // Output to regfile, dequeue
-            rob_o <= rob_arr[head_ptr];
-            rob_arr[head_ptr].valid <= 4'b0;
-            is_committing <= 1'b1;
+        if (rob_arr[head_ptr].reg_data.can_commit == 1'b1 || rob_store_complete == 1'b1) begin
+            // if (rob_arr[head_ptr].op.opcode == op_br) begin
+            //     pcmux_sel <= 
+            // end
+            // if (rob_arr[head_ptr].op.opcode == op_br) begin
+            //     pcmux_sel = 1'b1;
+            //     target_pc = rob_arr[head_ptr].target_pc;
+            // end else begin
+            //     pcmux_sel = 1'b0;
+            //     target_pc = 32'd0;
+            // end
 
-            // rob_arr[head_ptr].reg_data.can_commit <= 1'b0;
-            rob_arr[head_ptr] <= '{default: 0};
+            if(rob_arr[head_ptr].op.opcode == op_br) begin
+                rob_arr[head_ptr] <= '{default: 0};
+                incrementToNextInstr();
+            end else begin
+                // Output to regfile, dequeue
+                rob_o <= rob_arr[head_ptr];
+                rob_arr[head_ptr].valid <= 4'b0;
 
-            if(curr_is_store == 1'b0 || rob_store_complete == 1'b1) begin
-                // Entry 0 is reserved
-                if(counter <= 0) begin
-                    // do nothing
-                end else if(head_ptr >= (`RO_BUFFER_ENTRIES - 1)) begin
-                    head_ptr <= 1;
-                end else begin
-                    head_ptr <= head_ptr + 1'b1;
-                end
+                if(rob_store_complete == 1'b0)
+                    is_committing <= 1'b1;
 
+                // rob_arr[head_ptr].reg_data.can_commit <= 1'b0;
+                rob_arr[head_ptr] <= '{default: 0};
 
-                if(counter <= 0) begin
-                    tail_ptr <= tail_ptr;
-                    counter <= 0;
-                end else begin
-                    counter <= counter - 1'b1;
+                if(curr_is_store == 1'b0 || rob_store_complete == 1'b1) begin
+                    incrementToNextInstr();
                 end
             end
-        end else if (write == 1'b1) begin
+        end 
+        
+        if (write == 1'b1) begin
             // Save value to ROB, enqueue
+            if(input_i.rd == 8)
+                $display("rd 8 exists2");
             if (counter < (`RO_BUFFER_ENTRIES - 1)) begin
                 rob_arr[tail_ptr].op <= input_i;
                 rob_arr[tail_ptr].tag <= tail_ptr; 
@@ -126,7 +159,11 @@ always_ff @ (posedge clk) begin
                 else
                     tail_next_ptr <= tail_next_ptr + 1;
 
-                counter <= counter + 1'b1;
+                if(rob_arr[head_ptr].reg_data.can_commit == 1'b0)
+                    counter <= counter + 1'b1;
+
+                if(input_i.rd == 8)
+                    $display("rd 8 exists");
             end
         end
     end
@@ -137,10 +174,28 @@ always_ff @ (posedge clk) begin
         for(int j = 0; j < `RO_BUFFER_ENTRIES; ++j) begin
             if(rob_arr[j].reg_data.can_commit == 1'b0 && rob_arr[j] && rob_arr[j].tag == cdb[i].tag) begin
                 rob_arr[cdb[i].tag].reg_data.value <= cdb[i].value;
-                // rob_arr[cdb[i].]
+                rob_arr[cdb[i].tag].target_pc <= cdb[i].target_pc;
                 rob_arr[cdb[i].tag].reg_data.can_commit <= 1'b1;
             end
         end
+    end
+
+    // loop through rob arr, look for tag of needed reg,
+    // if it doesn't exist look in regfil 
+end
+
+always_comb begin
+    if (rob_arr[head_ptr].reg_data.can_commit == 1'b1) begin
+        if (rob_arr[head_ptr].op.opcode == op_br && rob_arr[head_ptr].reg_data.value == 1) begin
+            pcmux_sel = 1'b1;
+            target_pc = rob_arr[head_ptr].target_pc;
+        end else begin
+            pcmux_sel = 1'b0;
+            target_pc = 32'd0;
+        end
+    end else begin
+        pcmux_sel = 1'b0;
+        target_pc = 32'd0;
     end
 end
 

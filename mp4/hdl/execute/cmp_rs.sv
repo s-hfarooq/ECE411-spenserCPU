@@ -9,9 +9,6 @@ module cmp_rs (
     input logic flush,
 
     // From ROB
-    // input rv32i_word rob_reg_vals [`RO_BUFFER_ENTRIES],
-    // input logic rob_commit_arr [`RO_BUFFER_ENTRIES],
-    // output logic load_rob,
     input rob_arr_t rob_arr_o,
 
     // From/to CDB
@@ -24,14 +21,13 @@ module cmp_rs (
     // To decoder
     output logic cmp_rs_full,
 
-    // To fetch
-    // output logic take_br,   // 1 = take branch, 0 = don't take branch
-    // output rv32i_word next_pc,  // This IS NOT PC + 4
-
     // To/from regfile
     output rv32i_reg rs1_cmp_rs_i, rs2_cmp_rs_i,
     input regfile_data_out_t cmp_rs_d_out
 );
+
+// TODO: edge case - what happens if tag value needed is broadcasted on cdb at the same 
+// time as data is loading into RS? Don't think data would ever load into RS
 
 cmp_rs_t data [`CMP_RS_SIZE-1:0] /* synthesis ramstyle = "logic" */;
 logic is_in_use [3:0];
@@ -39,7 +35,7 @@ logic [`CMP_RS_SIZE-1:0] load_cmp;
 logic [`CMP_RS_SIZE-1:0] load_cdb;
 
 // for whatever reason we got a multiple drivers error when writing directly to alu_arr[i].value
-logic [`CMP_RS_SIZE-1:0] cmp_res_arr;
+rv32i_word [`CMP_RS_SIZE-1:0] cmp_res_arr;
 
 task updateFromROB(int idx);
     for(int i = 0; i < `RO_BUFFER_ENTRIES; ++i) begin
@@ -50,7 +46,7 @@ task updateFromROB(int idx);
                 // copy from ROB
                 data[idx].rs1.valid <= rob_arr_o[data[idx].rs1.tag].reg_data.can_commit;
                 data[idx].rs1.value <= rob_arr_o[data[idx].rs1.tag].reg_data.value;
-            end else begin 
+            end else begin
                 // set entry valid to 0
                 // copy value over so that it is not dont cares
                 data[idx].rs1.valid <= 1'b0;
@@ -100,8 +96,7 @@ always_ff @(posedge clk) begin
             data[i] <= '{default: 0};
             is_in_use[i] <= 1'b0;
         end
-    end 
-    else if(cmp_o.valid) begin
+    end else if (cmp_o.valid) begin
         // load data from decoder / ROB
 
         // load into first available rs (TODO PARAMETRIZE)
@@ -125,7 +120,7 @@ always_ff @(posedge clk) begin
             cmp_rs_full <= 1'b1;
         end
     end
-    
+
     // if is_valid sent as input, iterate though all items and set valid bit high for rs1/rs2
 
     // Maybe make generate - more efficient? 
@@ -135,20 +130,21 @@ always_ff @(posedge clk) begin
     for(int i = 0; i < `CMP_RS_SIZE; ++i) begin
         // check for tag match
         for(int j = 0; j < `NUM_CDB_ENTRIES; ++j) begin
-            if(data[i].rs1.tag == cdb_vals_i[j].tag) begin
+            if(data[i].rs1.valid == 1'b0 && data[i].rs1.tag == cdb_vals_i[j].tag) begin
                 data[i].rs1.value <= cdb_vals_i[j].value;
                 data[i].rs1.valid <= 1'b1;
             end
-            if(data[i].rs2.tag == cdb_vals_i[j].tag) begin
+            if(data[i].rs2.valid == 1'b0 &&  data[i].rs2.tag == cdb_vals_i[j].tag) begin
                 data[i].rs2.value <= cdb_vals_i[j].value;
                 data[i].rs2.valid <= 1'b1;
             end
         end
 
         load_cmp[i] <= 1'b0;
-        // if data[i].valid == 1'b1 then update cmp_arr value and 
+        // if data[i].valid == 1'b1 then update alu_arr value and 
         // set load_rob high 1 cycle later
-        if(data[i].rs1.valid == 1'b1 && data[i].rs2.valid == 1'b1) begin            
+        if(data[i].rs1.valid == 1'b1 && data[i].rs2.valid == 1'b1) begin
+            // data[i].busy <= 1'b1;
             load_cmp[i] <= 1'b1;
         end
 

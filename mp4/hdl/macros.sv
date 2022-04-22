@@ -20,7 +20,7 @@
 `define CMP_RS_SIZE 4
 
 // alu_reservation_station.sv
-`define LDST_SIZE 4
+`define LDST_SIZE 8
 
 // ro_buffer.sv
 // 8 + 1 because entry 0 is reserved

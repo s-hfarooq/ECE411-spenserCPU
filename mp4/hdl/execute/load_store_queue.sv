@@ -16,6 +16,7 @@ module load_store_queue
     output cdb_entry_t load_res,
 
     output logic ldst_full,
+    output logic almost_full,
 
     // To/from ROB
     output logic rob_store_complete,
@@ -35,22 +36,23 @@ module load_store_queue
 // Head and tail pointers
 logic [$clog2(`LDST_SIZE)-1:0] head_ptr = {$clog2(`LDST_SIZE){1'b0}};
 logic [$clog2(`LDST_SIZE)-1:0] tail_ptr = {$clog2(`LDST_SIZE){1'b0}};
-logic [$clog2(`LDST_SIZE):0] entries = 0;
+logic [$clog2(`LDST_SIZE):0] entries;
 
 lsb_t queue [`LDST_SIZE-1:0];
 
-assign ldst_full = (entries == `LDST_SIZE);
+assign ldst_full = (entries >= (`LDST_SIZE - 1));
+assign almost_full = (entries >= (`LDST_SIZE-2));
 
-always_ff @(posedge clk) begin
+assign entries = (head_ptr > tail_ptr) ? (tail_ptr + `LDST_SIZE - head_ptr) : (tail_ptr - head_ptr);
 
-end
-function void set_defaults();
-    rob_store_complete = 1'b0;
-    data_read = 1'b0;
-    data_write = 1'b0;
-    data_mbe = 4'b1111;
-    load_res = '{default: 0};
-endfunction
+task set_defaults();
+    rob_store_complete <= 1'b0;
+    data_read <= 1'b0;
+    data_write <= 1'b0;
+    data_mbe <= 4'b1111;
+    load_res <= '{default: 0};
+endtask
+
 // store rs
 always_ff @(posedge clk) begin : store_rs
     set_defaults();
@@ -61,12 +63,13 @@ always_ff @(posedge clk) begin : store_rs
             
         head_ptr <= {$clog2(`LDST_SIZE){1'b0}};
         tail_ptr <= {$clog2(`LDST_SIZE){1'b0}};
-        entries <= {$clog2(`LDST_SIZE){1'b0}};
+        // entries <= {$clog2(`LDST_SIZE){1'b0}};
     end else begin
         if(lsb_entry.valid == 1'b1 && entries < `LDST_SIZE) begin
             queue[tail_ptr] <= lsb_entry;
             tail_ptr <= tail_ptr + 1;
-            entries <= entries + 1;
+            // if(data_resp == 1'b0)
+            //     entries <= entries + 1;
         end
     end
 
@@ -126,22 +129,24 @@ always_ff @(posedge clk) begin : store_rs
                         queue[head_ptr].valid <= 1'b0;
 
                         head_ptr <= head_ptr + 1;
-                        entries <= entries - 1;
+
+                        // if(lsb_entry.valid == 1'b0)
+                        //     entries <= entries - 1;
                     end
                 end
                 1'b1: begin // store
                     // search CDB for valid tags
-                    for (int i = 0; i < `NUM_CDB_ENTRIES; ++i) begin
-                        if (cdb[i].tag == queue[head_ptr].qj) begin
-                            queue[head_ptr].vj <= cdb[i].value;
-                            // set register to valid
-                            queue[head_ptr].qj <= 3'b0;
-                        end else if (cdb[i].tag == queue[head_ptr].qk) begin
-                            queue[head_ptr].vk <= cdb[i].value;
-                            // set register to valid
-                            queue[head_ptr].qk <= 3'b0;
-                        end
-                    end
+                    // for (int i = 0; i < `NUM_CDB_ENTRIES; ++i) begin
+                    //     if (cdb[i].tag == queue[head_ptr].qj) begin
+                    //         queue[head_ptr].vj <= cdb[i].value;
+                    //         // set register to valid
+                    //         queue[head_ptr].qj <= 3'b0;
+                    //     end else if (cdb[i].tag == queue[head_ptr].qk) begin
+                    //         queue[head_ptr].vk <= cdb[i].value;
+                    //         // set register to valid
+                    //         queue[head_ptr].qk <= 3'b0;
+                    //     end
+                    // end
 
                     // check if both registers are valid and current store instruction at top of ROB, then output addr
                     if (queue[head_ptr].qj == 3'b0 && queue[head_ptr].qk == 3'b0 && 
@@ -149,8 +154,8 @@ always_ff @(posedge clk) begin : store_rs
                         // store to cache
                         data_write <= 1'b1;
                         data_addr <= queue[head_ptr].addr + queue[head_ptr].vj;
-                        // SHOULD THIS BE VJ OR VK
-                        data_wdata <= queue[head_ptr].vj;
+                        // SHOULD THIS BE VJ OR VK (IT SHOULD BE VK)
+                        data_wdata <= queue[head_ptr].vk;
 
                         case(store_funct3_t'(queue[head_ptr].funct))
                             // TODO Verify: THIS ASSUMES THAT THIS IS ALWAYS THLOWEST BITS.
@@ -171,7 +176,8 @@ always_ff @(posedge clk) begin : store_rs
                             queue[head_ptr].valid <= 1'b0;
 
                             head_ptr <= head_ptr + 1;
-                            entries <= entries - 1;
+                            // if(lsb_entry.valid == 1'b0)
+                            //     entries <= entries - 1;
                             rob_store_complete <= 1'b1;
                         end
                     end

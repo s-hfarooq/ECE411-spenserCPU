@@ -37,7 +37,7 @@ always_comb begin
         mem_read = 1'b1;
 end
 assign mem_write = 1'b0;
-assign i_queue_write = 1'b1;
+assign i_queue_write = ~i_queue_full;
 
 pc_register pc (
     .clk(clk),
@@ -73,9 +73,9 @@ i_queue i_queue (
 );
 
 always_comb begin
-    i_queue_data_in.pc <= pc_out;
-    i_queue_data_in.next_pc <= pc_out + 4; // branching will be different
-    i_queue_data_in.instr <= mem_rdata;
+    i_queue_data_in.pc = pc_out;
+    i_queue_data_in.next_pc = pc_out + 4; // branching will be different
+    i_queue_data_in.instr = mem_rdata;
 end
 
 always_comb begin : MUXES
