@@ -36,12 +36,14 @@ module load_store_queue
 // Head and tail pointers
 logic [$clog2(`LDST_SIZE)-1:0] head_ptr = {$clog2(`LDST_SIZE){1'b0}};
 logic [$clog2(`LDST_SIZE)-1:0] tail_ptr = {$clog2(`LDST_SIZE){1'b0}};
-logic [$clog2(`LDST_SIZE):0] entries = 0;
+logic [$clog2(`LDST_SIZE):0] entries;
 
 lsb_t queue [`LDST_SIZE-1:0];
 
 assign ldst_full = (entries >= (`LDST_SIZE - 1));
 assign almost_full = (entries >= (`LDST_SIZE-2));
+
+assign entries = (head_ptr > tail_ptr) ? (tail_ptr + `LDST_SIZE - head_ptr) : (tail_ptr - head_ptr);
 
 function void set_defaults();
     rob_store_complete = 1'b0;
@@ -61,13 +63,13 @@ always_ff @(posedge clk) begin : store_rs
             
         head_ptr <= {$clog2(`LDST_SIZE){1'b0}};
         tail_ptr <= {$clog2(`LDST_SIZE){1'b0}};
-        entries <= {$clog2(`LDST_SIZE){1'b0}};
+        // entries <= {$clog2(`LDST_SIZE){1'b0}};
     end else begin
         if(lsb_entry.valid == 1'b1 && entries < `LDST_SIZE) begin
             queue[tail_ptr] <= lsb_entry;
             tail_ptr <= tail_ptr + 1;
             // if(data_resp == 1'b0)
-            entries <= entries + 1;
+            //     entries <= entries + 1;
         end
     end
 
@@ -128,8 +130,8 @@ always_ff @(posedge clk) begin : store_rs
 
                         head_ptr <= head_ptr + 1;
 
-                        if(lsb_entry.valid == 1'b0)
-                            entries <= entries - 1;
+                        // if(lsb_entry.valid == 1'b0)
+                        //     entries <= entries - 1;
                     end
                 end
                 1'b1: begin // store
@@ -174,8 +176,8 @@ always_ff @(posedge clk) begin : store_rs
                             queue[head_ptr].valid <= 1'b0;
 
                             head_ptr <= head_ptr + 1;
-                            if(lsb_entry.valid == 1'b0)
-                                entries <= entries - 1;
+                            // if(lsb_entry.valid == 1'b0)
+                            //     entries <= entries - 1;
                             rob_store_complete <= 1'b1;
                         end
                     end

@@ -234,7 +234,7 @@ always_ff @ (posedge clk) begin
             end
 
             op_store : begin    // KEEP
-                if (rd != 0 && (lsb_full == 0)) begin
+                if ((lsb_full == 0)) begin
                     lsb_o.valid <= 1'b1;
                     lsb_o.vj <= vj_o;
                     lsb_o.vk <= vk_o;

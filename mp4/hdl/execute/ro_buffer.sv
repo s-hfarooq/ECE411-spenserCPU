@@ -56,7 +56,7 @@ logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] head_ptr = {$clog2(`RO_BUFFER_ENTRIES){1'
 logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] tail_ptr = {$clog2(`RO_BUFFER_ENTRIES){1'b0}};
 logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] tail_next_ptr = {$clog2(`RO_BUFFER_ENTRIES){1'b0}};
 
-assign curr_is_store = (input_i.opcode == op_store);
+assign curr_is_store = (rob_arr[head_ptr].op.opcode == op_store);
 assign head_tag = head_ptr;
 
 // Glue logic
@@ -102,7 +102,7 @@ always_ff @ (posedge clk) begin
         tail_next_ptr <= {$clog2(`RO_BUFFER_ENTRIES){1'b0}} + 2;
     end else begin
         // Check if we should commit head value
-        if (rob_arr[head_ptr].reg_data.can_commit == 1'b1) begin
+        if (rob_arr[head_ptr].reg_data.can_commit == 1'b1 || rob_store_complete == 1'b1) begin
             // if (rob_arr[head_ptr].op.opcode == op_br) begin
             //     pcmux_sel <= 
             // end
@@ -121,7 +121,9 @@ always_ff @ (posedge clk) begin
                 // Output to regfile, dequeue
                 rob_o <= rob_arr[head_ptr];
                 rob_arr[head_ptr].valid <= 4'b0;
-                is_committing <= 1'b1;
+
+                if(rob_store_complete == 1'b0)
+                    is_committing <= 1'b1;
 
                 // rob_arr[head_ptr].reg_data.can_commit <= 1'b0;
                 rob_arr[head_ptr] <= '{default: 0};
@@ -177,6 +179,9 @@ always_ff @ (posedge clk) begin
             end
         end
     end
+
+    // loop through rob arr, look for tag of needed reg,
+    // if it doesn't exist look in regfil 
 end
 
 always_comb begin
