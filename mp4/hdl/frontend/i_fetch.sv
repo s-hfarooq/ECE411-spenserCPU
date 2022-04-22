@@ -37,7 +37,7 @@ always_comb begin
         mem_read = 1'b1;
 end
 assign mem_write = 1'b0;
-assign i_queue_write = 1'b1;
+assign i_queue_write = ~i_queue_full;
 
 pc_register pc (
     .clk(clk),
