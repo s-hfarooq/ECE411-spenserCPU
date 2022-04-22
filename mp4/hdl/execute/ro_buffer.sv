@@ -181,7 +181,7 @@ end
 
 always_comb begin
     if (rob_arr[head_ptr].reg_data.can_commit == 1'b1) begin
-        if (rob_arr[head_ptr].op.opcode == op_br) begin
+        if (rob_arr[head_ptr].op.opcode == op_br && rob_arr[head_ptr].reg_data.value == 1) begin
             pcmux_sel = 1'b1;
             target_pc = rob_arr[head_ptr].target_pc;
         end else begin

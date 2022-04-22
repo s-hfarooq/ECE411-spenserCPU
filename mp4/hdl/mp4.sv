@@ -62,7 +62,7 @@ logic cmp_rs_full;
 cmp_rs_t cmp_o;
 alu_rs_t alu_o;
 lsb_t lsb_decode_o;
-logic ldst_full;
+logic ldst_full, ldst_almost_full;
 
 logic rob_store_complete;
 logic rob_curr_is_store;
@@ -116,6 +116,7 @@ i_decode decode (
     .cmp_rs_full(cmp_rs_full),
     .cmp_o(cmp_o),
     .lsb_full(ldst_full),
+    .lsb_almost_full(ldst_almost_full),
     .lsb_o(lsb_decode_o)
 );
 
@@ -149,6 +150,7 @@ load_store_queue ldstbuf (
     // .store_res(cdb[0]),
     .load_res(cdb[1]),
     .ldst_full(ldst_full),
+    .almost_full(ldst_almost_full),
     //() To/from ROB
     .rob_store_complete(rob_store_complete),
     .curr_is_store(rob_curr_is_store),

@@ -16,6 +16,7 @@ module load_store_queue
     output cdb_entry_t load_res,
 
     output logic ldst_full,
+    output logic almost_full,
 
     // To/from ROB
     output logic rob_store_complete,
@@ -39,11 +40,9 @@ logic [$clog2(`LDST_SIZE):0] entries = 0;
 
 lsb_t queue [`LDST_SIZE-1:0];
 
-assign ldst_full = (entries >= `LDST_SIZE);
+assign ldst_full = (entries >= (`LDST_SIZE - 1));
+assign almost_full = (entries >= (`LDST_SIZE-2));
 
-always_ff @(posedge clk) begin
-
-end
 function void set_defaults();
     rob_store_complete = 1'b0;
     data_read = 1'b0;
@@ -51,6 +50,7 @@ function void set_defaults();
     data_mbe = 4'b1111;
     load_res = '{default: 0};
 endfunction
+
 // store rs
 always_ff @(posedge clk) begin : store_rs
     set_defaults();

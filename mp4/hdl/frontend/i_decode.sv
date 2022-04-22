@@ -47,6 +47,7 @@ module i_decode(
 
     // From Load-Store Buffer
     input logic lsb_full,    // Signal is high if buffer is full
+    input logic lsb_almost_full,
 
     // To Load-Store Buffer
     output lsb_t lsb_o
@@ -122,7 +123,7 @@ always_ff @ (posedge clk) begin
         alu_o <= '0;
         cmp_o <= '0;
         lsb_o <= '0;
-    end else if(rob_is_full == 1'b1 || lsb_full == 1'b1) begin
+    end else if(rob_is_full == 1'b1) begin
         rob_write <= 1'b0;
         pc_and_rd.instr_pc <= 32'd0;
         pc_and_rd.opcode <= rv32i_opcode'(opcode);
@@ -213,7 +214,7 @@ always_ff @ (posedge clk) begin
             end
 
             op_load : begin // KEEP
-                if (rd != 0 && lsb_full == 0) begin
+                if (rd != 0 && lsb_full == 1'b0) begin
                     pc_and_rd.instr_pc <= instr_pc;
                     pc_and_rd.opcode <= rv32i_opcode'(opcode);
                     pc_and_rd.rd <= rd;
@@ -233,7 +234,7 @@ always_ff @ (posedge clk) begin
             end
 
             op_store : begin    // KEEP
-                if (rd != 0 && lsb_full == 0) begin
+                if (rd != 0 && lsb_full == 1'b0) begin
                     lsb_o.valid <= 1'b1;
                     lsb_o.vj <= vj_o;
                     lsb_o.vk <= vk_o;
@@ -442,12 +443,14 @@ end
 
 // Let iQueue know we want new values
 always_ff @(posedge clk) begin
+    if(rd != 0)
+        $displayh("robfull:%p, lsbalmost:%p, lsbfull:%p, instr:%p, Tag=%p, rd=%p", rob_is_full, lsb_almost_full, lsb_full, d_in, rob_free_tag, rd);
     if (rst) begin
-        iqueue_read <= 1'b1;
+        iqueue_read <= 1'b0;
         rd_o <= rd;
         load_tag <= 1'b0;
         tag <= '0;
-    end else if (rob_is_full == 1'b1) begin
+    end else if (rob_is_full == 1'b1 || lsb_almost_full == 1'b1 || lsb_full == 1'b1) begin
         iqueue_read <= 1'b0;
     end else begin
         iqueue_read <= 1'b1;
@@ -481,7 +484,7 @@ always_ff @(posedge clk) begin
                     rd_o <= rd;
                     load_tag <= 1'b1;
                     tag <= rob_free_tag;
-                    $displayh("Tag=%p, rd=%p", rob_free_tag, rd);
+                    // $displayh("Tag=%p, rd=%p", rob_free_tag, rd);
                 end
             end
 
