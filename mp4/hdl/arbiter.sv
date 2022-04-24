@@ -11,13 +11,13 @@ module arbiter (
     input logic mem_resp,
     output logic mem_read,
     output logic mem_write,
-    output logic[255:0] mem_wdata,
+    output logic [255:0] mem_wdata,
 
     // Instruction Cache
     input logic inst_read,
     input rv32i_word inst_addr,
     output logic inst_resp,
-    output logic[255:0] inst_rdata,
+    output logic [255:0] inst_rdata,
 
     // Data Cache
     input logic data_read,
@@ -25,7 +25,7 @@ module arbiter (
     input rv32i_word data_addr,
     input logic [255:0] data_wdata,
     output logic data_resp,
-    output logic[255:0] data_rdata
+    output logic [255:0] data_rdata
 );
 
 enum int unsigned {

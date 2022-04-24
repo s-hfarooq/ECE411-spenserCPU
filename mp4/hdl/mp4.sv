@@ -7,12 +7,12 @@ module mp4 (
     input logic clk,
     input logic rst,
 
-    input rv32i_word mem_rdata,
+    input logic [255:0] mem_rdata,
     output rv32i_word mem_addr,
     input logic mem_resp,
     output logic mem_read,
     output logic mem_write,
-    output rv32i_word mem_wdata
+    output logic [255:0] mem_wdata
     
     // I-Cache signals
     // output logic inst_read,
@@ -52,7 +52,7 @@ logic flush;
 rob_values_t rob_o;
 logic rob_is_committing;
 
-// 0: ldst store_res
+// 0: ldst store_res - no longer needed?
 // 1: ldst load_res
 // 2-5: alu_vals_o
 // 6-9: cmp_vals_o
@@ -84,9 +84,9 @@ rv32i_word next_pc;
 logic i_cache_pmem_resp;
 logic [255:0] i_cache_pmem_rdata;
 logic [31:0] i_cache_pmem_address;
-logic [255:0] i_cache_pmem_wdata;
+logic [255:0] i_cache_pmem_wdata; // shouldn't be input to anything
 logic i_cache_pmem_read;
-logic i_cache_pmem_write;
+logic i_cache_pmem_write; // shouldn't be input to anything
 logic i_cache_mem_read;
 logic i_cache_mem_write;
 logic [3:0] i_cache_mem_byte_enable_cpu;

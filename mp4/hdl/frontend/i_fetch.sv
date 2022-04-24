@@ -35,15 +35,6 @@ rv32i_word pc_in, pc_out, alu_out;
 
 assign pc_o = pc_out;
 assign mem_read = ~i_queue_full;
-// always_comb begin
-//     if (i_queue_full) begin
-//         mem_read = 1'b0;
-//     end else begin
-//         mem_read = 1'b1;
-//     end
-// end
-
-assign mem_write = 1'b0;
 assign i_queue_write = ~i_queue_full;
 
 pc_register pc (
@@ -60,13 +51,9 @@ br_pred predictor (
     .i_queue_full(i_queue_full),
     .take_br(take_br),
     .branch_pred_pc_sel(branch_pred_pc_sel),
-    .pc_load(pc_load)
+    .pc_load(pc_load),
+    .mem_resp(mem_resp)
 );
-
-// TODO later
-// cache i_cache(
-
-// );
 
 i_queue i_queue (
     .clk(clk),
