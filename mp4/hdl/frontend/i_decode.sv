@@ -10,6 +10,7 @@ module i_decode(
 
     // From Instruction Queue
     input i_queue_data_t d_in,
+    input logic i_queue_empty,
 
     // To Instruction Queue
     output logic iqueue_read,
@@ -123,7 +124,7 @@ always_ff @ (posedge clk) begin
         alu_o <= '0;
         cmp_o <= '0;
         lsb_o <= '0;
-    end else if(rob_is_full == 1'b1) begin
+    end else if(rob_is_full == 1'b1 /* || i_queue_empty == 1'b1 */) begin
         rob_write <= 1'b0;
         pc_and_rd.instr_pc <= 32'd0;
         pc_and_rd.opcode <= rv32i_opcode'(opcode);
@@ -140,18 +141,23 @@ always_ff @ (posedge clk) begin
         cmp_o.valid <= 1'b0;
         lsb_o.valid <= 1'b0;
         case (opcode)
-            // op_lui : begin
-            //     if (rd != 0 && alu_rs_full == 0 && rob_free_tag != 0) begin
-            //         rob_dest <= rd;
-            //         rob_write <= 1'b1;
-            //         alu_o.vj <= 32'd0; // TODO: use new stuct variables
-            //         alu_o.vk <= u_imm;
-            //         alu_o.qj <= 4'd0;
-            //         alu_o.qk <= 4'd0;
-            //         alu_o.op <= alu_add;
-            //         alu_o.rob_idx <= rob_free_tag;
-            //     end
-            // end
+            op_lui : begin
+                if (rd != 0 && alu_rs_full == 0 && rob_free_tag != 0) begin
+                    pc_and_rd.instr_pc <= instr_pc;
+                    pc_and_rd.opcode <= rv32i_opcode'(opcode);
+                    pc_and_rd.rd <= rd;
+                    rob_write <= 1'b1;
+                    alu_o.valid <= 1'b1;
+                    alu_o.rs1.value <= 32'd0;
+                    alu_o.rs2.value <= u_imm;
+                    alu_o.rs1.valid <= 1'b1;
+                    alu_o.rs2.valid <= 1'b1;
+                    alu_o.rs1.tag <= 4'd0;
+                    alu_o.rs2.tag <= 4'd0;
+                    alu_o.op <= alu_add;
+                    alu_o.rob_idx <= rob_free_tag;
+                end
+            end
 
             op_auipc : begin // KEEP
                 if (rd != 0 && alu_rs_full == 0 && rob_free_tag != 0) begin
@@ -171,19 +177,23 @@ always_ff @ (posedge clk) begin
                 end
             end
 
-            // op_jal : begin
-            //     if (alu_rs_full == 0) begin
-            //         alu_o.valid <= 1'b1;
-            //         rob_dest <= rd;
-            //         rob_write <= 1'b1;
-            //         alu_o.vj <= instr_pc; // TODO: use new stuct variables
-            //         alu_o.vk <= 32'd4; // stores pc+4 into rd
-            //         alu_o.qj <= 3'd0;
-            //         alu_o.qk <= 3'd0;
-            //         alu_o.op <= alu_add;
-            //         rob_write <= 1'b1;
-            //     end
-            // end
+            op_jal : begin
+                if (alu_rs_full == 0) begin
+                    pc_and_rd.instr_pc <= instr_pc;
+                    pc_and_rd.opcode <= rv32i_opcode'(opcode);
+                    pc_and_rd.rd <= rd;
+                    rob_write <= 1'b1;
+                    alu_o.valid <= 1'b1;
+                    alu_o.rs1.value <= instr_pc + 32'd4;
+                    alu_o.rs1.valid <= 1'b1;
+                    alu_o.rs2.value <= j_imm;
+                    alu_o.rs2.valid <= 1'b1;
+                    alu_o.rs1.tag <= 4'd0;
+                    alu_o.rs2.tag <= 4'd0;
+                    alu_o.op <= alu_add;
+                    alu_o.rob_idx <= rob_free_tag;
+                end
+            end
 
             // op_jalr : begin
             //     // ????? no idea what conditions to use, CHECK
@@ -234,7 +244,7 @@ always_ff @ (posedge clk) begin
             end
 
             op_store : begin    // KEEP
-                if ((lsb_full == 0)) begin
+                if (lsb_full == 0) begin
                     lsb_o.valid <= 1'b1;
                     lsb_o.vj <= vj_o;
                     lsb_o.vk <= vk_o;
@@ -257,46 +267,74 @@ always_ff @ (posedge clk) begin
                     pc_and_rd.opcode <= rv32i_opcode'(opcode);
                     pc_and_rd.rd <= rd;
                     case (funct3)
-                        // slt : begin
-                        //     if (cmp_rs_full == 0) begin
-                        //         // cmp_o.vj <= 
-                        //         rob_write <= 1'b1;
-                        //     end
-                        // end
+                        slt : begin
+                            if (cmp_rs_full == 0) begin
+                                cmp_o.valid <= 1'b1;
+                                cmp_o.br <= 1'b0;    // High if opcode is branch, some non-branch opcodes also use
+                                cmp_o.rs1.value <= vj_o;
+                                cmp_o.rs1.valid <= (qj_o == 0);
+                                cmp_o.rs2.value <= i_imm;
+                                cmp_o.rs2.valid <= 1'b1;
+                                cmp_o.rs1.tag <= qj_o;
+                                cmp_o.rs2.tag <= 4'd0;
+                                cmp_o.pc <= instr_pc;
+                                cmp_o.b_imm <= 32'd0;
+                                cmp_o.op <= branch_funct3;
+                                cmp_o.rob_idx <= rob_free_tag;
+                                rob_write <= 1'b1;
+                            end
+                        end
 
-                        // sltu : begin
-                        //     if (cmp_rs_full == 0) begin
-                        //         // send data to CMP reservation station
-                        //         rob_write <= 1'b1;
-                        //     end
-                        // end
+                        sltu : begin
+                            if (cmp_rs_full == 0) begin
+                                cmp_o.valid <= 1'b1;
+                                cmp_o.br <= 1'b0;    // High if opcode is branch, some non-branch opcodes also use
+                                cmp_o.rs1.value <= vj_o;
+                                cmp_o.rs1.valid <= (qj_o == 0);
+                                cmp_o.rs2.value <= i_imm;
+                                cmp_o.rs2.valid <= 1'b1;
+                                cmp_o.rs1.tag <= qj_o;
+                                cmp_o.rs2.tag <= 4'd0;
+                                cmp_o.pc <= instr_pc;
+                                cmp_o.b_imm <= 32'd0;
+                                cmp_o.op <= branch_funct3;
+                                cmp_o.rob_idx <= rob_free_tag;
+                                rob_write <= 1'b1;
+                            end
+                        end
 
-                        // sr : begin
-                        //     if (alu_rs_full == 0) begin
-                        //         case (funct7[5])
-                        //             1'b0 : begin
-                        //                 alu_o.valid <= 1'b1; // TODO: use new stuct variables
-                        //                 alu_o.vj <= vj_o;
-                        //                 alu_o.vk <= i_imm;
-                        //                 alu_o.qj <= qj_o;
-                        //                 alu_o.qk <= 32'b0;
-                        //                 alu_o.op <= alu_srl;
-                        //                 rob_write <= 1'b1;
-                        //             end
+                        sr : begin
+                            if (alu_rs_full == 0) begin
+                                case (funct7[5])
+                                    1'b0 : begin // srli
+                                        alu_o.valid <= 1'b1;
+                                        alu_o.rs1.value <= vj_o;
+                                        alu_o.rs1.valid <= (qj_o == 0);
+                                        alu_o.rs2.value <= i_imm;
+                                        alu_o.rs2.valid <= 1'b1;
+                                        alu_o.rs1.tag <= qj_o;
+                                        alu_o.rs2.tag <= 32'b0;
+                                        alu_o.op <= alu_srl;
+                                        alu_o.rob_idx <= rob_free_tag;
+                                        rob_write <= 1'b1;
+                                    end
 
-                        //             1'b1 : begin
-                        //                 alu_o.valid <= 1'b1; // TODO: use new stuct variables
-                        //                 alu_o.vj = vj_o;
-                        //                 alu_o.vk <= i_imm;
-                        //                 alu_o.qj <= qj_o;
-                        //                 alu_o.qk <= 32'b0;
-                        //                 alu_o.op <= alu_sra;
-                        //                 rob_write <= 1'b1;
-                        //             end
-                        //             default : ;
-                        //         endcase
-                        //     end
-                        // end
+                                    1'b1 : begin // srai
+                                        alu_o.valid <= 1'b1;
+                                        alu_o.rs1.value <= vj_o;
+                                        alu_o.rs1.valid <= (qj_o == 0);
+                                        alu_o.rs2.value <= i_imm;
+                                        alu_o.rs2.valid <= 1'b1;
+                                        alu_o.rs1.tag <= qj_o;
+                                        alu_o.rs2.tag <= 32'b0;
+                                        alu_o.op <= alu_sra;
+                                        alu_o.rob_idx <= rob_free_tag;
+                                        rob_write <= 1'b1;
+                                    end
+                                    default : ;
+                                endcase
+                            end
+                        end
 
                         default : begin  // add, sll, axor, aor, aand
                             if (alu_rs_full == 0) begin
@@ -366,58 +404,74 @@ always_ff @ (posedge clk) begin
                             end
                         end
 
-                        // slt : begin // send data to cmp rs somehow
-                        //     if (cmp_rs_full == 0) begin
-                        //         // cmp_o.br <= 1'b1;    // High if opcode is branch, non-branch opcodes also use
-                        //         // cmp_o.cmp_vj <= ; // TODO: use new stuct variables 
-                        //         // cmp_o.cmp_vk <= ;
-                        //         // cmp_o.cmp_qj <= ;
-                        //         // cmp_o.cmp_qk <= ;
-                        //         // cmp_o.funct <= branch_funct3;
-                        //         // cmp_o.cmp_tag <= rob_free_tag;
-                        //         cmp_o.cmp_op <= blt;
-                        //         rob_write <= 1'b1;
-                        //     end
-                            
-                        // end
+                        slt : begin
+                            if (cmp_rs_full == 0) begin
+                                cmp_o.valid <= 1'b1;
+                                cmp_o.br <= 1'b0;    // High if opcode is branch, some non-branch opcodes also use
+                                cmp_o.rs1.value <= vj_o;
+                                cmp_o.rs1.valid <= (qj_o == 0);
+                                cmp_o.rs2.value <= vk_o;
+                                cmp_o.rs2.valid <= (qk_o == 0);
+                                cmp_o.rs1.tag <= qj_o;
+                                cmp_o.rs2.tag <= qk_o;
+                                cmp_o.pc <= instr_pc;
+                                cmp_o.b_imm <= 32'd0;
+                                cmp_o.op <= branch_funct3;
+                                cmp_o.rob_idx <= rob_free_tag;
+                                rob_write <= 1'b1;
+                            end
+                        end
 
-                        // sltu : begin
-                        //     if (cmp_rs_full == 0) begin
-                        //         // cmp_o.cmp_vj <= ; // TODO: use new stuct variables
-                        //         // cmp_o.cmp_vk <= ;
-                        //         // cmp_o.cmp_qj <= ;
-                        //         // cmp_o.cmp_qk <= ;
-                        //         cmp_o.cmp_op <= bltu;
-                        //         rob_write <= 1'b1;
-                        //     end
-                        // end
+                        sltu : begin
+                            if (cmp_rs_full == 0) begin
+                                cmp_o.valid <= 1'b1;
+                                cmp_o.br <= 1'b0;
+                                cmp_o.rs1.value <= vj_o;
+                                cmp_o.rs1.valid <= (qj_o == 0);
+                                cmp_o.rs2.value <= vk_o;
+                                cmp_o.rs2.valid <= (qk_o == 0);
+                                cmp_o.rs1.tag <= qj_o;
+                                cmp_o.rs2.tag <= qk_o;
+                                cmp_o.pc <= instr_pc;
+                                cmp_o.b_imm <= 32'd0;
+                                cmp_o.op <= branch_funct3;
+                                cmp_o.rob_idx <= rob_free_tag;
+                                rob_write <= 1'b1;
+                            end
+                        end
 
-                        // sr : begin
-                        //     if (alu_rs_full == 0) begin
-                        //         case (funct7[5])
-                        //             1'b0: begin
-                        //                 alu_o.valid <= 1'b1; // TODO: use new stuct variables
-                        //                 alu_o.vj <= vj_o; 
-                        //                 alu_o.vk <= vk_o;
-                        //                 alu_o.qj <= qj_o;
-                        //                 alu_o.qk <= qk_o;
-                        //                 alu_o.op <= alu_sll;
-                        //                 rob_write <= 1'b1;
-                        //             end
+                        sr : begin
+                            if (alu_rs_full == 0) begin
+                                case (funct7[5])
+                                    1'b0 : begin // srl
+                                        alu_o.valid <= 1'b1;
+                                        alu_o.rs1.value <= vj_o;
+                                        alu_o.rs1.valid <= (qj_o == 0);
+                                        alu_o.rs2.value <= vk_o;
+                                        alu_o.rs2.valid <= (qk_o == 0);
+                                        alu_o.rs1.tag <= qj_o;
+                                        alu_o.rs2.tag <= qk_o;
+                                        alu_o.op <= alu_srl;
+                                        alu_o.rob_idx <= rob_free_tag;
+                                        rob_write <= 1'b1;
+                                    end
 
-                        //             1'b1: begin
-                        //                 alu_o.valid <= 1'b1; // TODO: use new stuct variables
-                        //                 alu_o.vj <= vj_o;
-                        //                 alu_o.vk <= vk_o;
-                        //                 alu_o.qj <= qj_o;
-                        //                 alu_o.qk <= qk_o;
-                        //                 alu_o.op <= alu_sra;
-                        //                 rob_write <= 1'b1;
-                        //             end
-                        //             default : ;
-                        //         endcase
-                        //     end
-                        // end
+                                    1'b1 : begin // sra
+                                        alu_o.valid <= 1'b1;
+                                        alu_o.rs1.value <= vj_o;
+                                        alu_o.rs1.valid <= (qj_o == 0);
+                                        alu_o.rs2.value <= vk_o;
+                                        alu_o.rs2.valid <= (qk_o == 0);
+                                        alu_o.rs1.tag <= qj_o;
+                                        alu_o.rs2.tag <= qk_o;
+                                        alu_o.op <= alu_sra;
+                                        alu_o.rob_idx <= rob_free_tag;
+                                        rob_write <= 1'b1;
+                                    end
+                                    default : ;
+                                endcase
+                            end
+                        end
 
                         default : begin  // sll, axor, aor, aand
                             if (alu_rs_full == 0) begin
@@ -450,7 +504,7 @@ always_ff @(posedge clk) begin
         rd_o <= rd;
         load_tag <= 1'b0;
         tag <= '0;
-    end else if (rob_is_full == 1'b1 || lsb_almost_full == 1'b1 || lsb_full == 1'b1) begin
+    end else if (rob_is_full == 1'b1 || lsb_almost_full == 1'b1 || lsb_full == 1'b1 /*|| i_queue_empty == 1'b1*/) begin
         iqueue_read <= 1'b0;
     end else begin
         iqueue_read <= 1'b0;
@@ -551,7 +605,7 @@ always_ff @(posedge clk) begin
                 end
             end
             default : begin
-                iqueue_read <= 1'b1;
+                iqueue_read <= 1'b1; // this makes it fast?
             end
         endcase
     end

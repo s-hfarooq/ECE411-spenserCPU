@@ -31,6 +31,7 @@ module mp4 (
 );
 
 logic iqueue_read;
+logic i_queue_empty;
 i_queue_data_t iqueue_o;
 logic load_tag;                     // From Decoder to Regfile
 regfile_data_out_t regfile_data_o;  // From regfile to Decoder
@@ -91,13 +92,15 @@ i_fetch i_fetch (
     .mem_write(),
     .pc_o(inst_addr),
     .take_br(take_br),
-    .next_pc(next_pc)
+    .next_pc(next_pc),
+    .i_queue_empty(i_queue_empty)
 );
 
 i_decode decode (
     .clk(clk),
     .rst(rst),
     .d_in(iqueue_o),
+    .i_queue_empty(i_queue_empty),
     .iqueue_read(iqueue_read),
     .regfile_entry_i(regfile_data_o),
     .rs1_o(rs1_from_decoder),

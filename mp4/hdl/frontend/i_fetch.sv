@@ -20,11 +20,14 @@ module i_fetch (
     output rv32i_word pc_o,
 
     input logic take_br,
-    input rv32i_word next_pc
+    input rv32i_word next_pc,
+
+    // To Decoder
+    output logic i_queue_empty
 );
 
 // i_queue signals
-logic i_queue_empty, i_queue_full, i_queue_write;
+logic i_queue_full, i_queue_write;
 i_queue_data_t i_queue_data_in;
 
 // PC signals
@@ -32,12 +35,16 @@ logic pc_load, branch_pred_pc_sel;
 rv32i_word pc_in, pc_out, alu_out;
 assign pc_o = pc_out;
 
-always_comb begin
-    if (i_queue_full)
-        mem_read = 1'b0;
-    else
-        mem_read = 1'b1;
-end
+
+assign mem_read = ~i_queue_full;
+// always_comb begin
+//     if (i_queue_full) begin
+//         mem_read = 1'b0;
+//     end else begin
+//         mem_read = 1'b1;
+//     end
+// end
+
 assign mem_write = 1'b0;
 assign i_queue_write = ~i_queue_full;
 
@@ -49,10 +56,11 @@ pc_register pc (
     .out(pc_out)
 );
 
-// TODO later
 br_pred predictor (
     .clk(clk),
     .rst(rst),
+    .i_queue_full(i_queue_full),
+    .take_br(take_br),
     .branch_pred_pc_sel(branch_pred_pc_sel),
     .pc_load(pc_load)
 );
