@@ -1,7 +1,5 @@
-`include "../macros.sv"
 
 import rv32i_types::*;
-import structs::*;
 
 module arbiter (
     input logic clk,
@@ -66,29 +64,61 @@ always_comb begin
             else
                 next_state = dcache;
         end
+
+        default : begin
+            next_state = idle;
+        end
     endcase
 end
 
 always_comb begin
-    case (state)
-        idle : ;
+    unique case (state)
+        idle : begin
+            // need to set the address properly for the mem
+            mem_addr = inst_addr;
+            mem_read = 1'b1;
+            inst_rdata = '0;
+            inst_resp = '0;
+            mem_write = 1'b0;
+            mem_wdata = 256'b0;
+            data_resp = '0;
+            data_rdata = '0;
+        end
 
         icache : begin
             inst_rdata = mem_rdata;
-            mem_addr = inst_addr;
             inst_resp = mem_resp;
+
             mem_read = inst_read;
             mem_write = 1'b0;
+            mem_addr = inst_addr;
             mem_wdata = 256'b0;
+            data_resp = '0;
+            data_rdata = '0;
         end
 
         dcache : begin
+            inst_rdata = '0;
+            inst_resp = '0;
+            
             mem_read = data_read;
             mem_write = data_write;
             mem_addr = data_addr;
             mem_wdata = data_wdata;
             data_resp = mem_resp;
             data_rdata = mem_rdata;
+        end
+
+        default : begin
+            inst_rdata = '0;
+            inst_resp = '0;
+
+            mem_read = '0;
+            mem_write = 1'b0;
+            mem_addr = '0;
+            mem_wdata = 256'b0;
+            data_resp = '0;
+            data_rdata = '0;
         end
     endcase
 end
@@ -100,4 +130,4 @@ always_ff @ (posedge clk) begin
         state <= next_state;
 end
     
-endmodule
+endmodule : arbiter

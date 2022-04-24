@@ -16,7 +16,6 @@ module i_fetch (
     input logic iqueue_read,
 
     output logic mem_read,
-    output logic mem_write,
     output rv32i_word pc_o,
 
     input logic take_br,
@@ -33,9 +32,8 @@ i_queue_data_t i_queue_data_in;
 // PC signals
 logic pc_load, branch_pred_pc_sel;
 rv32i_word pc_in, pc_out, alu_out;
+
 assign pc_o = pc_out;
-
-
 assign mem_read = ~i_queue_full;
 // always_comb begin
 //     if (i_queue_full) begin

@@ -7,27 +7,27 @@ module mp4 (
     input logic clk,
     input logic rst,
 
-    // input rv32i_word mem_rdata,
-    // output rv32i_word mem_addr,
-    // input logic mem_resp,
-    // output logic mem_read,
-    // output logic mem_write,
-    // output rv32i_word mem_wdata,
+    input rv32i_word mem_rdata,
+    output rv32i_word mem_addr,
+    input logic mem_resp,
+    output logic mem_read,
+    output logic mem_write,
+    output rv32i_word mem_wdata
     
     // I-Cache signals
-    output logic inst_read,
-    output rv32i_word inst_addr,
-    input logic inst_resp,
-    input rv32i_word inst_rdata,    // 32-bit instruction
+    // output logic inst_read,
+    // output rv32i_word inst_addr,
+    // input logic inst_resp,
+    // input rv32i_word inst_rdata,    // 32-bit instruction
 
-    // D-Cache signals
-    output logic data_read,
-    output logic data_write,
-    output logic [3:0] data_mbe,
-    output rv32i_word data_addr,
-    output rv32i_word data_wdata,
-    input logic data_resp,
-    input rv32i_word data_rdata
+    // // D-Cache signals
+    // output logic data_read,
+    // output logic data_write,
+    // output logic [3:0] data_mbe,
+    // output rv32i_word data_addr,
+    // output rv32i_word data_wdata,
+    // input logic data_resp,
+    // input rv32i_word data_rdata
 );
 
 logic iqueue_read;
@@ -80,17 +80,108 @@ regfile_data_out_t cmp_rs_d_out;
 logic take_br;
 rv32i_word next_pc;
 
+// i_cache glue logic
+logic i_cache_pmem_resp;
+logic [255:0] i_cache_pmem_rdata;
+logic [31:0] i_cache_pmem_address;
+logic [255:0] i_cache_pmem_wdata;
+logic i_cache_pmem_read;
+logic i_cache_pmem_write;
+logic i_cache_mem_read;
+logic i_cache_mem_write;
+logic [3:0] i_cache_mem_byte_enable_cpu;
+logic [31:0] i_cache_mem_address;
+logic [31:0] i_cache_mem_wdata_cpu;
+logic i_cache_mem_resp;
+logic [31:0] i_cache_mem_rdata_cpu;
+
+// d_cache glue logic
+logic d_cache_pmem_resp;
+logic [255:0] d_cache_pmem_rdata;
+logic [31:0] d_cache_pmem_address;
+logic [255:0] d_cache_pmem_wdata;
+logic d_cache_pmem_read;
+logic d_cache_pmem_write;
+logic d_cache_mem_read;
+logic d_cache_mem_write;
+logic [3:0] d_cache_mem_byte_enable_cpu;
+logic [31:0] d_cache_mem_address;
+logic [31:0] d_cache_mem_wdata_cpu;
+logic d_cache_mem_resp;
+logic [31:0] d_cache_mem_rdata_cpu;
+
+cache i_cache (
+    .clk(clk),
+    /* Physical memory signals */
+    .pmem_resp(i_cache_pmem_resp),
+    .pmem_rdata(i_cache_pmem_rdata),
+    .pmem_address(i_cache_pmem_address),
+    .pmem_wdata(i_cache_pmem_wdata),
+    .pmem_read(i_cache_pmem_read),
+    .pmem_write(i_cache_pmem_write),
+    /* CPU memory signals */
+    .mem_read(i_cache_mem_read),
+    .mem_write(i_cache_mem_write),
+    .mem_byte_enable_cpu(i_cache_mem_byte_enable_cpu),
+    .mem_address(i_cache_mem_address),
+    .mem_wdata_cpu(i_cache_mem_wdata_cpu),
+    .mem_resp(i_cache_mem_resp),
+    .mem_rdata_cpu(i_cache_mem_rdata_cpu)
+);
+
+cache d_cache (
+    .clk(clk),
+    /* Physical memory signals */
+    .pmem_resp(d_cache_pmem_resp),
+    .pmem_rdata(d_cache_pmem_rdata),
+    .pmem_address(d_cache_pmem_address),
+    .pmem_wdata(d_cache_pmem_wdata),
+    .pmem_read(d_cache_pmem_read),
+    .pmem_write(d_cache_pmem_write),
+    /* CPU memory signals */
+    .mem_read(d_cache_mem_read),
+    .mem_write(d_cache_mem_write),
+    .mem_byte_enable_cpu(d_cache_mem_byte_enable_cpu),
+    .mem_address(d_cache_mem_address),
+    .mem_wdata_cpu(d_cache_mem_wdata_cpu),
+    .mem_resp(d_cache_mem_resp),
+    .mem_rdata_cpu(d_cache_mem_rdata_cpu)
+);
+
+arbiter arbiter (
+    .clk(clk),
+    .rst(rst),
+    // Memory
+    .mem_rdata(mem_rdata),
+    .mem_addr(mem_addr),
+    .mem_resp(mem_resp),
+    .mem_read(mem_read),
+    .mem_write(mem_write),
+    .mem_wdata(mem_wdata),
+    // Instruction Cache
+    .inst_read(i_cache_pmem_read),
+    .inst_addr(i_cache_pmem_address),
+    .inst_resp(i_cache_pmem_resp),
+    .inst_rdata(i_cache_pmem_rdata),
+    // Data Cache
+    .data_read(d_cache_pmem_read),
+    .data_write(d_cache_pmem_write),
+    .data_addr(d_cache_pmem_address),
+    .data_wdata(d_cache_pmem_wdata),
+    .data_resp(d_cache_pmem_resp),
+    .data_rdata(d_cache_pmem_rdata)
+);
+
 i_fetch i_fetch (
     .clk(clk),
     .rst(rst),
     .flush(flush),
-    .mem_resp(inst_resp),
-    .mem_rdata(inst_rdata), // 32-bit instruction input
+    .mem_resp(i_cache_mem_resp),
+    .mem_rdata(i_cache_mem_rdata_cpu), // 32-bit instruction input
     .i_queue_data_out(iqueue_o),
     .iqueue_read(iqueue_read),
-    .mem_read(inst_read),
-    .mem_write(),
-    .pc_o(inst_addr),
+    .mem_read(i_cache_mem_read),
+    .pc_o(i_cache_mem_address),
     .take_br(take_br),
     .next_pc(next_pc),
     .i_queue_empty(i_queue_empty)
@@ -112,8 +203,6 @@ i_decode decode (
     .rob_in(rob_arr),
     .rob_write(rob_write),
     .rob_is_full(rob_is_full),
-    // I'm going to use the i_decode_opcode_t version
-    // .rob_dest(),           // dest_reg, send to ROB to load it in
     .pc_and_rd(pc_and_rd),
     .alu_rs_full(alu_rs_full),
     .alu_o(alu_o),
@@ -160,13 +249,13 @@ load_store_queue ldstbuf (
     .curr_is_store(rob_curr_is_store),
     .head_tag(rob_head_tag),
     // From/to d-cache
-    .data_read(data_read),
-    .data_write(data_write),
-    .data_mbe(data_mbe), // mem byte enable
-    .data_addr(data_addr),
-    .data_wdata(data_wdata),
-    .data_resp(data_resp),
-    .data_rdata(data_rdata)
+    .data_read(d_cache_mem_read),
+    .data_write(d_cache_mem_write),
+    .data_mbe(d_cache_mem_byte_enable_cpu), // mem byte enable
+    .data_addr(d_cache_mem_address),
+    .data_wdata(d_cache_mem_wdata_cpu),
+    .data_resp(d_cache_mem_resp),
+    .data_rdata(d_cache_mem_rdata_cpu)
 );
 
 ro_buffer rob (
