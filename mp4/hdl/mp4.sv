@@ -141,6 +141,7 @@ cache d_cache (
 arbiter arbiter (
     .clk(clk),
     .rst(rst),
+    .flush(flush),
     // Memory
     .mem_rdata(arbiter_mem_rdata),
     .mem_addr(arbiter_mem_address),
@@ -165,6 +166,7 @@ arbiter arbiter (
 cacheline_adaptor cacheline_adaptor (
     .clk(clk),
     .reset_n(~rst),
+    .flush(1'b0),
 
     // Port to LLC (Lowest Level Cache)
     .line_i(arbiter_mem_wdata),
@@ -287,7 +289,10 @@ ro_buffer rob (
     .head_tag(rob_head_tag),
     .pcmux_sel(take_br),
     .target_pc(next_pc),
-    .take_br(take_br)
+    .take_br(take_br),
+    .mem_resp(mem_resp),
+    .mem_read(mem_read),
+    .mem_write(mem_write)
 );
 
 alu_rs alu_rs (

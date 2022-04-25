@@ -35,24 +35,15 @@ module ro_buffer (
 
     // Output to PC
     output logic pcmux_sel,
-    output rv32i_word target_pc
+    output rv32i_word target_pc,
+
+    input logic mem_resp,
+    input logic mem_read,
+    input logic mem_write
 );
 
 rob_arr_t rob_arr;
 assign rob_arr_o = rob_arr;
-
-// Set outputs to decoder equal to the ROB data
-// always_comb begin
-//     for (int i = 0; i < `RO_BUFFER_ENTRIES; ++i) begin
-//         for (int j = 0; j < `RO_BUFFER_ENTRIES; ++j) begin
-//             if(rob_arr[i].valid == 1'b1) begin // entry is being used in rob
-//                 rob_arr_o[i] = rob_arr[j];
-//             end else begin
-//                 rob_arr_o.reg_data.can_commit = 1'b0;
-//             end
-//         end
-//     end
-// end
 
 // Head and tail pointers
 logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] head_ptr = {$clog2(`RO_BUFFER_ENTRIES){1'b0}};
@@ -110,17 +101,6 @@ always_ff @ (posedge clk) begin
     end else begin
         // Check if we should commit head value
         if (rob_arr[head_ptr].reg_data.can_commit == 1'b1 || rob_store_complete == 1'b1) begin
-            // if (rob_arr[head_ptr].op.opcode == op_br) begin
-            //     pcmux_sel <= 
-            // end
-            // if (rob_arr[head_ptr].op.opcode == op_br) begin
-            //     pcmux_sel = 1'b1;
-            //     target_pc = rob_arr[head_ptr].target_pc;
-            // end else begin
-            //     pcmux_sel = 1'b0;
-            //     target_pc = 32'd0;
-            // end
-
             if(rob_arr[head_ptr].op.opcode == op_br) begin
                 if(rob_arr[head_ptr].reg_data.value != take_br) begin
                     pcmux_sel <= 1'b1;

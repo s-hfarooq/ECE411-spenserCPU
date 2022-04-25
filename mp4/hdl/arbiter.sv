@@ -3,6 +3,7 @@ import rv32i_types::*;
 module arbiter (
     input clk,
     input rst,
+    input logic flush,
 
     // Memory
     input logic [255:0] mem_rdata,
@@ -33,37 +34,41 @@ enum int unsigned {
 
 /* State Transitions */
 always_comb begin
-    case (state)
-        idle : begin
-            if (data_read || data_write)
-                next_state = dcache;
-            else if (inst_read)
-                next_state = icache;
-            else
-                next_state = idle;
-        end
+    if(flush) begin
+        next_state = idle;
+    end else begin
+        case (state)
+            idle : begin
+                if (data_read || data_write)
+                    next_state = dcache;
+                else if (inst_read)
+                    next_state = icache;
+                else
+                    next_state = idle;
+            end
 
-        icache : begin
-            if (mem_resp && (data_read || data_write))
-                next_state = dcache;
-            else if (mem_resp)
-                next_state = idle;
-            else
-                next_state = icache;
-        end
+            icache : begin
+                if (mem_resp && (data_read || data_write))
+                    next_state = dcache;
+                else if (mem_resp)
+                    next_state = idle;
+                else
+                    next_state = icache;
+            end
 
-        dcache : begin
-            if (mem_resp && inst_read)
-                next_state = icache;
-            else if (mem_resp)
+            dcache : begin
+                if (mem_resp && inst_read)
+                    next_state = icache;
+                else if (mem_resp)
+                    next_state = idle;
+                else
+                    next_state = dcache;
+            end
+            default: begin
                 next_state = idle;
-            else
-                next_state = dcache;
-        end
-        default: begin
-            next_state = idle;
-        end
-    endcase
+            end
+        endcase
+    end
 end
 
 /* State Outputs */
@@ -105,7 +110,7 @@ always_comb begin
 end
 
 always_ff @ (posedge clk) begin
-    if (rst)
+    if (rst || flush)
         state <= idle;
     else
         state <= next_state;

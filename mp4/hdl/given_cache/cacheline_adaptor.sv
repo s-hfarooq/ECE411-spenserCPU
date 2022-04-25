@@ -4,6 +4,7 @@ module cacheline_adaptor
 (
     input clk,
     input reset_n,
+    input logic flush,
 
     // Port to LLC (Lowest Level Cache)
     input logic [255:0] line_i,
@@ -42,7 +43,7 @@ module cacheline_adaptor
     assign op = read_i ? READ_OP : write_i ? WRITE_OP : NO_OP;
 
     always_ff @(posedge clk) begin
-        if (~reset_n) begin
+        if (~reset_n || flush) begin
             state.macro <= IDLE;
         end
         else begin
