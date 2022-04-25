@@ -51,6 +51,8 @@ task set_defaults();
     data_write <= 1'b0;
     data_mbe <= 4'b1111;
     load_res <= '{default: 0};
+    data_addr <= 32'd0;
+    data_wdata <= 32'd0;
 endtask
 
 // store rs
@@ -106,32 +108,58 @@ always_ff @(posedge clk) begin : store_rs
                         // broadcast data received on CDB
                         // calculate effective address and set tag
 
+                        // need to load correct bits for lb/lh (shouldn't always be lowest)
                         case(load_funct3_t'(queue[head_ptr].funct))
                             lb: begin 
-                                load_res.value <= {{24{data_rdata[7]}}, data_rdata[7:0]};
+                                // load_res.value <= {{24{data_rdata[7]}}, data_rdata[7:0]};
+                                $displayh("IN lb, data_addr: %p (%p), val will be (assumming 00): %p", data_addr, data_addr[1:0], {{24{data_rdata[7]}}, data_rdata[7:0]});
+
+                                case (data_addr[1:0])
+                                    2'b00: load_res.value <= {{24{data_rdata[7]}}, data_rdata[7:0]};
+                                    2'b01: load_res.value <= {{24{data_rdata[15]}}, data_rdata[15:8]};
+                                    2'b10: load_res.value <= {{24{data_rdata[23]}}, data_rdata[23:16]};
+                                    2'b11: load_res.value <= {{24{data_rdata[31]}}, data_rdata[31:24]};
+                                    default: load_res.value <= 32'h0;
+                                endcase
                             end
                             lh: begin
-                                load_res.value <= {{16{data_rdata[15]}}, data_rdata[15:0]};
+                                // load_res.value <= {{16{data_rdata[15]}}, data_rdata[15:0]};
+                                case (data_addr[1])
+                                    1'b0: load_res.value <= $signed(data_rdata[15:0]); // looking at the top bits
+                                    1'b1: load_res.value <= $signed(data_rdata[31:16]);
+                                endcase  
                             end
                             lw: begin 
                                 load_res.value <= data_rdata;
                             end
                             lbu: begin 
-                                load_res.value <= {24'b0, data_rdata[7:0]};
+                                // load_res.value <= {24'b0, data_rdata[7:0]};
+                                case (data_addr[1:0])
+                                    2'b00: load_res.value <= {24'h0, data_rdata[7:0]};
+                                    2'b01: load_res.value <= {24'h0, data_rdata[15:8]};
+                                    2'b10: load_res.value <= {24'h0, data_rdata[23:16]};
+                                    2'b11: load_res.value <= {24'h0, data_rdata[31:24]};
+                                    default: load_res.value <= 32'h0;
+                                endcase
                             end
                             lhu: begin 
-                                load_res.value <= {16'b0, data_rdata[15:0]};
+                                // load_res.value <= {16'b0, data_rdata[15:0]};
+                                case (data_addr[1])
+                                    1'b0: load_res.value <= {16'h0, data_rdata[15:0]}; // looking at the top bits
+                                    1'b1: load_res.value <= {16'h0, data_rdata[31:16]};
+                                endcase  
+                            end
+
+                            default: begin
+                                load_res.value <= 32'd0;
                             end
                         endcase
 
                         load_res.tag <= queue[head_ptr].tag;
-                        
                         queue[head_ptr].valid <= 1'b0;
-
                         head_ptr <= head_ptr + 1;
-
-                        // if(lsb_entry.valid == 1'b0)
-                        //     entries <= entries - 1;
+                        data_read <= 1'b0;
+                        queue[head_ptr] <= '{default: 0};
                     end
                 end
                 1'b1: begin // store
@@ -160,15 +188,18 @@ always_ff @(posedge clk) begin : store_rs
                         case(store_funct3_t'(queue[head_ptr].funct))
                             // TODO Verify: THIS ASSUMES THAT THIS IS ALWAYS THLOWEST BITS.
                             // WE NEED TO MAKE SURE THAT EVERYTHING IS 4-BYTE ALIGNED
-                            sb: begin
-                                data_mbe <= 4'b0001;
-                            end
-                            sh: begin
-                                data_mbe <= 4'b0011;
-                            end
-                            sw: begin
-                                data_mbe <= 4'b1111;
-                            end
+                            sw: data_mbe <= 4'b1111;
+                            sh: data_mbe <= 4'b0011 << data_addr[1:0];
+                            sb: data_mbe <= 4'b0001 << data_addr[1:0];
+                            // sb: begin
+                            //     data_mbe <= 4'b0001;
+                            // end
+                            // sh: begin
+                            //     data_mbe <= 4'b0011;
+                            // end
+                            // sw: begin
+                            //     data_mbe <= 4'b1111;
+                            // end
                         endcase
 
                         // need to dequeue
@@ -179,6 +210,9 @@ always_ff @(posedge clk) begin : store_rs
                             // if(lsb_entry.valid == 1'b0)
                             //     entries <= entries - 1;
                             rob_store_complete <= 1'b1;
+                            data_write <= 1'b0;
+
+                            queue[head_ptr] <= '{default: 0};
                         end
                     end
                 end

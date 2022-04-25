@@ -64,7 +64,8 @@ i_queue i_queue (
     .data_in(i_queue_data_in),
     .data_out(i_queue_data_out),
     .empty(i_queue_empty),
-    .full(i_queue_full)
+    .full(i_queue_full),
+    .mem_resp(mem_resp)
 );
 
 always_comb begin

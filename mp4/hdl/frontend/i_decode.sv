@@ -206,7 +206,7 @@ always_ff @ (posedge clk) begin
                 if (cmp_rs_full == 0) begin
                     pc_and_rd.instr_pc <= instr_pc;
                     pc_and_rd.opcode <= rv32i_opcode'(opcode);
-                    pc_and_rd.rd <= rd;
+                    pc_and_rd.rd <= 4'd0;
                     cmp_o.valid <= 1'b1;
                     cmp_o.br <= 1'b1;    // High if opcode is branch, some non-branch opcodes also use
                     cmp_o.rs1.value <= vj_o;

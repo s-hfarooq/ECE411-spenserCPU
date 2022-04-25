@@ -1,9 +1,8 @@
-
 import rv32i_types::*;
 
 module arbiter (
-    input logic clk,
-    input logic rst,
+    input clk,
+    input rst,
 
     // Memory
     input logic [255:0] mem_rdata,
@@ -12,13 +11,13 @@ module arbiter (
     output logic mem_read,
     output logic mem_write,
     output logic [255:0] mem_wdata,
-
+    
     // Instruction Cache
     input logic inst_read,
     input rv32i_word inst_addr,
     output logic inst_resp,
     output logic [255:0] inst_rdata,
-
+    
     // Data Cache
     input logic data_read,
     input logic data_write,
@@ -32,13 +31,14 @@ enum int unsigned {
     idle, icache, dcache
 } state, next_state;
 
+/* State Transitions */
 always_comb begin
     case (state)
         idle : begin
-            if (inst_read)
-                next_state = icache;
-            else if (data_read || data_write)
+            if (data_read || data_write)
                 next_state = dcache;
+            else if (inst_read)
+                next_state = icache;
             else
                 next_state = idle;
         end
@@ -46,9 +46,7 @@ always_comb begin
         icache : begin
             if (mem_resp && (data_read || data_write))
                 next_state = dcache;
-            else if (mem_resp && inst_read && !(data_read || data_write))
-                next_state = icache;
-            else if (mem_resp && !inst_read && !(data_read || data_write))
+            else if (mem_resp)
                 next_state = idle;
             else
                 next_state = icache;
@@ -57,68 +55,51 @@ always_comb begin
         dcache : begin
             if (mem_resp && inst_read)
                 next_state = icache;
-            else if (mem_resp && (data_read || data_write) && !inst_read)
-                next_state = dcache;
-            else if (mem_resp && !(data_read || data_write) && !inst_read)
+            else if (mem_resp)
                 next_state = idle;
             else
                 next_state = dcache;
         end
-
-        default : begin
+        default: begin
             next_state = idle;
         end
     endcase
 end
 
+/* State Outputs */
 always_comb begin
-    unique case (state)
-        idle : begin
-            // need to set the address properly for the mem
-            mem_addr = inst_addr;
-            mem_read = 1'b1;
-            inst_rdata = '0;
-            inst_resp = '0;
-            mem_write = 1'b0;
-            mem_wdata = 256'b0;
-            data_resp = '0;
-            data_rdata = '0;
-        end
-
+    case (state)
         icache : begin
             inst_rdata = mem_rdata;
+            mem_addr = inst_addr;
             inst_resp = mem_resp;
-
             mem_read = inst_read;
             mem_write = 1'b0;
-            mem_addr = inst_addr;
-            mem_wdata = 256'b0;
-            data_resp = '0;
-            data_rdata = '0;
+            mem_wdata = 256'd0;
+            data_resp = 1'b0;
+            data_rdata = 'b0;
         end
 
         dcache : begin
-            inst_rdata = '0;
-            inst_resp = '0;
-            
             mem_read = data_read;
             mem_write = data_write;
             mem_addr = data_addr;
             mem_wdata = data_wdata;
             data_resp = mem_resp;
             data_rdata = mem_rdata;
+            inst_resp = 1'b0;
+            inst_rdata = 'b0;
         end
 
-        default : begin
-            inst_rdata = '0;
-            inst_resp = '0;
-
-            mem_read = '0;
+        default : begin // idle
             mem_write = 1'b0;
-            mem_addr = '0;
-            mem_wdata = 256'b0;
-            data_resp = '0;
-            data_rdata = '0;
+            mem_read = 1'b0;
+            mem_wdata = 'b0;
+            mem_addr = 'b0;
+            inst_resp = 1'b0;
+            inst_rdata = 'b0;
+            data_resp = 1'b0;
+            data_rdata = 'b0;
         end
     endcase
 end
@@ -129,5 +110,5 @@ always_ff @ (posedge clk) begin
     else
         state <= next_state;
 end
-    
+
 endmodule : arbiter
