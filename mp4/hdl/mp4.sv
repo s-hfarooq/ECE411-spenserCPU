@@ -203,6 +203,7 @@ i_fetch i_fetch (
 i_decode decode (
     .clk(clk),
     .rst(rst),
+    .flush(flush),
     .d_in(iqueue_o),
     .i_queue_empty(i_queue_empty),
     .iqueue_read(iqueue_read),

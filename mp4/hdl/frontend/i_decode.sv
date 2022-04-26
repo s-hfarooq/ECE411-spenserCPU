@@ -6,6 +6,7 @@ import structs::*;
 module i_decode(
     input clk,
     input rst,
+    input logic flush,
     // input load,
 
     // From Instruction Queue
@@ -115,7 +116,7 @@ end
 always_ff @ (posedge clk) begin
     if(rd == 8)
         $displayh("rd is 8, d_in is %p, opcode is %p", d_in, opcode);
-    if (rst) begin
+    if (rst || flush) begin
         rob_write <= 1'b0;
         pc_and_rd.instr_pc <= 32'd0;
         pc_and_rd.opcode <= rv32i_opcode'(opcode);
@@ -499,7 +500,7 @@ end
 always_ff @(posedge clk) begin
     if(rd != 0)
         $displayh("robfull:%p, lsbalmost:%p, lsbfull:%p, instr:%p, Tag=%p, rd=%p", rob_is_full, lsb_almost_full, lsb_full, d_in, rob_free_tag, rd);
-    if (rst) begin
+    if (rst || flush) begin
         iqueue_read <= 1'b0;
         rd_o <= rd;
         load_tag <= 1'b0;
