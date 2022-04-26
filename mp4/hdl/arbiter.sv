@@ -34,7 +34,7 @@ enum int unsigned {
 
 /* State Transitions */
 always_comb begin
-    if(flush) begin
+    if(rst) begin
         next_state = idle;
     end else begin
         case (state)
@@ -50,10 +50,10 @@ always_comb begin
             icache : begin
                 if (mem_resp && (data_read || data_write))
                     next_state = dcache;
-                else if (mem_resp)
-                    next_state = idle;
-                else
+                else if (~mem_resp || inst_read)
                     next_state = icache;
+                else
+                    next_state = idle;
             end
 
             dcache : begin
@@ -110,7 +110,7 @@ always_comb begin
 end
 
 always_ff @ (posedge clk) begin
-    if (rst || flush)
+    if (rst)
         state <= idle;
     else
         state <= next_state;

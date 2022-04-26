@@ -102,14 +102,24 @@ always_ff @ (posedge clk) begin
         // Check if we should commit head value
         if (rob_arr[head_ptr].reg_data.can_commit == 1'b1 || rob_store_complete == 1'b1) begin
             if(rob_arr[head_ptr].op.opcode == op_br) begin
-                if(rob_arr[head_ptr].reg_data.value != take_br) begin
+                // if(rob_arr[head_ptr].reg_data.value != take_br) begin
+                if(rob_arr[head_ptr].reg_data.value == 1) begin
                     pcmux_sel <= 1'b1;
+                    $displayh("takebr set high for target %p (%p) (%p)", rob_arr[head_ptr].target_pc, mem_read, mem_resp);
                     target_pc <= rob_arr[head_ptr].target_pc;
-                    flush <= 1'b1;
-                end
+                    // flush <= 1'b1;
 
-                rob_arr[head_ptr] <= '{default: 0};
-                incrementToNextInstr();
+                    if(mem_read == 0 && mem_resp == 0) begin
+                        $displayh("takebr clearning for target %p (%p)(%p)", rob_arr[head_ptr].target_pc, mem_read, mem_resp);
+                        rob_arr[head_ptr] <= '{default: 0};
+                        incrementToNextInstr();
+                        flush <= 1'b1;
+                    end
+                end else begin
+                    // $displayh("takebr clearning for target %p (%p)(%p)", rob_arr[head_ptr].target_pc, mem_read, mem_resp);
+                    rob_arr[head_ptr] <= '{default: 0};
+                    incrementToNextInstr();
+                end
             end else begin
                 // Output to regfile, dequeue
                 rob_o <= rob_arr[head_ptr];

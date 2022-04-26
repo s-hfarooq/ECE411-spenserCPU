@@ -33,8 +33,8 @@ i_queue_data_t i_queue_data_in;
 logic pc_load, branch_pred_pc_sel;
 rv32i_word pc_in, pc_out, alu_out;
 
-assign pc_o = pc_out;
-assign mem_read = ~i_queue_full;
+// assign pc_o = pc_out;
+assign mem_read = 1'b1;
 assign i_queue_write = ~i_queue_full;
 
 pc_register pc (
@@ -76,8 +76,14 @@ end
 
 always_comb begin : MUXES
     case (take_br)
-        1'b0: pc_in = pc_out + 4;
-        1'b1: pc_in = next_pc;
+        1'b0: begin
+            pc_in = pc_out + 4;
+            pc_o = pc_out;
+        end
+        1'b1: begin
+            pc_in = next_pc;
+            pc_o = next_pc;
+        end
         // default: `BAD_MUX_SEL;
     endcase
 end
