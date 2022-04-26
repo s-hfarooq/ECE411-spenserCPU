@@ -290,9 +290,9 @@ ro_buffer rob (
     .pcmux_sel(take_br),
     .target_pc(next_pc),
     .take_br(take_br),
-    .mem_resp(arbiter_mem_resp),
-    .mem_read(arbiter_mem_read),
-    .mem_write(arbiter_mem_write)
+    .mem_resp(instr_resp),
+    .mem_read(instr_read),
+    .mem_write(1'b0)
 );
 
 alu_rs alu_rs (
