@@ -95,8 +95,6 @@ always_ff @(posedge clk) begin
         for(int i = 0; i < `CMP_RS_SIZE; ++i) begin
             data[i] <= '{default: 0};
             is_in_use[i] <= 1'b0;
-            load_cmp[i] <= 1'b0;
-            load_cdb[i] <= 1'b0;
         end
     end else if (cmp_o.valid) begin
         // load data from decoder / ROB
