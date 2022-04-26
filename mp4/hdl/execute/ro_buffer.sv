@@ -109,7 +109,7 @@ always_ff @ (posedge clk) begin
                     target_pc <= rob_arr[head_ptr].target_pc;
                     // flush <= 1'b1;
 
-                    if(mem_read == 0 && mem_resp == 0) begin
+                    if(mem_read == 1 && mem_resp == 1) begin
                         $displayh("takebr clearning for target %p (%p)(%p)", rob_arr[head_ptr].target_pc, mem_read, mem_resp);
                         rob_arr[head_ptr] <= '{default: 0};
                         incrementToNextInstr();
