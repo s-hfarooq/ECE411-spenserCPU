@@ -23,3 +23,12 @@ For checkpoint 2, we implemented the ROB, reservation stations, load store buffe
 
 ## Roadmap
 For checkpoint 3, we will need to add L1 caches and implement the arbiter and branch predictor we designed for checkpoint 2. We will likely also be editing the given cache code for better performance. Additionally, we'll decide if we want to implement any additional advanced features. Again, like the previous checkpoint, implementation and debug will mostly be done through pair programming.
+
+
+# Checkpoint 3
+
+## Progress Report
+For checkpoint 3, we continued to debug our previous weeks code in order to be able to properly run the CP1 testcode. We also added in caches and our arbiter and had to fix additional bugs in order to make these work properly. CP1 testcode now works as intended, but we are still having issues with CP2 testcode. We have yet to try CP3 or competition testcode.
+
+## Roadmap
+For checkpoint 4, we will be fixing the bugs to ensure CP2, CP3, and all competition testcode run as expected. If we have time we will work on creating a better branch predictor (likely 2-bit) and implement a better cache than the working one we were provided with. 
