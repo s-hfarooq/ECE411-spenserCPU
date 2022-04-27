@@ -7,30 +7,16 @@ module mp4 (
     input logic clk,
     input logic rst,
 
-    // input rv32i_word mem_rdata,
-    // output rv32i_word mem_addr,
-    // input logic mem_resp,
-    // output logic mem_read,
-    // output logic mem_write,
-    // output rv32i_word mem_wdata,
-    
-    // I-Cache signals
-    output logic inst_read,
-    output rv32i_word inst_addr,
-    input logic inst_resp,
-    input rv32i_word inst_rdata,    // 32-bit instruction
-
-    // D-Cache signals
-    output logic data_read,
-    output logic data_write,
-    output logic [3:0] data_mbe,
-    output rv32i_word data_addr,
-    output rv32i_word data_wdata,
-    input logic data_resp,
-    input rv32i_word data_rdata
+    input logic [63:0] mem_rdata,
+    output rv32i_word mem_addr,
+    input logic mem_resp,
+    output logic mem_read,
+    output logic mem_write,
+    output logic [63:0] mem_wdata
 );
 
 logic iqueue_read;
+logic i_queue_empty;
 i_queue_data_t iqueue_o;
 logic load_tag;                     // From Decoder to Regfile
 regfile_data_out_t regfile_data_o;  // From regfile to Decoder
@@ -51,7 +37,7 @@ logic flush;
 rob_values_t rob_o;
 logic rob_is_committing;
 
-// 0: ldst store_res
+// 0: ldst store_res - no longer needed?
 // 1: ldst load_res
 // 2-5: alu_vals_o
 // 6-9: cmp_vals_o
@@ -79,25 +65,147 @@ regfile_data_out_t cmp_rs_d_out;
 logic take_br;
 rv32i_word next_pc;
 
+logic i_cache_pmem_resp;
+logic [255:0] i_cache_pmem_rdata;
+logic [31:0] i_cache_pmem_address;
+logic [255:0] i_cache_pmem_wdata;
+logic i_cache_pmem_read;
+logic i_cache_pmem_write;
+
+rv32i_word instr_addr;
+logic instr_read;
+logic instr_resp;
+logic [255:0] instr_rdata;
+rv32i_word mem_address;
+assign mem_addr = mem_address;
+
+logic [255:0] data_rdata;
+logic dcache_resp;
+logic dcache_write;
+logic dcache_read;
+logic [3:0] dcache_byte_enable;
+logic dcache_pmem_resp;
+logic [255:0] dcache_pmem_rdata;
+logic [31:0] dcache_pmem_address;
+logic [255:0] dcache_pmem_wdata;
+logic dcache_pmem_read;
+logic dcache_pmem_write;
+logic [31:0] d_cache_wdata;
+logic [31:0] d_cache_address;
+
+logic arbiter_mem_resp;
+logic [255:0] arbiter_mem_rdata;
+logic arbiter_mem_write;
+logic arbiter_mem_read;
+logic [255:0] arbiter_mem_wdata;
+rv32i_word arbiter_mem_address;
+
+cache i_cache (
+    .clk(clk),
+    /* Physical memory signals */
+    .pmem_resp(i_cache_pmem_resp),
+    .pmem_rdata(i_cache_pmem_rdata),
+    .pmem_address(i_cache_pmem_address),
+    .pmem_wdata(i_cache_pmem_wdata),
+    .pmem_read(i_cache_pmem_read),
+    .pmem_write(i_cache_pmem_write),
+    /* CPU memory signals */
+    .mem_read(instr_read),
+    .mem_write(1'b0),
+    .mem_byte_enable_cpu(4'b0),
+    .mem_address(instr_addr),
+    .mem_wdata_cpu(32'b0),
+    .mem_resp(instr_resp),
+    .mem_rdata_cpu(instr_rdata)
+);
+
+cache d_cache (
+    .clk(clk),
+    /* Physical memory signals */
+    .pmem_resp(dcache_pmem_resp),
+    .pmem_rdata(dcache_pmem_rdata),
+    .pmem_address(dcache_pmem_address),
+    .pmem_wdata(dcache_pmem_wdata),
+    .pmem_read(dcache_pmem_read),
+    .pmem_write(dcache_pmem_write),
+    /* CPU memory signals */
+    .mem_read(dcache_read),
+    .mem_write(dcache_write),
+    .mem_byte_enable_cpu(dcache_byte_enable),
+    .mem_address(d_cache_address),
+    .mem_wdata_cpu(d_cache_wdata),
+    .mem_resp(dcache_resp),
+    .mem_rdata_cpu(data_rdata)
+);
+
+arbiter arbiter (
+    .clk(clk),
+    .rst(rst),
+    .flush(flush),
+    // Memory
+    .mem_rdata(arbiter_mem_rdata),
+    .mem_addr(arbiter_mem_address),
+    .mem_resp(arbiter_mem_resp),
+    .mem_read(arbiter_mem_read),
+    .mem_write(arbiter_mem_write),
+    .mem_wdata(arbiter_mem_wdata),
+    // Instruction Cache
+    .inst_read(i_cache_pmem_read),
+    .inst_addr(i_cache_pmem_address),
+    .inst_resp(i_cache_pmem_resp),
+    .inst_rdata(i_cache_pmem_rdata),
+    // Data Cache
+    .data_read(dcache_pmem_read),
+    .data_write(dcache_pmem_write),
+    .data_addr(dcache_pmem_address),
+    .data_wdata(dcache_pmem_wdata),
+    .data_resp(dcache_pmem_resp),
+    .data_rdata(dcache_pmem_rdata)
+);
+
+cacheline_adaptor cacheline_adaptor (
+    .clk(clk),
+    .reset_n(~rst),
+    .flush(1'b0),
+
+    // Port to LLC (Lowest Level Cache)
+    .line_i(arbiter_mem_wdata),
+    .line_o(arbiter_mem_rdata),
+    .address_i(arbiter_mem_address),
+    .read_i(arbiter_mem_read),
+    .write_i(arbiter_mem_write),
+    .resp_o(arbiter_mem_resp),
+
+    // Port to memory
+    .burst_i(mem_rdata),
+    .burst_o(mem_wdata),
+    .address_o(mem_address),
+    .read_o(mem_read),
+    .write_o(mem_write),
+    .resp_i(mem_resp)
+);
+
 i_fetch i_fetch (
     .clk(clk),
     .rst(rst),
     .flush(flush),
-    .mem_resp(inst_resp),
-    .mem_rdata(inst_rdata), // 32-bit instruction input
+    .mem_resp(instr_resp),
+    .mem_rdata(instr_rdata), // 32-bit instruction input
     .i_queue_data_out(iqueue_o),
     .iqueue_read(iqueue_read),
-    .mem_read(inst_read),
-    .mem_write(),
-    .pc_o(inst_addr),
+    .mem_read(instr_read),
+    .pc_o(instr_addr),
     .take_br(take_br),
-    .next_pc(next_pc)
+    .next_pc(next_pc),
+    .i_queue_empty(i_queue_empty)
 );
 
 i_decode decode (
     .clk(clk),
     .rst(rst),
+    .flush(flush),
     .d_in(iqueue_o),
+    .i_queue_empty(i_queue_empty),
     .iqueue_read(iqueue_read),
     .regfile_entry_i(regfile_data_o),
     .rs1_o(rs1_from_decoder),
@@ -109,8 +217,6 @@ i_decode decode (
     .rob_in(rob_arr),
     .rob_write(rob_write),
     .rob_is_full(rob_is_full),
-    // I'm going to use the i_decode_opcode_t version
-    // .rob_dest(),           // dest_reg, send to ROB to load it in
     .pc_and_rd(pc_and_rd),
     .alu_rs_full(alu_rs_full),
     .alu_o(alu_o),
@@ -157,12 +263,12 @@ load_store_queue ldstbuf (
     .curr_is_store(rob_curr_is_store),
     .head_tag(rob_head_tag),
     // From/to d-cache
-    .data_read(data_read),
-    .data_write(data_write),
-    .data_mbe(data_mbe), // mem byte enable
-    .data_addr(data_addr),
-    .data_wdata(data_wdata),
-    .data_resp(data_resp),
+    .data_read(dcache_read),
+    .data_write(dcache_write),
+    .data_mbe(dcache_byte_enable), // mem byte enable
+    .data_addr(d_cache_address),
+    .data_wdata(d_cache_wdata),
+    .data_resp(dcache_resp),
     .data_rdata(data_rdata)
 );
 
@@ -184,7 +290,10 @@ ro_buffer rob (
     .head_tag(rob_head_tag),
     .pcmux_sel(take_br),
     .target_pc(next_pc),
-    .take_br(take_br)
+    .take_br(take_br),
+    .mem_resp(instr_resp),
+    .mem_read(instr_read),
+    .mem_write(1'b0)
 );
 
 alu_rs alu_rs (

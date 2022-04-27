@@ -131,32 +131,35 @@ always_ff @(posedge clk) begin
     // Set valid bits based on input from CDB
     // CRITICAL PATH WHAT THE FUCK
     // FIX THIS ASAP
-    for(int i = 0; i < `ALU_RS_SIZE; ++i) begin
-        // check for tag match
-        for(int j = 0; j < `NUM_CDB_ENTRIES; ++j) begin
-            if(data[i].rs1.valid == 1'b0 && data[i].rs1.tag == cdb_vals_i[j].tag) begin
-                data[i].rs1.value <= cdb_vals_i[j].value;
-                data[i].rs1.valid <= 1'b1;
+    if(~(rst || flush)) begin
+        for(int i = 0; i < `ALU_RS_SIZE; ++i) begin
+            // check for tag match
+            for(int j = 0; j < `NUM_CDB_ENTRIES; ++j) begin
+                if(data[i].rs1.valid == 1'b0 && data[i].rs1.tag == cdb_vals_i[j].tag) begin
+                    data[i].rs1.value <= cdb_vals_i[j].value;
+                    data[i].rs1.valid <= 1'b1;
+                end
+                if(data[i].rs2.valid == 1'b0 &&  data[i].rs2.tag == cdb_vals_i[j].tag) begin
+                    data[i].rs2.value <= cdb_vals_i[j].value;
+                    data[i].rs2.valid <= 1'b1;
+                end
             end
-            if(data[i].rs2.valid == 1'b0 &&  data[i].rs2.tag == cdb_vals_i[j].tag) begin
-                data[i].rs2.value <= cdb_vals_i[j].value;
-                data[i].rs2.valid <= 1'b1;
+
+            load_alu[i] <= 1'b0;
+            // if data[i].valid == 1'b1 then update alu_arr value and 
+            // set load_rob high 1 cycle later
+            if(data[i].valid == 1'b1 && data[i].rs1.valid == 1'b1 && data[i].rs2.valid == 1'b1) begin
+                // data[i].busy <= 1'b1;
+                load_alu[i] <= 1'b1;
             end
-        end
 
-        load_alu[i] <= 1'b0;
-        // if data[i].valid == 1'b1 then update alu_arr value and 
-        // set load_rob high 1 cycle later
-        if(data[i].rs1.valid == 1'b1 && data[i].rs2.valid == 1'b1) begin
-            // data[i].busy <= 1'b1;
-            load_alu[i] <= 1'b1;
-        end
-
-        // Send data to CDB
-        if(is_in_use[i] == 1'b1 && load_cdb[i] == 1'b1) begin
-            cdb_alu_vals_o[i].value <= alu_res_arr[i];
-            cdb_alu_vals_o[i].tag <= data[i].rob_idx;
-            is_in_use[i] <= 1'b0;
+            // Send data to CDB
+            if(is_in_use[i] == 1'b1 && load_cdb[i] == 1'b1) begin
+                cdb_alu_vals_o[i].value <= alu_res_arr[i];
+                cdb_alu_vals_o[i].tag <= data[i].rob_idx;
+                is_in_use[i] <= 1'b0;
+                load_alu[i] <= 1'b0;
+            end
         end
     end
 end
