@@ -23,3 +23,11 @@ For checkpoint 2, we implemented the ROB, reservation stations, load store buffe
 
 ## Roadmap
 For checkpoint 3, we will need to add L1 caches and implement the arbiter and branch predictor we designed for checkpoint 2. We will likely also be editing the given cache code for better performance. Additionally, we'll decide if we want to implement any additional advanced features. Again, like the previous checkpoint, implementation and debug will mostly be done through pair programming.
+
+# Checkpoint 3
+
+## Progress Report
+For checkpoint 3, we made our datapath able to run CP1 code, with and without caches.
+
+## Roadmap
+For checkpoint 4, we will continue integrating caches to run CP2 and CP3 code, and eventually the competition code. 
