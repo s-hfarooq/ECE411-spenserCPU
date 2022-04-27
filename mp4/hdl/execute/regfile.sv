@@ -7,9 +7,9 @@ module regfile (
     input logic flush,
 
     // From decoder
-    input logic load_tag,
-    input tag_t tag_decoder,
-    input rv32i_reg reg_id_decoder,
+    input logic load_tag, // load_tag in decoder
+    input tag_t tag_decoder, // tag in decoder
+    input rv32i_reg reg_id_decoder, // rd_o in decoder
     // input i_decode_opcode_t op_in,
     input rv32i_reg rs1_i, rs2_i,
     input rv32i_reg rs1_alu_rs_i, rs2_alu_rs_i,
@@ -105,7 +105,7 @@ always_ff @ (posedge clk) begin
     end
 
     // Load register tag from decoder
-    else if (load_tag)
+    if (load_tag)
         tags[reg_id_decoder] <= tag_decoder;
 end
 
