@@ -72,6 +72,9 @@ set_global_assignment -name EDA_TEST_BENCH_FILE hvl/rvfi_itf.sv -section_id mp4_
 set_global_assignment -name EDA_TEST_BENCH_FILE hvl/rvfimon.v -section_id mp4_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE hvl/shadow_memory.sv -section_id mp4_tb
 set_global_assignment -name EDA_TEST_BENCH_FILE hvl/source_tb.sv -section_id mp4_tb
+set_global_assignment -name FLOW_ENABLE_POWER_ANALYZER OFF
+set_global_assignment -name POWER_DEFAULT_INPUT_IO_TOGGLE_RATE 12.5%
+set_global_assignment -name SDC_FILE mp4.out.sdc
 set_global_assignment -name SYSTEMVERILOG_FILE hdl/given_cache/cacheline_adaptor.sv
 set_global_assignment -name SYSTEMVERILOG_FILE hdl/given_cache/line_adapter.sv
 set_global_assignment -name SYSTEMVERILOG_FILE hdl/given_cache/data_array.sv
