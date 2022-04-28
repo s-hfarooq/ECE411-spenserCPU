@@ -242,7 +242,7 @@ load_store_queue ldstbuf (
     .rob_store_complete(rob_store_complete),
     .curr_is_store(rob_curr_is_store),
     .head_tag(rob_head_tag),
-    // From/to d-cache
+    // To/from d-cache
     .data_read(d_cache_mem_read),
     .data_write(d_cache_mem_write),
     .data_mbe(d_cache_byte_enable), // mem byte enable
@@ -279,10 +279,10 @@ alu_rs alu_rs (
     .flush(flush),
     // From ROB
     .rob_arr_o(rob_arr),
-    // From/to CDB
+    // To/from CDB
     .cdb_vals_i(cdb),
     .cdb_alu_vals_o(cdb[`ALU_RS_SIZE-1+1 -: `ALU_RS_SIZE]),
-    // From/to decoder
+    // To/from decoder
     .alu_o(alu_o),
     .alu_rs_full(alu_rs_full)
 );
@@ -293,10 +293,10 @@ cmp_rs cmp_rs (
     .flush(flush),
     // From ROB
     .rob_arr_o(rob_arr),
-    // From/to CDB
+    // To/from CDB
     .cdb_vals_i(cdb),
     .cdb_cmp_vals_o(cdb[(2*(`CMP_RS_SIZE-1))+2 -: `CMP_RS_SIZE]),
-    // From/to decoder
+    // To/from decoder
     .cmp_o(cmp_o),
     .cmp_rs_full(cmp_rs_full)
 );

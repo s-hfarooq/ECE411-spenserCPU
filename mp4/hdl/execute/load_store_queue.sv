@@ -8,7 +8,7 @@ module load_store_queue (
     input rst,
     input logic flush,
 
-    // From/to CDB
+    // To/from CDB
     input cdb_t cdb,
     output cdb_entry_t load_res,
 
@@ -20,7 +20,7 @@ module load_store_queue (
     input logic curr_is_store,
     input logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] head_tag,
     
-    // From/to d-cache
+    // To/from d-cache
     output logic data_read,
     output logic data_write,
     output logic [3:0] data_mbe, // mem byte enable

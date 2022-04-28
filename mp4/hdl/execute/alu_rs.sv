@@ -11,14 +11,12 @@ module alu_rs (
     // From ROB
     input rob_arr_t rob_arr_o,
 
-    // From/to CDB
+    // To/from CDB
     input cdb_t cdb_vals_i,
     output cdb_entry_t [`ALU_RS_SIZE-1:0] cdb_alu_vals_o,
 
-    // From decoder
+    // To/from decoder
     input alu_rs_t alu_o,
-
-    // To decoder
     output logic alu_rs_full
 );
 
