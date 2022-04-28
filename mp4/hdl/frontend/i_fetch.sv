@@ -14,7 +14,7 @@ module i_fetch (
     output rv32i_word pc_out,
 
     // From/to Decoder
-    input logic iqueue_read,
+    input logic i_queue_read,
     input rv32i_word next_pc,
     output logic i_queue_empty,
 
@@ -55,7 +55,7 @@ i_queue i_queue (
     .clk(clk),
     .rst(rst),
     .flush(flush),
-    .read(iqueue_read),
+    .read(i_queue_read),
     .write(i_queue_write),
     .data_in(i_queue_data_in),
     .mem_resp(i_cache_mem_resp),

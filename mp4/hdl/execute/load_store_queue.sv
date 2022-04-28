@@ -12,10 +12,9 @@ module load_store_queue (
     input cdb_t cdb,
     output cdb_entry_t load_res,
 
+    // To/from ROB
     output logic ldst_full,
     output logic almost_full,
-
-    // To/from ROB
     input lsb_t lsb_entry,
     output logic rob_store_complete,
     input logic curr_is_store,
