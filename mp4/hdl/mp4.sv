@@ -132,25 +132,25 @@ arbiter arbiter (
     .clk(clk),
     .rst(rst),
     .flush(flush),
-    // Memory
-    .mem_rdata(arbiter_mem_rdata),
-    .mem_addr(arbiter_mem_address),
-    .mem_resp(arbiter_mem_resp),
-    .mem_read(arbiter_mem_read),
-    .mem_write(arbiter_mem_write),
-    .mem_wdata(arbiter_mem_wdata),
+    // To/from cacheline adaptor
+    .cacheline_adaptor_mem_rdata(arbiter_mem_rdata),
+    .cacheline_adaptor_mem_addr(arbiter_mem_address),
+    .cacheline_adaptor_mem_resp(arbiter_mem_resp),
+    .cacheline_adaptor_mem_read(arbiter_mem_read),
+    .cacheline_adaptor_mem_write(arbiter_mem_write),
+    .cacheline_adaptor_mem_wdata(arbiter_mem_wdata),
     // Instruction Cache
-    .inst_read(i_cache_pmem_read),
-    .inst_addr(i_cache_pmem_address),
-    .inst_resp(i_cache_pmem_resp),
-    .inst_rdata(i_cache_pmem_rdata),
+    .i_cache_pmem_read(i_cache_pmem_read),
+    .i_cache_pmem_address(i_cache_pmem_address),
+    .i_cache_pmem_resp(i_cache_pmem_resp),
+    .i_cache_pmem_rdata(i_cache_pmem_rdata),
     // Data Cache
-    .data_read(dcache_pmem_read),
-    .data_write(dcache_pmem_write),
-    .data_addr(dcache_pmem_address),
-    .data_wdata(dcache_pmem_wdata),
-    .data_resp(dcache_pmem_resp),
-    .data_rdata(dcache_pmem_rdata)
+    .d_cache_pmem_read(dcache_pmem_read),
+    .d_cache_pmem_write(dcache_pmem_write),
+    .d_cache_pmem_address(dcache_pmem_address),
+    .d_cache_pmem_wdata(dcache_pmem_wdata),
+    .d_cache_pmem_resp(dcache_pmem_resp),
+    .d_cache_pmem_rdata(dcache_pmem_rdata)
 );
 
 cacheline_adaptor cacheline_adaptor (
@@ -179,15 +179,15 @@ i_fetch i_fetch (
     .clk(clk),
     .rst(rst),
     .flush(flush),
-    .mem_resp(instr_resp),
-    .mem_rdata(instr_rdata), // 32-bit instruction input
+    .i_cache_mem_resp(instr_resp),
+    .i_cache_mem_rdata(instr_rdata), // 32-bit instruction input
     .i_queue_data_out(iqueue_o),
-    .iqueue_read(iqueue_read),
     .mem_read(instr_read),
-    .pc_o(instr_addr),
-    .take_br(take_br),
+    .pc_out(instr_addr),
+    .iqueue_read(iqueue_read),
     .next_pc(next_pc),
-    .i_queue_empty(i_queue_empty)
+    .i_queue_empty(i_queue_empty),
+    .take_br(take_br)
 );
 
 i_decode decode (

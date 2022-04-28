@@ -1,129 +1,25 @@
-// import rv32i_types::*;
-// import structs::*;
-
-// module i_fetch (
-//     input logic clk,
-//     input logic rst,
-
-//     input logic flush,
-
-//     input logic mem_resp,
-//     input rv32i_word mem_rdata,
-
-//     output i_queue_data_t i_queue_data_out,
-
-//     // From Decoder
-//     input logic iqueue_read,
-
-//     output logic mem_read,
-//     output rv32i_word pc_o,
-
-//     input logic take_br,
-//     input rv32i_word next_pc,
-
-//     // To Decoder
-//     output logic i_queue_empty
-// );
-
-// // i_queue signals
-// logic i_queue_full, i_queue_write;
-// i_queue_data_t i_queue_data_in;
-
-// // PC signals
-// logic pc_load, branch_pred_pc_sel;
-// rv32i_word pc_in, pc_out, alu_out;
-
-// // assign pc_o = pc_out;
-// assign mem_read = 1'b1;
-// assign i_queue_write = ~i_queue_full;
-
-// pc_register pc (
-//     .clk(clk),
-//     .rst(rst),
-//     .load(pc_load),
-//     .in(pc_in),
-//     .out(pc_out)
-// );
-
-// br_pred predictor (
-//     .clk(clk),
-//     .rst(rst),
-//     .i_queue_full(i_queue_full),
-//     .take_br(take_br),
-//     .branch_pred_pc_sel(branch_pred_pc_sel),
-//     .pc_load(pc_load),
-//     .mem_resp(mem_resp),
-//     .flush(flush)
-// );
-
-// i_queue i_queue (
-//     .clk(clk),
-//     .rst(rst),
-//     .flush(flush),
-//     .read(iqueue_read),
-//     .write(i_queue_write),
-//     .data_in(i_queue_data_in),
-//     .data_out(i_queue_data_out),
-//     .empty(i_queue_empty),
-//     .full(i_queue_full),
-//     .mem_resp(mem_resp)
-// );
-
-// always_comb begin
-//     if(take_br) begin
-//         i_queue_data_in.pc = next_pc-4;
-//         i_queue_data_in.next_pc = next_pc; // branching will be different
-//         i_queue_data_in.instr = 32'd0;
-//     end else begin
-//         i_queue_data_in.pc = pc_out;
-//         i_queue_data_in.next_pc = pc_out + 4; // branching will be different
-//         i_queue_data_in.instr = mem_rdata;
-//     end
-// end
-
-// always_comb begin : MUXES
-//     case (take_br)
-//         1'b0: begin
-//             pc_in = pc_out + 4;
-//             pc_o = pc_out;
-//         end
-//         1'b1: begin
-//             pc_in = next_pc;
-//             pc_o = next_pc;
-//         end
-//         // default: `BAD_MUX_SEL;
-//     endcase
-// end
-
-// endmodule : i_fetch
-
-
-
 import rv32i_types::*;
 import structs::*;
 
 module i_fetch (
     input logic clk,
     input logic rst,
-
     input logic flush,
 
-    input logic mem_resp,
-    input rv32i_word mem_rdata,
-
+    // From/to i-cache
+    input logic i_cache_mem_resp,
+    input rv32i_word i_cache_mem_rdata,
     output i_queue_data_t i_queue_data_out,
-
-    // From Decoder
-    input logic iqueue_read,
-
     output logic mem_read,
-    output rv32i_word pc_o,
+    output rv32i_word pc_out,
 
-    input logic take_br,
+    // From/to Decoder
+    input logic iqueue_read,
     input rv32i_word next_pc,
+    output logic i_queue_empty,
 
-    // To Decoder
-    output logic i_queue_empty
+    // From ROB
+    input logic take_br
 );
 
 // i_queue signals
@@ -132,9 +28,8 @@ i_queue_data_t i_queue_data_in;
 
 // PC signals
 logic pc_load, branch_pred_pc_sel;
-rv32i_word pc_in, pc_out, alu_out;
+rv32i_word pc_in;
 
-assign pc_o = pc_out;
 assign mem_read = 1'b1;
 assign i_queue_write = ~i_queue_full;
 
@@ -150,10 +45,9 @@ br_pred predictor (
     .clk(clk),
     .rst(rst),
     .i_queue_full(i_queue_full),
-    .take_br(take_br),
     .branch_pred_pc_sel(branch_pred_pc_sel),
     .pc_load(pc_load),
-    .mem_resp(mem_resp),
+    .mem_resp(i_cache_mem_resp),
     .flush(flush)
 );
 
@@ -164,35 +58,30 @@ i_queue i_queue (
     .read(iqueue_read),
     .write(i_queue_write),
     .data_in(i_queue_data_in),
+    .mem_resp(i_cache_mem_resp),
     .data_out(i_queue_data_out),
     .empty(i_queue_empty),
-    .full(i_queue_full),
-    .mem_resp(mem_resp)
+    .full(i_queue_full)
 );
 
+// logic going to i-queue
 always_comb begin
-    if(take_br) begin
+    if (take_br) begin
         i_queue_data_in.pc = next_pc;
-        i_queue_data_in.next_pc = next_pc+4; // branching will be different
+        i_queue_data_in.next_pc = next_pc + 4;
         i_queue_data_in.instr = 32'd0;
     end else begin
         i_queue_data_in.pc = pc_out;
-        i_queue_data_in.next_pc = pc_out + 4; // branching will be different
-        i_queue_data_in.instr = mem_rdata;
+        i_queue_data_in.next_pc = pc_out + 4;
+        i_queue_data_in.instr = i_cache_mem_rdata;
     end
 end
 
+// pc_in logic
 always_comb begin : MUXES
     case (take_br)
-        1'b0: begin
-            pc_in = pc_out + 4;
-            // pc_o = pc_out;
-        end
-        1'b1: begin
-            pc_in = next_pc;
-            // pc_o = next_pc;
-        end
-        // default: `BAD_MUX_SEL;
+        1'b0: pc_in = pc_out + 4;
+        1'b1: pc_in = next_pc;
     endcase
 end
 

@@ -3,7 +3,7 @@
 import rv32i_types::*;
 import structs::*;
 
-module i_decode(
+module i_decode (
     input clk,
     input rst,
     input logic flush,
@@ -349,22 +349,14 @@ always_ff @ (posedge clk) begin
 
             op_reg : begin
                 if (rd != 0 && rob_free_tag != 0) begin
-                    if(rd == 8)
-                        $displayh("rd 8 in if, funct3 = %p", funct3);
                     pc_and_rd.instr_pc <= instr_pc;
                     pc_and_rd.opcode <= rv32i_opcode'(opcode);
                     pc_and_rd.rd <= rd;
                     case (arith_funct3_t'(funct3))
                         add : begin
-                            if(rd == 8)
-                                $display("in add case");
                             if (alu_rs_full == 0) begin
-                                if(rd == 8)
-                                    $displayh("in second if, funct7[5] = %p", funct7[5]);
                                 case (funct7[5])
                                     1'b0: begin
-                                        if(rd == 8)
-                                            $display("in fuct7[5]=0");
                                         alu_o.valid <= 1'b1;
                                         alu_o.rs1.value <= vj_o;
                                         alu_o.rs1.valid <= (qj_o == 0);
@@ -375,9 +367,6 @@ always_ff @ (posedge clk) begin
                                         alu_o.op <= alu_add;
                                         alu_o.rob_idx <= rob_free_tag;
                                         rob_write <= 1'b1;
-
-                                        if(rd == 8)
-                                            $displayh("rs1val: %p, rs1valid: %p, rs2val: %p, rs2valid: %p, rs1tag: %p, rs2tag: %p, freetag: %p", vj_o, (qj_o==0), vk_o, (qk_o==0), qj_o, qk_o, rob_free_tag);
                                     end
 
                                     1'b1: begin
@@ -490,9 +479,7 @@ end
 
 // Let iQueue know we want new values
 always_ff @(posedge clk) begin
-    if(rd != 0)
-        $displayh("robfull:%p, lsbalmost:%p, lsbfull:%p, instr:%p, Tag=%p, rd=%p", rob_is_full, lsb_almost_full, lsb_full, d_in, rob_free_tag, rd);
-    if (rst || flush) begin
+   if (rst || flush) begin
         iqueue_read <= 1'b0;
         rd_o <= rd;
         load_tag <= 1'b0;
@@ -604,4 +591,4 @@ always_ff @(posedge clk) begin
     end
 end
 
-endmodule
+endmodule : i_decode

@@ -3,8 +3,7 @@
 import rv32i_types::*;
 import structs::*;
 
-module load_store_queue
-(
+module load_store_queue (
     input clk,
     input rst,
     input logic flush,
@@ -53,10 +52,10 @@ task set_defaults();
     data_wdata <= 32'd0;
 endtask
 
-always_ff @(posedge clk) begin : store_rs
+always_ff @ (posedge clk) begin : store_rs
     set_defaults();
 
-    if(rst || flush) begin
+    if (rst || flush) begin
         for(int i = 0; i < `LDST_SIZE; ++i)
             ldst_queue <= '{default: 0};
             
@@ -64,22 +63,22 @@ always_ff @(posedge clk) begin : store_rs
         tail_ptr <= {$clog2(`LDST_SIZE){1'b0}};
     end else begin
         // add new entry to queue
-        if(lsb_entry.valid == 1'b1 && counter < `LDST_SIZE) begin
+        if (lsb_entry.valid == 1'b1 && counter < `LDST_SIZE) begin
             ldst_queue[tail_ptr] <= lsb_entry;
             tail_ptr <= tail_ptr + 1;
         end
     end
 
-    if(counter > 0) begin
+    if (counter > 0) begin
         // Check CDB to see if needed values have been broadcasted
-        for(int i = 0; i < `LDST_SIZE; ++i) begin
-            for(int j = 0; j < `NUM_CDB_ENTRIES; ++j) begin
-                if(ldst_queue[i].qj != 0 && ldst_queue[i].qj == cdb[j].tag) begin
+        for (int i = 0; i < `LDST_SIZE; ++i) begin
+            for (int j = 0; j < `NUM_CDB_ENTRIES; ++j) begin
+                if (ldst_queue[i].qj != 0 && ldst_queue[i].qj == cdb[j].tag) begin
                     ldst_queue[i].vj <= cdb[j].value;
                     ldst_queue[i].qj <= 0;
                 end
 
-                if(ldst_queue[i].qk != 0 && ldst_queue[i].qk == cdb[j].tag) begin
+                if (ldst_queue[i].qk != 0 && ldst_queue[i].qk == cdb[j].tag) begin
                     ldst_queue[i].vk <= cdb[j].value;
                     ldst_queue[i].qk <= 0;
                 end
@@ -87,24 +86,24 @@ always_ff @(posedge clk) begin : store_rs
         end
 
         // Set can finish if we have valid register values
-        if(ldst_queue[head_ptr].qj == 0 && ldst_queue[head_ptr].qk == 0)
+        if (ldst_queue[head_ptr].qj == 0 && ldst_queue[head_ptr].qk == 0)
             ldst_queue[head_ptr].can_finish <= 1'b1;
         
         // Send data to cache if register values are valid
-        if(ldst_queue[head_ptr].can_finish == 1'b1) begin
-            case(ldst_queue[head_ptr].type_of_inst)
+        if (ldst_queue[head_ptr].can_finish == 1'b1) begin
+            case (ldst_queue[head_ptr].type_of_inst)
                 1'b0: begin // load
                     // request data from d_cache
                     data_read <= 1'b1;
                     data_addr <= ldst_queue[head_ptr].addr + ldst_queue[head_ptr].vj;
 
                     // remove entry from queue
-                    if(data_resp == 1'b1) begin // only once cache has responded
+                    if (data_resp == 1'b1) begin // only once cache has responded
                         // broadcast data received on CDB
                         // calculate effective address and set tag
 
                         // need to load correct bits for lb/lh (shouldn't always be lowest)
-                        case(load_funct3_t'(ldst_queue[head_ptr].funct))
+                        case (load_funct3_t'(ldst_queue[head_ptr].funct))
                             lb: begin 
                                 case (data_addr[1:0])
                                     2'b00: load_res.value <= {{24{data_rdata[7]}}, data_rdata[7:0]};
@@ -161,7 +160,7 @@ always_ff @(posedge clk) begin : store_rs
                         // SHOULD THIS BE VJ OR VK (IT SHOULD BE VK)
                         data_wdata <= ldst_queue[head_ptr].vk;
 
-                        case(store_funct3_t'(ldst_queue[head_ptr].funct))
+                        case (store_funct3_t'(ldst_queue[head_ptr].funct))
                             // TODO Verify: THIS ASSUMES THAT THIS IS ALWAYS THLOWEST BITS.
                             // WE NEED TO MAKE SURE THAT EVERYTHING IS 4-BYTE ALIGNED
                             sw: data_mbe <= 4'b1111;
@@ -170,7 +169,7 @@ always_ff @(posedge clk) begin : store_rs
                         endcase
 
                         // need to dequeue
-                        if(data_resp == 1'b1) begin // only once cache has responded
+                        if (data_resp == 1'b1) begin // only once cache has responded
                             ldst_queue[head_ptr].valid <= 1'b0;
 
                             head_ptr <= head_ptr + 1;

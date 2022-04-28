@@ -33,18 +33,18 @@ logic [`CMP_RS_SIZE-1:0] load_cdb;
 // for whatever reason we got a multiple drivers error when writing directly to cmp_arr[i].value
 rv32i_word [`CMP_RS_SIZE-1:0] cmp_res_arr;
 
-always_ff @(posedge clk) begin
+always_ff @ (posedge clk) begin
     // Can probably make more efficient - worry about later
     cmp_rs_full <= 1'b1;
-    for(int i = 0; i < `CMP_RS_SIZE; ++i) begin
-        if(is_in_use[i] == 1'b0)
+    for (int i = 0; i < `CMP_RS_SIZE; ++i) begin
+        if (is_in_use[i] == 1'b0)
             cmp_rs_full <= 1'b0;
 
         cdb_cmp_vals_o[i] <= '{default: 0};
     end
     
-    if(rst || flush) begin
-        for(int i = 0; i < `CMP_RS_SIZE; ++i) begin
+    if (rst || flush) begin
+        for (int i = 0; i < `CMP_RS_SIZE; ++i) begin
             cmp_rs_data_arr[i] <= '{default: 0};
             is_in_use[i] <= 1'b0;
         end
@@ -52,16 +52,16 @@ always_ff @(posedge clk) begin
         // load data from decoder / ROB
 
         // load into first available rs (TODO PARAMETRIZE)
-        if(is_in_use[0] == 1'b0) begin
+        if (is_in_use[0] == 1'b0) begin
             cmp_rs_data_arr[0] <= cmp_o;
             is_in_use[0] <= 1'b1;
-        end else if(is_in_use[1] == 1'b0) begin
+        end else if (is_in_use[1] == 1'b0) begin
             cmp_rs_data_arr[1] <= cmp_o;
             is_in_use[1] <= 1'b1;
-        end else if(is_in_use[2] == 1'b0) begin
+        end else if (is_in_use[2] == 1'b0) begin
             cmp_rs_data_arr[2] <= cmp_o;
             is_in_use[2] <= 1'b1;
-        end else if(is_in_use[3] == 1'b0) begin
+        end else if (is_in_use[3] == 1'b0) begin
             cmp_rs_data_arr[3] <= cmp_o;
             is_in_use[3] <= 1'b1;
         end else begin
@@ -75,15 +75,15 @@ always_ff @(posedge clk) begin
     // Set valid bits based on input from CDB
     // CRITICAL PATH WHAT THE FUCK
     // FIX THIS ASAP
-    if(~(rst || flush)) begin
-        for(int i = 0; i < `CMP_RS_SIZE; ++i) begin
+    if (~(rst || flush)) begin
+        for (int i = 0; i < `CMP_RS_SIZE; ++i) begin
             // check for tag match
-            for(int j = 0; j < `NUM_CDB_ENTRIES; ++j) begin
-                if(cmp_rs_data_arr[i].rs1.valid == 1'b0 && cmp_rs_data_arr[i].rs1.tag == cdb_vals_i[j].tag) begin
+            for (int j = 0; j < `NUM_CDB_ENTRIES; ++j) begin
+                if (cmp_rs_data_arr[i].rs1.valid == 1'b0 && cmp_rs_data_arr[i].rs1.tag == cdb_vals_i[j].tag) begin
                     cmp_rs_data_arr[i].rs1.value <= cdb_vals_i[j].value;
                     cmp_rs_data_arr[i].rs1.valid <= 1'b1;
                 end
-                if(cmp_rs_data_arr[i].rs2.valid == 1'b0 &&  cmp_rs_data_arr[i].rs2.tag == cdb_vals_i[j].tag) begin
+                if (cmp_rs_data_arr[i].rs2.valid == 1'b0 &&  cmp_rs_data_arr[i].rs2.tag == cdb_vals_i[j].tag) begin
                     cmp_rs_data_arr[i].rs2.value <= cdb_vals_i[j].value;
                     cmp_rs_data_arr[i].rs2.valid <= 1'b1;
                 end
@@ -92,11 +92,11 @@ always_ff @(posedge clk) begin
             load_cmp[i] <= 1'b0;
             // if data[i].valid == 1'b1 then update alu_arr value and 
             // set load_rob high 1 cycle later
-            if(cmp_rs_data_arr[i].valid == 1'b1 && cmp_rs_data_arr[i].rs1.valid == 1'b1 && cmp_rs_data_arr[i].rs2.valid == 1'b1)
+            if (cmp_rs_data_arr[i].valid == 1'b1 && cmp_rs_data_arr[i].rs1.valid == 1'b1 && cmp_rs_data_arr[i].rs2.valid == 1'b1)
                 load_cmp[i] <= 1'b1;
 
             // Send data to CDB
-            if(is_in_use[i] && load_cdb[i] == 1'b1) begin
+            if (is_in_use[i] && load_cdb[i] == 1'b1) begin
                 // If instruction is a branch
                 if (cmp_rs_data_arr[i].br == 1) begin
                     // if CMP output is 1 or 0, decide to take branch or not
@@ -125,7 +125,7 @@ end
 // Instantiate CMP's
 genvar cmp_i;
 generate
-    for(cmp_i = 0; cmp_i < `CMP_RS_SIZE; ++cmp_i) begin : generate_cmp
+    for (cmp_i = 0; cmp_i < `CMP_RS_SIZE; ++cmp_i) begin : generate_cmp
         cmp cmp_instantiation(
             .clk(clk),
             .cmpop(cmp_rs_data_arr[cmp_i].op),
