@@ -46,6 +46,7 @@ logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] rob_head_tag;
 logic rob_is_full;
 logic take_br;
 rv32i_word next_pc;
+logic branch_prediction;
 
 // ALU/CMP signals
 logic alu_rs_full;
@@ -184,7 +185,8 @@ i_fetch i_fetch (
     .i_queue_read(i_queue_read),
     .next_pc(next_pc),
     .i_queue_empty(i_queue_empty),
-    .take_br(take_br)
+    .take_br(take_br),
+    .branch_prediction(branch_prediction)
 );
 
 i_decode decode (
@@ -270,7 +272,8 @@ ro_buffer rob (
     .branch_taken(take_br),
     .target_pc(next_pc),
     .mem_resp(i_cache_mem_resp),
-    .mem_read(i_cache_mem_read)
+    .mem_read(i_cache_mem_read),
+    .branch_prediction(branch_prediction)
 );
 
 alu_rs alu_rs (

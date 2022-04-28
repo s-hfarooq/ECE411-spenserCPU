@@ -19,7 +19,8 @@ module i_fetch (
     output logic i_queue_empty,
 
     // From ROB
-    input logic take_br
+    input logic take_br,
+    output logic branch_prediction
 );
 
 // i_queue signals
@@ -27,7 +28,7 @@ logic i_queue_full, i_queue_write;
 i_queue_data_t i_queue_data_in;
 
 // PC signals
-logic pc_load, branch_pred_pc_sel;
+logic pc_load;
 rv32i_word pc_in;
 
 assign mem_read = 1'b1;
@@ -45,7 +46,7 @@ br_pred predictor (
     .clk(clk),
     .rst(rst),
     .i_queue_full(i_queue_full),
-    .branch_pred_pc_sel(branch_pred_pc_sel),
+    .branch_prediction(branch_prediction),
     .pc_load(pc_load),
     .mem_resp(i_cache_mem_resp),
     .flush(flush)
@@ -66,7 +67,7 @@ i_queue i_queue (
 
 // logic going to i-queue
 always_comb begin
-    if (take_br) begin
+    if (take_br || branch_prediction) begin // this may be wrong for branch prediction
         i_queue_data_in.pc = next_pc;
         i_queue_data_in.next_pc = next_pc + 4;
         i_queue_data_in.instr = 32'd0;
@@ -79,7 +80,7 @@ end
 
 // pc_in logic
 always_comb begin : MUXES
-    case (take_br)
+    case (take_br || branch_prediction) // this may be wrong for branch prediction
         1'b0: pc_in = pc_out + 4;
         1'b1: pc_in = next_pc;
     endcase
