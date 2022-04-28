@@ -32,8 +32,12 @@ module ro_buffer (
     output logic branch_taken,
     output rv32i_word target_pc,
 
+    // From i-cache
     input logic mem_resp,
-    input logic mem_read
+    input logic mem_read,
+
+    // From i-queue
+    input logic branch_prediction
 );
 
 rob_arr_t rob_arr;
@@ -87,7 +91,8 @@ always_ff @ (posedge clk) begin
         if (rob_arr[head_ptr].reg_data.can_commit == 1'b1 || rob_store_complete == 1'b1) begin
             if (rob_arr[head_ptr].op.opcode == op_br) begin
                 // branch prediction logic here? 
-                if (rob_arr[head_ptr].reg_data.value == 1) begin
+                if (rob_arr[head_ptr].reg_data.value == 1 && branch_prediction == 1'b0) begin
+                    // predicted that we didn't take branch when we should take it 
                     branch_taken <= 1'b1;
                     target_pc <= rob_arr[head_ptr].target_pc;
 
@@ -96,7 +101,18 @@ always_ff @ (posedge clk) begin
                         incrementToNextInstr();
                         flush <= 1'b1;
                     end
+                end else if (rob_arr[head_ptr].reg_data.value == 0 && branch_prediction == 1'b1) begin
+                    // predicted that we did take branch when we shouldn't have
+                    branch_taken <= 1'b1;
+                    target_pc <= rob_arr[head_ptr].op.instr_pc + 4;
+
+                    if (mem_read == 1 && mem_resp == 1) begin
+                        rob_arr[head_ptr] <= '{default: 0};
+                        incrementToNextInstr();
+                        flush <= 1'b1;
+                    end
                 end else begin
+                    // Predicted branch taken correctly, don't do anything special
                     rob_arr[head_ptr] <= '{default: 0};
                     incrementToNextInstr();
                 end
