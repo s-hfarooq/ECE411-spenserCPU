@@ -17,6 +17,8 @@ module i_fetch (
     input logic i_queue_read,
     input rv32i_word next_pc,
     output logic i_queue_empty,
+    output rv32i_word branch_pred_new_pc,
+    output logic curr_is_branch,
 
     // From ROB
     input logic take_br,
@@ -67,9 +69,13 @@ i_queue i_queue (
 
 // logic going to i-queue
 always_comb begin
-    if (take_br || branch_prediction) begin // this may be wrong for branch prediction
+    if (take_br) begin
         i_queue_data_in.pc = next_pc;
         i_queue_data_in.next_pc = next_pc + 4;
+        i_queue_data_in.instr = 32'd0;
+    end else if(curr_is_branch && branch_prediction) begin
+        i_queue_data_in.pc = branch_pred_new_pc;
+        i_queue_data_in.next_pc = branch_pred_new_pc + 4;
         i_queue_data_in.instr = 32'd0;
     end else begin
         i_queue_data_in.pc = pc_out;
@@ -80,9 +86,12 @@ end
 
 // pc_in logic
 always_comb begin : MUXES
-    case (take_br || branch_prediction) // this may be wrong for branch prediction
-        1'b0: pc_in = pc_out + 4;
-        1'b1: pc_in = next_pc;
+    case ({take_br, (curr_is_branch && branch_prediction)})
+        2'b00: pc_in = pc_out + 4;
+        2'b01: pc_in = branch_pred_new_pc;
+        2'b10: pc_in = next_pc;
+        2'b11: pc_in = next_pc;
+        default: pc_in = pc_out + 4;
     endcase
 end
 

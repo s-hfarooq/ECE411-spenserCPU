@@ -35,6 +35,8 @@ logic rob_write;                    // From Decoder to ROB
 rob_arr_t rob_arr;                  // From ROB to Decoder
 logic [3:0] rob_free_tag;
 i_decode_opcode_t pc_and_rd;
+rv32i_word branch_pred_new_pc;
+logic curr_is_branch;
 
 // ROB signals
 rob_values_t rob_o;
@@ -185,6 +187,8 @@ i_fetch i_fetch (
     .i_queue_read(i_queue_read),
     .next_pc(next_pc),
     .i_queue_empty(i_queue_empty),
+    .branch_pred_new_pc(branch_pred_new_pc),
+    .curr_is_branch(curr_is_branch),
     .take_br(take_br),
     .branch_prediction(branch_prediction)
 );
@@ -196,6 +200,8 @@ i_decode decode (
     .d_in(i_queue_o),
     .i_queue_empty(i_queue_empty),
     .i_queue_read(i_queue_read),
+    .branch_pred_new_pc(branch_pred_new_pc),
+    .curr_is_branch(curr_is_branch),
     .regfile_entry_i(regfile_data_o),
     .rs1_o(rs1_from_decoder),
     .rs2_o(rs2_from_decoder),

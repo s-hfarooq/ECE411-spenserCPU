@@ -15,6 +15,8 @@ module i_decode (
 
     // To Instruction Queue
     output logic i_queue_read,
+    output rv32i_word branch_pred_new_pc,
+    output logic curr_is_branch,
 
     // From Register File
     // input rv32i_word reg_vj, reg_vk, // r1, r2 inputs
@@ -125,6 +127,7 @@ always_ff @ (posedge clk) begin
         alu_o <= '0;
         cmp_o <= '0;
         lsb_o <= '0;
+        curr_is_branch <= 1'b0;
     end else begin
         rob_write <= 1'b0;
         pc_and_rd.instr_pc <= 32'd0;
@@ -133,6 +136,7 @@ always_ff @ (posedge clk) begin
         alu_o.valid <= 1'b0;
         cmp_o.valid <= 1'b0;
         lsb_o.valid <= 1'b0;
+        curr_is_branch <= 1'b0;
         case (opcode)
             op_lui : begin
                 if (rd != 0 && alu_rs_full == 0 && rob_free_tag != 0) begin
@@ -213,6 +217,8 @@ always_ff @ (posedge clk) begin
                     cmp_o.op <= branch_funct3;
                     cmp_o.rob_idx <= rob_free_tag;
                     rob_write <= 1'b1;
+                    branch_pred_new_pc <= b_imm;
+                    curr_is_branch <= 1'b1;
                 end
             end
 
