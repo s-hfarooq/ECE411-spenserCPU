@@ -12,14 +12,10 @@ module alu (
 );
 
 always_ff @(posedge clk) begin
-    if(load_alu == 1'b1)
-        ready = 1'b1;
-    else 
-        ready <= 1'b0;
+    ready <= load_alu;
 end
 
-always_comb
-begin
+always_comb begin
     unique case (aluop)
         alu_add:  f = a + b;
         alu_sll:  f = a << b[4:0];

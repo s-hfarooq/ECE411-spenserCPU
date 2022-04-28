@@ -28,10 +28,6 @@ rob_arr_t rob_arr;                  // From ROB to Decoder
 logic [3:0] rob_free_tag;
 i_decode_opcode_t pc_and_rd;
 
-regfile_data_out_t regfile_d_out, alu_rs_d_out;
-logic load_reg;
-
-logic rob_read;
 logic flush;
 
 rob_values_t rob_o;
@@ -54,13 +50,7 @@ logic rob_store_complete;
 logic rob_curr_is_store;
 logic [$clog2(`RO_BUFFER_ENTRIES)-1:0] rob_head_tag;
 
-logic rob_is_empty;
 logic rob_is_full;
-
-rv32i_reg rs1_alu_rs_i, rs2_alu_rs_i;
-regfile_data_out_t alu_rs_d_outl;
-rv32i_reg rs1_cmp_rs_i, rs2_cmp_rs_i;
-regfile_data_out_t cmp_rs_d_out;
 
 logic take_br;
 rv32i_word next_pc;
@@ -236,16 +226,9 @@ regfile reg_file (
     .reg_id_decoder(rd_from_decoder),
     .rs1_i(rs1_from_decoder),
     .rs2_i(rs2_from_decoder),
-    .rob_o(rob_o),
-    .rob_is_committing(rob_is_committing),
     .d_out(regfile_data_o),
-    // To/from RS
-    .rs1_alu_rs_i(rs1_alu_rs_i),
-    .rs2_alu_rs_i(rs2_alu_rs_i),
-    .alu_rs_d_out(alu_rs_d_out),
-    .rs1_cmp_rs_i(rs1_cmp_rs_i),
-    .rs2_cmp_rs_i(rs2_cmp_rs_i),
-    .cmp_rs_d_out(cmp_rs_d_out)
+    .rob_o(rob_o),
+    .rob_is_committing(rob_is_committing)
 );
 
 load_store_queue ldstbuf (
@@ -276,24 +259,21 @@ ro_buffer rob (
     .clk(clk),
     .rst(rst),
     .flush(flush),
+    .load_rob(rob_write),
     .cdb(cdb),
-    .write(rob_write),
-    .input_i(pc_and_rd),
+    .decoder_instr_i(pc_and_rd),
     .rob_arr_o(rob_arr),
     .rob_free_tag(rob_free_tag),
-    .empty(rob_is_empty),
     .full(rob_is_full),
     .rob_o(rob_o),
     .is_committing(rob_is_committing),
     .rob_store_complete(rob_store_complete),
     .curr_is_store(rob_curr_is_store),
-    .head_tag(rob_head_tag),
-    .pcmux_sel(take_br),
+    .head_ptr(rob_head_tag),
+    .branch_taken(take_br),
     .target_pc(next_pc),
-    .take_br(take_br),
     .mem_resp(instr_resp),
-    .mem_read(instr_read),
-    .mem_write(1'b0)
+    .mem_read(instr_read)
 );
 
 alu_rs alu_rs (
@@ -308,11 +288,7 @@ alu_rs alu_rs (
     // From decoder
     .alu_o(alu_o),
     // To decoder
-    .alu_rs_full(alu_rs_full),
-    // To/from regfile
-    .rs1_alu_rs_i(rs1_alu_rs_i),
-    .rs2_alu_rs_i(rs2_alu_rs_i),
-    .alu_rs_d_out(alu_rs_d_out)
+    .alu_rs_full(alu_rs_full)
 );
 
 cmp_rs cmp_rs (
@@ -323,14 +299,11 @@ cmp_rs cmp_rs (
     .rob_arr_o(rob_arr),
     // From/to CDB
     .cdb_vals_i(cdb),
-    .cdb_cmp_vals_o(cdb[(2*(`CMP_RS_SIZE-1))+3 -: `CMP_RS_SIZE]), // I think this is right
+    .cdb_cmp_vals_o(cdb[(2*(`CMP_RS_SIZE-1))+3 -: `CMP_RS_SIZE]),
     // From decoder
     .cmp_o(cmp_o),
     // To decoder
-    .cmp_rs_full(cmp_rs_full),
-    .rs1_cmp_rs_i(rs1_cmp_rs_i),
-    .rs2_cmp_rs_i(rs2_cmp_rs_i),
-    .cmp_rs_d_out(cmp_rs_d_out)
+    .cmp_rs_full(cmp_rs_full)
 );
 
 endmodule : mp4
