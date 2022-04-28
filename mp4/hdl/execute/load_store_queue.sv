@@ -54,6 +54,8 @@ endtask
 always_ff @ (posedge clk) begin : store_rs
     set_defaults();
 
+    data_read <= 1'b0;
+
     if (rst || flush) begin
         for(int i = 0; i < `LDST_SIZE; ++i)
             ldst_queue <= '{default: 0};

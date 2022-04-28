@@ -91,11 +91,17 @@ logic [2:0] qj_o, qk_o;
 assign rs1_o = rs1;
 assign rs2_o = rs2;
 
+rv32i_word prevReg;
+rv32i_word prevTag;
+
 always_comb begin
     // if source register is not reg0, and if ROB has the value for the
     // source register, use that value for the source operand, otherwise
     // use the value from the regfile.
-    if (regfile_entry_i.qj_out != 0 && rob_in[regfile_entry_i.qj_out].reg_data.can_commit) begin
+    if(rs1 != 0 && prevReg == rs1) begin
+        vj_o = 32'd0;
+        qj_o = prevTag;
+    end else if (regfile_entry_i.qj_out != 0 && rob_in[regfile_entry_i.qj_out].reg_data.can_commit) begin
         vj_o = rob_in[regfile_entry_i.qj_out].reg_data.value;
         qj_o = 3'b000;
     end else begin
@@ -103,7 +109,10 @@ always_comb begin
         qj_o = regfile_entry_i.qj_out;
     end
 
-    if (regfile_entry_i.qk_out != 0 && rob_in[regfile_entry_i.qk_out].reg_data.can_commit) begin
+    if(rs2 != 0 && prevReg == rs2) begin
+        vk_o = 32'd0;
+        qk_o = prevTag;
+    end else if (regfile_entry_i.qk_out != 0 && rob_in[regfile_entry_i.qk_out].reg_data.can_commit) begin
         vk_o = rob_in[regfile_entry_i.qk_out].reg_data.value;
         qk_o = 3'b000;
     end else begin
@@ -114,8 +123,6 @@ end
 
 // Decode + Issue
 always_ff @ (posedge clk) begin
-    if(rd == 8)
-        $displayh("rd is 8, d_in is %p, opcode is %p", d_in, opcode);
     if (rst || flush) begin
         rob_write <= 1'b0;
         pc_and_rd.instr_pc <= 32'd0;
@@ -125,6 +132,8 @@ always_ff @ (posedge clk) begin
         alu_o <= '0;
         cmp_o <= '0;
         lsb_o <= '0;
+        prevReg <= '0;
+        prevTag <= '0;
     end else begin
         rob_write <= 1'b0;
         pc_and_rd.instr_pc <= 32'd0;
@@ -133,6 +142,8 @@ always_ff @ (posedge clk) begin
         alu_o.valid <= 1'b0;
         cmp_o.valid <= 1'b0;
         lsb_o.valid <= 1'b0;
+        prevReg <= '0;
+        prevTag <= '0;
         case (opcode)
             op_lui : begin
                 if (rd != 0 && alu_rs_full == 0 && rob_free_tag != 0) begin
@@ -149,6 +160,8 @@ always_ff @ (posedge clk) begin
                     alu_o.rs2.tag <= 4'd0;
                     alu_o.op <= alu_add;
                     alu_o.rob_idx <= rob_free_tag;
+                    prevReg <= rd;
+                    prevTag <= rob_free_tag;
                 end
             end
 
@@ -167,6 +180,8 @@ always_ff @ (posedge clk) begin
                     alu_o.rs2.tag <= 4'd0;
                     alu_o.op <= alu_add;
                     alu_o.rob_idx <= rob_free_tag;
+                    prevReg <= rd;
+                    prevTag <= rob_free_tag;
                 end
             end
 
@@ -185,6 +200,8 @@ always_ff @ (posedge clk) begin
                     alu_o.rs2.tag <= 4'd0;
                     alu_o.op <= alu_add;
                     alu_o.rob_idx <= rob_free_tag;
+                    prevReg <= rd;
+                    prevTag <= rob_free_tag;
                 end
             end
 
@@ -233,6 +250,8 @@ always_ff @ (posedge clk) begin
                     lsb_o.type_of_inst <= 1'b0;
                     lsb_o.can_finish <= 1'b0;
                     rob_write <= 1'b1;
+                    prevReg <= rd;
+                    prevTag <= rob_free_tag;
                 end
             end
 
@@ -259,6 +278,8 @@ always_ff @ (posedge clk) begin
                     pc_and_rd.instr_pc <= instr_pc;
                     pc_and_rd.opcode <= rv32i_opcode'(opcode);
                     pc_and_rd.rd <= rd;
+                    prevReg <= rd;
+                    prevTag <= rob_free_tag;
                     case (funct3)
                         slt : begin
                             if (cmp_rs_full == 0) begin
@@ -352,6 +373,8 @@ always_ff @ (posedge clk) begin
                     pc_and_rd.instr_pc <= instr_pc;
                     pc_and_rd.opcode <= rv32i_opcode'(opcode);
                     pc_and_rd.rd <= rd;
+                    prevReg <= rd;
+                    prevTag <= rob_free_tag;
                     case (arith_funct3_t'(funct3))
                         add : begin
                             if (alu_rs_full == 0) begin
