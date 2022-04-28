@@ -86,11 +86,6 @@ typedef struct packed {
     rv32i_word target_pc;
 } cdb_entry_t;
 
-
-// typedef struct packed {
-
-// } arbiter_entry_t;
-
 typedef cdb_entry_t[`NUM_CDB_ENTRIES-1:0] cdb_t;
 typedef rob_values_t[(`RO_BUFFER_ENTRIES)-1:0] rob_arr_t;
 
