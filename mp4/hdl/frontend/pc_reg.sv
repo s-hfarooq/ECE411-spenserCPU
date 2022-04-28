@@ -15,8 +15,7 @@ module pc_register (
  */
 logic [`PC_REGISTER_WIDTH-1:0] data;
 
-always_ff @(posedge clk)
-begin
+always_ff @ (posedge clk) begin
     if (rst)
     begin
         data <= 32'h00000060;
@@ -31,8 +30,7 @@ begin
     end
 end
 
-always_comb
-begin
+always_comb begin
     out = data;
 end
 

@@ -11,14 +11,12 @@ module alu_rs (
     // From ROB
     input rob_arr_t rob_arr_o,
 
-    // From/to CDB
+    // To/from CDB
     input cdb_t cdb_vals_i,
     output cdb_entry_t [`ALU_RS_SIZE-1:0] cdb_alu_vals_o,
 
-    // From decoder
+    // To/from decoder
     input alu_rs_t alu_o,
-
-    // To decoder
     output logic alu_rs_full
 );
 
@@ -40,15 +38,15 @@ rv32i_word [`ALU_RS_SIZE-1:0] alu_res_arr;
 always_ff @(posedge clk) begin
     // Can probably make more efficient - worry about later
     alu_rs_full <= 1'b1;
-    for(int i = 0; i < `ALU_RS_SIZE; ++i) begin
-        if(is_in_use[i] == 1'b0)
+    for (int i = 0; i < `ALU_RS_SIZE; ++i) begin
+        if (is_in_use[i] == 1'b0)
             alu_rs_full <= 1'b0;
 
         cdb_alu_vals_o[i] <= '{default: 0};
     end
     
-    if(rst || flush) begin
-        for(int i = 0; i < `ALU_RS_SIZE; ++i) begin
+    if (rst || flush) begin
+        for (int i = 0; i < `ALU_RS_SIZE; ++i) begin
             alu_rs_data_arr[i] <= '{default: 0};
             is_in_use[i] <= 1'b0;
         end
@@ -56,16 +54,16 @@ always_ff @(posedge clk) begin
         // load data from decoder / ROB
 
         // load into first available rs (TODO PARAMETRIZE)
-        if(is_in_use[0] == 1'b0) begin
+        if (is_in_use[0] == 1'b0) begin
             alu_rs_data_arr[0] <= alu_o;
             is_in_use[0] <= 1'b1;
-        end else if(is_in_use[1] == 1'b0) begin
+        end else if (is_in_use[1] == 1'b0) begin
             alu_rs_data_arr[1] <= alu_o;
             is_in_use[1] <= 1'b1;
-        end else if(is_in_use[2] == 1'b0) begin
+        end else if (is_in_use[2] == 1'b0) begin
             alu_rs_data_arr[2] <= alu_o;
             is_in_use[2] <= 1'b1;
-        end else if(is_in_use[3] == 1'b0) begin
+        end else if (is_in_use[3] == 1'b0) begin
             alu_rs_data_arr[3] <= alu_o;
             is_in_use[3] <= 1'b1;
         end else begin
@@ -79,15 +77,15 @@ always_ff @(posedge clk) begin
     // Set valid bits based on input from CDB
     // CRITICAL PATH WHAT THE FUCK
     // FIX THIS ASAP
-    if(~(rst || flush)) begin
-        for(int i = 0; i < `ALU_RS_SIZE; ++i) begin
+    if (~(rst || flush)) begin
+        for (int i = 0; i < `ALU_RS_SIZE; ++i) begin
             // check for tag match
-            for(int j = 0; j < `NUM_CDB_ENTRIES; ++j) begin
-                if(alu_rs_data_arr[i].rs1.valid == 1'b0 && alu_rs_data_arr[i].rs1.tag == cdb_vals_i[j].tag) begin
+            for (int j = 0; j < `NUM_CDB_ENTRIES; ++j) begin
+                if (alu_rs_data_arr[i].rs1.valid == 1'b0 && alu_rs_data_arr[i].rs1.tag == cdb_vals_i[j].tag) begin
                     alu_rs_data_arr[i].rs1.value <= cdb_vals_i[j].value;
                     alu_rs_data_arr[i].rs1.valid <= 1'b1;
                 end
-                if(alu_rs_data_arr[i].rs2.valid == 1'b0 &&  alu_rs_data_arr[i].rs2.tag == cdb_vals_i[j].tag) begin
+                if (alu_rs_data_arr[i].rs2.valid == 1'b0 &&  alu_rs_data_arr[i].rs2.tag == cdb_vals_i[j].tag) begin
                     alu_rs_data_arr[i].rs2.value <= cdb_vals_i[j].value;
                     alu_rs_data_arr[i].rs2.valid <= 1'b1;
                 end
@@ -96,11 +94,11 @@ always_ff @(posedge clk) begin
             load_alu[i] <= 1'b0;
             // if data[i].valid == 1'b1 then update alu_arr value and 
             // set load_rob high 1 cycle later
-            if(alu_rs_data_arr[i].valid == 1'b1 && alu_rs_data_arr[i].rs1.valid == 1'b1 && alu_rs_data_arr[i].rs2.valid == 1'b1)
+            if (alu_rs_data_arr[i].valid == 1'b1 && alu_rs_data_arr[i].rs1.valid == 1'b1 && alu_rs_data_arr[i].rs2.valid == 1'b1)
                 load_alu[i] <= 1'b1;
 
             // Send data to CDB
-            if(is_in_use[i] == 1'b1 && load_cdb[i] == 1'b1) begin
+            if (is_in_use[i] == 1'b1 && load_cdb[i] == 1'b1) begin
                 cdb_alu_vals_o[i].value <= alu_res_arr[i];
                 cdb_alu_vals_o[i].tag <= alu_rs_data_arr[i].rob_idx;
                 is_in_use[i] <= 1'b0;
@@ -113,7 +111,7 @@ end
 // Instantiate ALU's
 genvar alu_i;
 generate
-    for(alu_i = 0; alu_i < `ALU_RS_SIZE; ++alu_i) begin : generate_alu
+    for (alu_i = 0; alu_i < `ALU_RS_SIZE; ++alu_i) begin : generate_alu
         alu alu_instantiation(
             .clk(clk),
             .aluop(alu_rs_data_arr[alu_i].op),

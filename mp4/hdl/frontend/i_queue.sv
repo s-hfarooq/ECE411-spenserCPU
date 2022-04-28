@@ -19,16 +19,16 @@ module i_queue (
     input logic read,
     input logic write,
     input i_queue_data_t data_in,
+    input logic mem_resp,
     
     // Outputs to decoder
     output i_queue_data_t data_out,
     output logic empty,
-    output logic full,
-    input logic mem_resp
+    output logic full
 );
 
 // Array of I-Queue entries
-i_queue_data_t queue [`I_QUEUE_ENRTRIES-1:0];
+i_queue_data_t i_queue_arr [`I_QUEUE_ENRTRIES-1:0];
 
 // Head and tail pointers
 logic [$clog2(`I_QUEUE_ENRTRIES)-1:0] head_ptr = {$clog2(`I_QUEUE_ENRTRIES){1'b0}};
@@ -49,37 +49,39 @@ always_ff @ (posedge clk) begin
     end else begin
         unique case({read, write})
             2'b00: ; // do nothing
-            2'b01: begin
+            2'b01: begin // only write
                 if (mem_resp == 1'b1 && counter < `I_QUEUE_ENRTRIES) begin
                     if (empty)
                         data_out <= data_in;
-                    queue[tail_ptr] <= data_in;
+                    i_queue_arr[tail_ptr] <= data_in;
                     tail_ptr <= tail_ptr + 1'b1;
                     counter <= counter + 1'b1;
                 end
             end
-            2'b10: begin
+            2'b10: begin // only read
+                // output data if queue not empty
                 if (counter != 0) begin
-                    data_out <= queue[head_ptr];
+                    data_out <= i_queue_arr[head_ptr];
                     head_ptr <= head_ptr + 1'b1;
                     counter <= counter - 1'b1;
                 end
             end
-            2'b11: begin
+            2'b11: begin // read and write
                 // Want to pass input directly to output if we 
                 // don't have anything in queue already
-                if(mem_resp == 1'b1) begin
+                if (mem_resp == 1'b1) begin
                     if (counter == 0) begin
                         data_out <= data_in;
                     end else begin
-                        data_out <= queue[head_ptr];
+                        data_out <= i_queue_arr[head_ptr];
                         head_ptr <= head_ptr + 1'b1;
-                        queue[tail_ptr] <= data_in;
+                        i_queue_arr[tail_ptr] <= data_in;
                         tail_ptr <= tail_ptr + 1'b1;
                     end
                 end else begin
+                    // Act as if only read is high if memory hasn't yet responded
                     if (counter != 0) begin
-                        data_out <= queue[head_ptr];
+                        data_out <= i_queue_arr[head_ptr];
                         head_ptr <= head_ptr + 1'b1;
                         counter <= counter - 1'b1;
                     end
