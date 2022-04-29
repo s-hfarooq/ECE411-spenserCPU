@@ -214,17 +214,39 @@ always_ff @ (posedge clk) begin
 
             op_br : begin   // KEEP
                 if (cmp_rs_full == 0) begin
+                    if(rs1 != 0 && prevReg == rs1) begin
+                        cmp_o.rs1.value <= 32'd0;
+                        cmp_o.rs1.tag <= prevTag;
+                        cmp_o.rs1.valid <= 1'b0;
+                    end else begin
+                        cmp_o.rs1.value <= vj_o;
+                        cmp_o.rs1.tag <= qj_o;
+                        cmp_o.rs1.valid <= (qj_o == 0);
+                    end
+
+                    if(rs2 != 0 && prevReg == rs2) begin
+                        cmp_o.rs2.value <= 32'd0;
+                        cmp_o.rs2.tag <= prevTag;
+                        cmp_o.rs2.valid <= 1'b0;
+                    end else begin
+                        cmp_o.rs2.value <= vk_o;
+                        cmp_o.rs2.tag <= qk_o;
+                        cmp_o.rs2.valid <= (qk_o == 0);
+                    end
+
+
+
                     pc_and_rd.instr_pc <= instr_pc;
                     pc_and_rd.opcode <= rv32i_opcode'(opcode);
                     pc_and_rd.rd <= 4'd0;
                     cmp_o.valid <= 1'b1;
                     cmp_o.br <= 1'b1;    // High if opcode is branch, some non-branch opcodes also use
-                    cmp_o.rs1.value <= vj_o;
-                    cmp_o.rs1.valid <= (qj_o == 0);
-                    cmp_o.rs2.value <= vk_o;
-                    cmp_o.rs2.valid <= (qk_o == 0);
-                    cmp_o.rs1.tag <= qj_o;
-                    cmp_o.rs2.tag <= qk_o;
+                    // cmp_o.rs1.value <= vj_o;
+                    // cmp_o.rs1.valid <= (qj_o == 0);
+                    // cmp_o.rs2.value <= vk_o;
+                    // cmp_o.rs2.valid <= (qk_o == 0);
+                    // cmp_o.rs1.tag <= qj_o;
+                    // cmp_o.rs2.tag <= qk_o;
                     cmp_o.pc <= instr_pc;
                     cmp_o.b_imm <= b_imm;
                     cmp_o.op <= branch_funct3;
@@ -235,6 +257,7 @@ always_ff @ (posedge clk) begin
 
             op_load : begin // KEEP
                 if (rd != 0 && (lsb_full == 0)) begin
+                    // TOOD: add similar logic elsewhere
                     if(rs1 != 0 && prevReg == rs1) begin
                         lsb_o.vj <= 32'd0;
                         lsb_o.qj <= prevTag;
@@ -268,11 +291,30 @@ always_ff @ (posedge clk) begin
 
             op_store : begin    // KEEP
                 if (lsb_full == 0) begin
+
+                    if(rs1 != 0 && prevReg == rs1) begin
+                        lsb_o.vj <= 32'd0;
+                        lsb_o.qj <= prevTag;
+                    end else begin
+                        lsb_o.vj <= vj_o;
+                        lsb_o.qj <= qj_o;
+                    end
+
+                    if(rs2 != 0 && prevReg == rs2) begin
+                        lsb_o.vk <= 32'd0;
+                        lsb_o.qk <= prevTag;
+                    end else begin
+                        lsb_o.vk <= vk_o;
+                        lsb_o.qk <= qk_o;
+                    end
+
+
+
                     lsb_o.valid <= 1'b1;
-                    lsb_o.vj <= vj_o;
-                    lsb_o.vk <= vk_o;
-                    lsb_o.qj <= qj_o;
-                    lsb_o.qk <= qk_o;
+                    // lsb_o.vj <= vj_o;
+                    // lsb_o.vk <= vk_o;
+                    // lsb_o.qj <= qj_o;
+                    // lsb_o.qk <= qk_o;
                     lsb_o.addr <= s_imm;
                     lsb_o.type_of_inst <= 1'b1;  // 0 = load, 1 = store
                     lsb_o.funct <= store_funct3;
@@ -294,13 +336,25 @@ always_ff @ (posedge clk) begin
                     case (funct3)
                         slt : begin
                             if (cmp_rs_full == 0) begin
+
+                                if(rs1 != 0 && prevReg == rs1) begin
+                                    cmp_o.rs1.value <= 32'd0;
+                                    cmp_o.rs1.valid <= 1'b0;
+                                    cmp_o.rs1.tag <= prevTag;
+                                end else begin
+                                    cmp_o.rs1.value <= vj_o;
+                                    cmp_o.rs1.valid <= (qj_o == 0);
+                                    cmp_o.rs1.tag <= qj_o;
+                                end
+
+
                                 cmp_o.valid <= 1'b1;
                                 cmp_o.br <= 1'b0;    // High if opcode is branch, some non-branch opcodes also use
-                                cmp_o.rs1.value <= vj_o;
-                                cmp_o.rs1.valid <= (qj_o == 0);
+                                // cmp_o.rs1.value <= vj_o;
+                                // cmp_o.rs1.valid <= (qj_o == 0);
                                 cmp_o.rs2.value <= i_imm;
                                 cmp_o.rs2.valid <= 1'b1;
-                                cmp_o.rs1.tag <= qj_o;
+                                // cmp_o.rs1.tag <= qj_o;
                                 cmp_o.rs2.tag <= 4'd0;
                                 cmp_o.pc <= instr_pc;
                                 cmp_o.b_imm <= 32'd0;
@@ -312,13 +366,25 @@ always_ff @ (posedge clk) begin
 
                         sltu : begin
                             if (cmp_rs_full == 0) begin
+
+                                if(rs1 != 0 && prevReg == rs1) begin
+                                    cmp_o.rs1.value <= 32'd0;
+                                    cmp_o.rs1.valid <= 1'b0;
+                                    cmp_o.rs1.tag <= prevTag;
+                                end else begin
+                                    cmp_o.rs1.value <= vj_o;
+                                    cmp_o.rs1.valid <= (qj_o == 0);
+                                    cmp_o.rs1.tag <= qj_o;
+                                end
+
+
                                 cmp_o.valid <= 1'b1;
                                 cmp_o.br <= 1'b0;    // High if opcode is branch, some non-branch opcodes also use
-                                cmp_o.rs1.value <= vj_o;
-                                cmp_o.rs1.valid <= (qj_o == 0);
+                                // cmp_o.rs1.value <= vj_o;
+                                // cmp_o.rs1.valid <= (qj_o == 0);
                                 cmp_o.rs2.value <= i_imm;
                                 cmp_o.rs2.valid <= 1'b1;
-                                cmp_o.rs1.tag <= qj_o;
+                                // cmp_o.rs1.tag <= qj_o;
                                 cmp_o.rs2.tag <= 4'd0;
                                 cmp_o.pc <= instr_pc;
                                 cmp_o.b_imm <= 32'd0;
@@ -330,14 +396,25 @@ always_ff @ (posedge clk) begin
 
                         sr : begin
                             if (alu_rs_full == 0) begin
+
+                                if(rs1 != 0 && prevReg == rs1) begin
+                                    alu_o.rs1.value <= 32'd0;
+                                    alu_o.rs1.valid <= 1'b0;
+                                    alu_o.rs1.tag <= prevTag;
+                                end else begin
+                                    alu_o.rs1.value <= vj_o;
+                                    alu_o.rs1.valid <= (qj_o == 0);
+                                    alu_o.rs1.tag <= qj_o;
+                                end
+
                                 case (funct7[5])
                                     1'b0 : begin // srli
                                         alu_o.valid <= 1'b1;
-                                        alu_o.rs1.value <= vj_o;
-                                        alu_o.rs1.valid <= (qj_o == 0);
+                                        // alu_o.rs1.value <= vj_o;
+                                        // alu_o.rs1.valid <= (qj_o == 0);
                                         alu_o.rs2.value <= i_imm;
                                         alu_o.rs2.valid <= 1'b1;
-                                        alu_o.rs1.tag <= qj_o;
+                                        // alu_o.rs1.tag <= qj_o;
                                         alu_o.rs2.tag <= 32'b0;
                                         alu_o.op <= alu_srl;
                                         alu_o.rob_idx <= rob_free_tag;
@@ -346,11 +423,11 @@ always_ff @ (posedge clk) begin
 
                                     1'b1 : begin // srai
                                         alu_o.valid <= 1'b1;
-                                        alu_o.rs1.value <= vj_o;
-                                        alu_o.rs1.valid <= (qj_o == 0);
+                                        // alu_o.rs1.value <= vj_o;
+                                        // alu_o.rs1.valid <= (qj_o == 0);
                                         alu_o.rs2.value <= i_imm;
                                         alu_o.rs2.valid <= 1'b1;
-                                        alu_o.rs1.tag <= qj_o;
+                                        // alu_o.rs1.tag <= qj_o;
                                         alu_o.rs2.tag <= 32'b0;
                                         alu_o.op <= alu_sra;
                                         alu_o.rob_idx <= rob_free_tag;
@@ -363,12 +440,23 @@ always_ff @ (posedge clk) begin
 
                         default : begin  // add, sll, axor, aor, aand
                             if (alu_rs_full == 0) begin
+
+                                if(rs1 != 0 && prevReg == rs1) begin
+                                    alu_o.rs1.value <= 32'd0;
+                                    alu_o.rs1.valid <= 1'b0;
+                                    alu_o.rs1.tag <= prevTag;
+                                end else begin
+                                    alu_o.rs1.value <= vj_o;
+                                    alu_o.rs1.valid <= (qj_o == 0);
+                                    alu_o.rs1.tag <= qj_o;
+                                end
+
                                 alu_o.valid <= 1'b1;
-                                alu_o.rs1.value <= vj_o;
-                                alu_o.rs1.valid <= (qj_o == 0);
+                                // alu_o.rs1.value <= vj_o;
+                                // alu_o.rs1.valid <= (qj_o == 0);
                                 alu_o.rs2.value <= i_imm;
                                 alu_o.rs2.valid <= 1'b1;
-                                alu_o.rs1.tag <= qj_o;
+                                // alu_o.rs1.tag <= qj_o;
                                 alu_o.rs2.tag <= 32'b0;
                                 alu_o.op <= alu_ops'(funct3);
                                 alu_o.rob_idx <= rob_free_tag;
@@ -389,15 +477,38 @@ always_ff @ (posedge clk) begin
                     case (arith_funct3_t'(funct3))
                         add : begin
                             if (alu_rs_full == 0) begin
+
+                                if(rs1 != 0 && prevReg == rs1) begin
+                                    alu_o.rs1.value <= 32'd0;
+                                    alu_o.rs1.valid <= 1'b0;
+                                    alu_o.rs1.tag <= prevTag;
+                                end else begin
+                                    alu_o.rs1.value <= vj_o;
+                                    alu_o.rs1.valid <= (qj_o == 0);
+                                    alu_o.rs1.tag <= qj_o;
+                                end
+
+                                if(rs2 != 0 && prevReg == rs2) begin
+                                    alu_o.rs2.value <= 32'd0;
+                                    alu_o.rs2.valid <= 1'b0;
+                                    alu_o.rs2.tag <= prevTag;
+                                end else begin
+                                    alu_o.rs2.value <= vk_o;
+                                    alu_o.rs2.valid <= (qj_o == 0);
+                                    alu_o.rs2.tag <= qk_o;
+                                end
+
+
+
                                 case (funct7[5])
                                     1'b0: begin
                                         alu_o.valid <= 1'b1;
-                                        alu_o.rs1.value <= vj_o;
-                                        alu_o.rs1.valid <= (qj_o == 0);
-                                        alu_o.rs2.value <= vk_o;
-                                        alu_o.rs2.valid <= (qk_o == 0);
-                                        alu_o.rs1.tag <= qj_o;
-                                        alu_o.rs2.tag <= qk_o;
+                                        // alu_o.rs1.value <= vj_o;
+                                        // alu_o.rs1.valid <= (qj_o == 0);
+                                        // alu_o.rs2.value <= vk_o;
+                                        // alu_o.rs2.valid <= (qk_o == 0);
+                                        // alu_o.rs1.tag <= qj_o;
+                                        // alu_o.rs2.tag <= qk_o;
                                         alu_o.op <= alu_add;
                                         alu_o.rob_idx <= rob_free_tag;
                                         rob_write <= 1'b1;
@@ -405,12 +516,12 @@ always_ff @ (posedge clk) begin
 
                                     1'b1: begin
                                         alu_o.valid <= 1'b1;
-                                        alu_o.rs1.value <= vj_o;
-                                        alu_o.rs1.valid <= (qj_o == 0);
-                                        alu_o.rs2.value <= vk_o;
-                                        alu_o.rs2.valid <= (qk_o == 0);
-                                        alu_o.rs1.tag <= qj_o;
-                                        alu_o.rs2.tag <= qk_o;
+                                        // alu_o.rs1.value <= vj_o;
+                                        // alu_o.rs1.valid <= (qj_o == 0);
+                                        // alu_o.rs2.value <= vk_o;
+                                        // alu_o.rs2.valid <= (qk_o == 0);
+                                        // alu_o.rs1.tag <= qj_o;
+                                        // alu_o.rs2.tag <= qk_o;
                                         alu_o.op <= alu_sub;
                                         alu_o.rob_idx <= rob_free_tag;
                                         rob_write <= 1'b1;
@@ -422,14 +533,36 @@ always_ff @ (posedge clk) begin
 
                         slt : begin
                             if (cmp_rs_full == 0) begin
+
+                                if(rs1 != 0 && prevReg == rs1) begin
+                                    cmp_o.rs1.value <= 32'd0;
+                                    cmp_o.rs1.valid <= 1'b0;
+                                    cmp_o.rs1.tag <= prevTag;
+                                end else begin
+                                    cmp_o.rs1.value <= vj_o;
+                                    cmp_o.rs1.valid <= (qj_o == 0);
+                                    cmp_o.rs1.tag <= qj_o;
+                                end
+
+                                if(rs2 != 0 && prevReg == rs2) begin
+                                    cmp_o.rs2.value <= 32'd0;
+                                    cmp_o.rs2.valid <= 1'b0;
+                                    cmp_o.rs2.tag <= prevTag;
+                                end else begin
+                                    cmp_o.rs2.value <= vk_o;
+                                    cmp_o.rs2.valid <= (qj_o == 0);
+                                    cmp_o.rs2.tag <= qk_o;
+                                end
+
+
                                 cmp_o.valid <= 1'b1;
                                 cmp_o.br <= 1'b0;    // High if opcode is branch, some non-branch opcodes also use
-                                cmp_o.rs1.value <= vj_o;
-                                cmp_o.rs1.valid <= (qj_o == 0);
-                                cmp_o.rs2.value <= vk_o;
-                                cmp_o.rs2.valid <= (qk_o == 0);
-                                cmp_o.rs1.tag <= qj_o;
-                                cmp_o.rs2.tag <= qk_o;
+                                // cmp_o.rs1.value <= vj_o;
+                                // cmp_o.rs1.valid <= (qj_o == 0);
+                                // cmp_o.rs2.value <= vk_o;
+                                // cmp_o.rs2.valid <= (qk_o == 0);
+                                // cmp_o.rs1.tag <= qj_o;
+                                // cmp_o.rs2.tag <= qk_o;
                                 cmp_o.pc <= instr_pc;
                                 cmp_o.b_imm <= 32'd0;
                                 cmp_o.op <= branch_funct3;
@@ -440,14 +573,35 @@ always_ff @ (posedge clk) begin
 
                         sltu : begin
                             if (cmp_rs_full == 0) begin
+
+                                if(rs1 != 0 && prevReg == rs1) begin
+                                    cmp_o.rs1.value <= 32'd0;
+                                    cmp_o.rs1.valid <= 1'b0;
+                                    cmp_o.rs1.tag <= prevTag;
+                                end else begin
+                                    cmp_o.rs1.value <= vj_o;
+                                    cmp_o.rs1.valid <= (qj_o == 0);
+                                    cmp_o.rs1.tag <= qj_o;
+                                end
+
+                                if(rs2 != 0 && prevReg == rs2) begin
+                                    cmp_o.rs2.value <= 32'd0;
+                                    cmp_o.rs2.valid <= 1'b0;
+                                    cmp_o.rs2.tag <= prevTag;
+                                end else begin
+                                    cmp_o.rs2.value <= vk_o;
+                                    cmp_o.rs2.valid <= (qj_o == 0);
+                                    cmp_o.rs2.tag <= qk_o;
+                                end
+
                                 cmp_o.valid <= 1'b1;
                                 cmp_o.br <= 1'b0;
-                                cmp_o.rs1.value <= vj_o;
-                                cmp_o.rs1.valid <= (qj_o == 0);
-                                cmp_o.rs2.value <= vk_o;
-                                cmp_o.rs2.valid <= (qk_o == 0);
-                                cmp_o.rs1.tag <= qj_o;
-                                cmp_o.rs2.tag <= qk_o;
+                                // cmp_o.rs1.value <= vj_o;
+                                // cmp_o.rs1.valid <= (qj_o == 0);
+                                // cmp_o.rs2.value <= vk_o;
+                                // cmp_o.rs2.valid <= (qk_o == 0);
+                                // cmp_o.rs1.tag <= qj_o;
+                                // cmp_o.rs2.tag <= qk_o;
                                 cmp_o.pc <= instr_pc;
                                 cmp_o.b_imm <= 32'd0;
                                 cmp_o.op <= branch_funct3;
@@ -458,15 +612,36 @@ always_ff @ (posedge clk) begin
 
                         sr : begin
                             if (alu_rs_full == 0) begin
+                                if(rs1 != 0 && prevReg == rs1) begin
+                                    alu_o.rs1.value <= 32'd0;
+                                    alu_o.rs1.valid <= 1'b0;
+                                    alu_o.rs1.tag <= prevTag;
+                                end else begin
+                                    alu_o.rs1.value <= vj_o;
+                                    alu_o.rs1.valid <= (qj_o == 0);
+                                    alu_o.rs1.tag <= qj_o;
+                                end
+
+                                if(rs2 != 0 && prevReg == rs2) begin
+                                    alu_o.rs2.value <= 32'd0;
+                                    alu_o.rs2.valid <= 1'b0;
+                                    alu_o.rs2.tag <= prevTag;
+                                end else begin
+                                    alu_o.rs2.value <= vk_o;
+                                    alu_o.rs2.valid <= (qj_o == 0);
+                                    alu_o.rs2.tag <= qk_o;
+                                end
+
+
                                 case (funct7[5])
                                     1'b0 : begin // srl
                                         alu_o.valid <= 1'b1;
-                                        alu_o.rs1.value <= vj_o;
-                                        alu_o.rs1.valid <= (qj_o == 0);
-                                        alu_o.rs2.value <= vk_o;
-                                        alu_o.rs2.valid <= (qk_o == 0);
-                                        alu_o.rs1.tag <= qj_o;
-                                        alu_o.rs2.tag <= qk_o;
+                                        // alu_o.rs1.value <= vj_o;
+                                        // alu_o.rs1.valid <= (qj_o == 0);
+                                        // alu_o.rs2.value <= vk_o;
+                                        // alu_o.rs2.valid <= (qk_o == 0);
+                                        // alu_o.rs1.tag <= qj_o;
+                                        // alu_o.rs2.tag <= qk_o;
                                         alu_o.op <= alu_srl;
                                         alu_o.rob_idx <= rob_free_tag;
                                         rob_write <= 1'b1;
@@ -474,12 +649,12 @@ always_ff @ (posedge clk) begin
 
                                     1'b1 : begin // sra
                                         alu_o.valid <= 1'b1;
-                                        alu_o.rs1.value <= vj_o;
-                                        alu_o.rs1.valid <= (qj_o == 0);
-                                        alu_o.rs2.value <= vk_o;
-                                        alu_o.rs2.valid <= (qk_o == 0);
-                                        alu_o.rs1.tag <= qj_o;
-                                        alu_o.rs2.tag <= qk_o;
+                                        // alu_o.rs1.value <= vj_o;
+                                        // alu_o.rs1.valid <= (qj_o == 0);
+                                        // alu_o.rs2.value <= vk_o;
+                                        // alu_o.rs2.valid <= (qk_o == 0);
+                                        // alu_o.rs1.tag <= qj_o;
+                                        // alu_o.rs2.tag <= qk_o;
                                         alu_o.op <= alu_sra;
                                         alu_o.rob_idx <= rob_free_tag;
                                         rob_write <= 1'b1;
@@ -491,13 +666,34 @@ always_ff @ (posedge clk) begin
 
                         default : begin  // sll, axor, aor, aand
                             if (alu_rs_full == 0) begin
+
+                                if(rs1 != 0 && prevReg == rs1) begin
+                                    alu_o.rs1.value <= 32'd0;
+                                    alu_o.rs1.valid <= 1'b0;
+                                    alu_o.rs1.tag <= prevTag;
+                                end else begin
+                                    alu_o.rs1.value <= vj_o;
+                                    alu_o.rs1.valid <= (qj_o == 0);
+                                    alu_o.rs1.tag <= qj_o;
+                                end
+
+                                if(rs2 != 0 && prevReg == rs2) begin
+                                    alu_o.rs2.value <= 32'd0;
+                                    alu_o.rs2.valid <= 1'b0;
+                                    alu_o.rs2.tag <= prevTag;
+                                end else begin
+                                    alu_o.rs2.value <= vk_o;
+                                    alu_o.rs2.valid <= (qj_o == 0);
+                                    alu_o.rs2.tag <= qk_o;
+                                end
+
                                 alu_o.valid <= 1'b1;
-                                alu_o.rs1.value <= vj_o;
-                                alu_o.rs2.value <= vk_o;
-                                alu_o.rs1.valid <= (qj_o == 0);
-                                alu_o.rs2.valid <= (qk_o == 0);
-                                alu_o.rs1.tag <= qj_o;
-                                alu_o.rs2.tag <= qk_o;
+                                // alu_o.rs1.value <= vj_o;
+                                // alu_o.rs2.value <= vk_o;
+                                // alu_o.rs1.valid <= (qj_o == 0);
+                                // alu_o.rs2.valid <= (qk_o == 0);
+                                // alu_o.rs1.tag <= qj_o;
+                                // alu_o.rs2.tag <= qk_o;
                                 alu_o.op <= alu_ops'(funct3);
                                 alu_o.rob_idx <= rob_free_tag;
                                 rob_write <= 1'b1;
