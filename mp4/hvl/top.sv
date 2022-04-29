@@ -104,6 +104,13 @@ Burst Memory Ports:
 
 Please refer to tb_itf.sv for more information.
 */
+// logic halt;
+// assign halt = dut.i_fetch.pc_load & (dut.i_fetch.pc_out == dut.i_fetch.next_pc);
+
+// always @(posedge itf.clk) begin
+//     if (halt)
+//         $finish;
+// end
 
 mp4 dut(
     .clk(itf.clk),

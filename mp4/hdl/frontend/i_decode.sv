@@ -98,10 +98,7 @@ always_comb begin
     // if source register is not reg0, and if ROB has the value for the
     // source register, use that value for the source operand, otherwise
     // use the value from the regfile.
-    if(rs1 != 0 && prevReg == rs1) begin
-        vj_o = 32'd0;
-        qj_o = prevTag;
-    end else if (regfile_entry_i.qj_out != 0 && rob_in[regfile_entry_i.qj_out].reg_data.can_commit) begin
+    if (regfile_entry_i.qj_out != 0 && rob_in[regfile_entry_i.qj_out].reg_data.can_commit) begin
         vj_o = rob_in[regfile_entry_i.qj_out].reg_data.value;
         qj_o = 3'b000;
     end else begin
@@ -109,10 +106,7 @@ always_comb begin
         qj_o = regfile_entry_i.qj_out;
     end
 
-    if(rs2 != 0 && prevReg == rs2) begin
-        vk_o = 32'd0;
-        qk_o = prevTag;
-    end else if (regfile_entry_i.qk_out != 0 && rob_in[regfile_entry_i.qk_out].reg_data.can_commit) begin
+    if (regfile_entry_i.qk_out != 0 && rob_in[regfile_entry_i.qk_out].reg_data.can_commit) begin
         vk_o = rob_in[regfile_entry_i.qk_out].reg_data.value;
         qk_o = 3'b000;
     end else begin
@@ -144,6 +138,12 @@ always_ff @ (posedge clk) begin
         lsb_o.valid <= 1'b0;
         // prevReg <= '0;
         // prevTag <= '0;
+
+        // if(rd == 0) begin
+        //     prevReg <= '0;
+        //     prevTag <= '0;
+        // end
+
         case (opcode)
             op_lui : begin
                 if (rd != 0 && alu_rs_full == 0 && rob_free_tag != 0) begin
@@ -702,7 +702,10 @@ always_ff @ (posedge clk) begin
                     endcase
                 end
             end
-            default : ;
+            default : begin
+                // prevReg <= 32'd0;
+                // prevTag <= 5'd0;
+            end
         endcase
     end
 end
