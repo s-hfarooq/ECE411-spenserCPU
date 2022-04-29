@@ -70,13 +70,40 @@ task updateFromROB(int idx);
 
         if(lsb_entry.qk == 0) begin
             // do nothing
-        end else if(rob_arr_o[i].tag ==lsb_entry.qk) begin
+        end else if(rob_arr_o[i].tag == lsb_entry.qk) begin
             if(rob_arr_o[i].valid == 1'b1) begin
                 // copy from ROB
                 if(rob_arr_o[lsb_entry.qk].reg_data.can_commit)
                     ldst_queue[idx].qk <= 32'd0;
                 else
                     ldst_queue[idx].qk <= lsb_entry.qk;
+                ldst_queue[idx].vk <= rob_arr_o[lsb_entry.qk].reg_data.value;
+            end
+        end
+    end
+endtask
+
+
+task updateFromROBLater(int idx);
+    for(int i = 0; i < `RO_BUFFER_ENTRIES; ++i) begin
+        if(ldst_queue[idx].qj == 0) begin
+            // do nothing
+        end else if(rob_arr_o[i].tag == ldst_queue[idx].qj) begin
+            if(rob_arr_o[i].valid == 1'b1) begin
+                // copy from ROB
+                if(rob_arr_o[lsb_entry.qj].reg_data.can_commit)
+                    ldst_queue[idx].qj <= 32'd0;
+                ldst_queue[idx].vj <= rob_arr_o[lsb_entry.qj].reg_data.value;
+            end
+        end 
+
+        if(ldst_queue[idx].qk == 0) begin
+            // do nothing
+        end else if(rob_arr_o[i].tag == ldst_queue[idx].qk) begin
+            if(rob_arr_o[i].valid == 1'b1) begin
+                // copy from ROB
+                if(rob_arr_o[lsb_entry.qk].reg_data.can_commit)
+                    ldst_queue[idx].qk <= 32'd0;
                 ldst_queue[idx].vk <= rob_arr_o[lsb_entry.qk].reg_data.value;
             end
         end
@@ -106,6 +133,8 @@ always_ff @ (posedge clk) begin : store_rs
     if (counter > 0) begin
         // Check CDB to see if needed values have been broadcasted
         for (int i = 0; i < `LDST_SIZE; ++i) begin
+            if(ldst_queue[i].valid == 1'b1)
+                updateFromROBLater(i);
             for (int j = 0; j < `NUM_CDB_ENTRIES; ++j) begin
                 if (ldst_queue[i].qj != 0 && ldst_queue[i].qj == cdb[j].tag) begin
                     ldst_queue[i].vj <= cdb[j].value;
