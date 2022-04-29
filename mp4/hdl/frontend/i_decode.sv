@@ -330,9 +330,12 @@ always_ff @ (posedge clk) begin
                     lsb_o.can_finish <= 1'b0;
                     rob_write <= 1'b1;
 
-                    prevReg <= '0;
-                    prevTag <= '0;
+                    // prevReg <= '0;
+                    // prevTag <= '0;
                 end
+
+                prevReg <= '0;
+                prevTag <= '0;
             end
 
             op_imm : begin
@@ -486,6 +489,9 @@ always_ff @ (posedge clk) begin
                             end
                         end
                     endcase
+                end else begin
+                    prevReg <= '0;
+                    prevTag <= '0;
                 end
             end
 
@@ -740,8 +746,8 @@ always_ff @ (posedge clk) begin
                 end
             end
             default : begin
-                // prevReg <= 32'd0;
-                // prevTag <= 5'd0;
+                // prevReg <= '0;
+                // prevTag <= '0;
             end
         endcase
     end
