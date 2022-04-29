@@ -142,8 +142,8 @@ always_ff @ (posedge clk) begin
         alu_o.valid <= 1'b0;
         cmp_o.valid <= 1'b0;
         lsb_o.valid <= 1'b0;
-        prevReg <= '0;
-        prevTag <= '0;
+        // prevReg <= '0;
+        // prevTag <= '0;
         case (opcode)
             op_lui : begin
                 if (rd != 0 && alu_rs_full == 0 && rob_free_tag != 0) begin
@@ -235,13 +235,24 @@ always_ff @ (posedge clk) begin
 
             op_load : begin // KEEP
                 if (rd != 0 && (lsb_full == 0)) begin
+                    if(rs1 != 0 && prevReg == rs1) begin
+                        lsb_o.vj <= 32'd0;
+                        lsb_o.qj <= prevTag;
+                    end else begin
+                        lsb_o.vj <= vj_o;
+                        lsb_o.qj <= qj_o;
+                    end
+
+
+
                     pc_and_rd.instr_pc <= instr_pc;
                     pc_and_rd.opcode <= rv32i_opcode'(opcode);
                     pc_and_rd.rd <= rd;
-                    lsb_o.vj <= vj_o;
+
+                    // lsb_o.vj <= vj_o;
                     lsb_o.valid <= 1'b1;
                     lsb_o.vk <= 32'd0;
-                    lsb_o.qj <= qj_o;
+                    // lsb_o.qj <= qj_o;
                     lsb_o.qk <= 32'd0;
                     lsb_o.addr <= i_imm;
                     lsb_o.type_of_inst <= 1'b0;  // 0 = load, 1 = store
