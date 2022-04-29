@@ -27,7 +27,9 @@ module load_store_queue (
     output rv32i_word data_addr,
     output rv32i_word data_wdata,
     input logic data_resp,
-    input rv32i_word data_rdata
+    input rv32i_word data_rdata,
+
+    input rob_arr_t rob_arr_o
 );
 
 // Head and tail pointers
@@ -51,6 +53,36 @@ task set_defaults();
     data_wdata <= 32'd0;
 endtask
 
+task updateFromROB(int idx);
+    for(int i = 0; i < `RO_BUFFER_ENTRIES; ++i) begin
+        if(lsb_entry.qj == 0) begin
+            // do nothing
+        end else if(rob_arr_o[i].tag == lsb_entry.qj) begin
+            if(rob_arr_o[i].valid == 1'b1) begin
+                // copy from ROB
+                if(rob_arr_o[lsb_entry.qj].reg_data.can_commit)
+                    ldst_queue[idx].qj <= 32'd0;
+                else
+                    ldst_queue[idx].qj <= lsb_entry.qj;
+                ldst_queue[idx].vj <= rob_arr_o[lsb_entry.qj].reg_data.value;
+            end
+        end 
+
+        if(lsb_entry.qk == 0) begin
+            // do nothing
+        end else if(rob_arr_o[i].tag ==lsb_entry.qk) begin
+            if(rob_arr_o[i].valid == 1'b1) begin
+                // copy from ROB
+                if(rob_arr_o[lsb_entry.qk].reg_data.can_commit)
+                    ldst_queue[idx].qk <= 32'd0;
+                else
+                    ldst_queue[idx].qk <= lsb_entry.qk;
+                ldst_queue[idx].vk <= rob_arr_o[lsb_entry.qk].reg_data.value;
+            end
+        end
+    end
+endtask
+
 always_ff @ (posedge clk) begin : store_rs
     set_defaults();
 
@@ -66,6 +98,7 @@ always_ff @ (posedge clk) begin : store_rs
         // add new entry to queue
         if (lsb_entry.valid == 1'b1 && counter < `LDST_SIZE) begin
             ldst_queue[tail_ptr] <= lsb_entry;
+            updateFromROB(tail_ptr);
             tail_ptr <= tail_ptr + 1;
         end
     end

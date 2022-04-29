@@ -249,7 +249,8 @@ load_store_queue ldstbuf (
     .data_addr(d_cache_mem_addr),
     .data_wdata(d_cache_mem_wdata),
     .data_resp(d_cache_mem_resp),
-    .data_rdata(d_cache_mem_rdata)
+    .data_rdata(d_cache_mem_rdata),
+    .rob_arr_o(rob_arr)
 );
 
 ro_buffer rob (
