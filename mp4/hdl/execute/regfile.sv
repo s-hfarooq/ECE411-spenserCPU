@@ -20,24 +20,16 @@ module regfile (
 
 // Main structures
 logic [31:0] regfile [31:0];
-logic [4:0] tags [31:0];
 
 // To decoder
 assign d_out.vj_out = (rs1_i == 0) ? 32'h0000_0000 : regfile[rs1_i];
 assign d_out.vk_out = (rs2_i == 0) ? 32'h0000_0000 : regfile[rs2_i];
-assign d_out.qj_out = tags[rs1_i];
-assign d_out.qk_out = tags[rs2_i];
-assign d_out.qi_out = 0;
+
 
 always_ff @ (posedge clk) begin
     if (rst) begin
         for (int i = 0; i < 32; ++i) begin
             regfile[i] <= 32'h0000_0000;
-            tags[i] <= 5'b00000;
-        end
-    end else if (flush) begin
-        for (int i = 0; i < 32; ++i) begin
-            tags[i] <= 5'b00000;
         end
     end else if (rob_is_committing == 1'b1 && rob_o.op.rd != 0) begin
         // Load register value from ROB
@@ -46,13 +38,9 @@ always_ff @ (posedge clk) begin
         /* Clear tag for the register being of ROB commit when the tag of
         the register being modified matches the tag of the ROB entry that
         was just committed */
-        if (tags[rob_o.op.rd] == rob_o.tag)
-            tags[rob_o.op.rd] <= 5'b00000;
+        // if (tags[rob_o.op.rd] == rob_o.tag)
+        //     tags[rob_o.op.rd] <= 5'b00000;
     end
-
-    // Load register tag from decoder
-    if (load_tag)
-        tags[reg_id_decoder] <= tag_decoder;
 end
 
 endmodule : regfile

@@ -75,9 +75,6 @@ typedef struct packed { // when alu_rs needs to send data to the alu, it uses th
 typedef struct packed {
     rv32i_word vj_out;
     rv32i_word vk_out;
-    tag_t qi_out;
-    tag_t qj_out;
-    tag_t qk_out;
 } regfile_data_out_t;
 
 typedef struct packed {

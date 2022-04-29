@@ -29,8 +29,10 @@ module i_decode (
 
     // From Reorder Buffer
     input logic [3:0] rob_free_tag,
+    input logic rob_is_committing,
     input rob_arr_t rob_in,
     input logic rob_is_full,
+    input rob_values_t rob_o,
 
     // To Reorder Buffer
     output logic rob_write,
@@ -93,31 +95,18 @@ logic [2:0] qj_o, qk_o;
 assign rs1_o = rs1;
 assign rs2_o = rs2;
 
-always_comb begin
-    // if source register is not reg0, and if ROB has the value for the
-    // source register, use that value for the source operand, otherwise
-    // use the value from the regfile.
-    if (regfile_entry_i.qj_out != 0 && rob_in[regfile_entry_i.qj_out].reg_data.can_commit) begin
-        vj_o = rob_in[regfile_entry_i.qj_out].reg_data.value;
-        qj_o = 3'b000;
-    end else begin
-        vj_o = regfile_entry_i.vj_out;
-        qj_o = regfile_entry_i.qj_out;
-    end
+logic [4:0] tags [31:0];
 
-    if (regfile_entry_i.qk_out != 0 && rob_in[regfile_entry_i.qk_out].reg_data.can_commit) begin
-        vk_o = rob_in[regfile_entry_i.qk_out].reg_data.value;
-        qk_o = 3'b000;
-    end else begin
-        vk_o = regfile_entry_i.vk_out;
-        qk_o = regfile_entry_i.qk_out;
-    end
-end
+assign qj_o = tags[rs1];
+assign qk_o = tags[rs2];
+
+
+
 
 // Decode + Issue
 always_ff @ (posedge clk) begin
     if(rd == 8)
-        $displayh("rd is 8, d_in is %p, opcode is %p", d_in, opcode);
+        // $displayh("rd is 8, d_in is %p, opcode is %p", d_in, opcode);
     if (rst || flush) begin
         rob_write <= 1'b0;
         pc_and_rd.instr_pc <= 32'd0;
@@ -483,8 +472,51 @@ always_ff @ (posedge clk) begin
     end
 end
 
+
+
+// always_ff @(posedge clk) begin
+//     // if source register is not reg0, and if ROB has the value for the
+//     // source register, use that value for the source operand, otherwise
+//     // use the value from the regfile.
+
+
+    
+// end
+
 // Let iQueue know we want new values
 always_ff @(posedge clk) begin
+
+    if (flush)
+        for (int i = 0; i < 32; i = i + 1)
+            tags[i] <= 0;
+
+    if (rob_is_committing == 1'b1 && rob_o.op.rd != 0) begin
+        // Load register value from ROB
+
+        /* Clear tag for the register being of ROB commit when the tag of
+        the register being modified matches the tag of the ROB entry that
+        was just committed */
+        if (tags[rob_o.op.rd] == rob_o.tag)
+            tags[rob_o.op.rd] <= 4'b0000;
+        else ;
+    end
+
+        // Load register tag from decoder
+
+    if (qj_o != 0 && rob_in[qj_o].reg_data.can_commit) begin
+        vj_o <= rob_in[qj_o].reg_data.value;
+        tags[rs1] <= 4'b0000;
+    end else begin
+        vj_o <= regfile_entry_i.vj_out;
+    end
+
+    if (qk_o != 0 && rob_in[qk_o].reg_data.can_commit) begin
+        vk_o <= rob_in[qk_o].reg_data.value;
+        tags[rs2] <= 4'b0000;
+    end else begin
+        vk_o = regfile_entry_i.vk_out;
+    end
+
    if (rst || flush) begin
         i_queue_read <= 1'b0;
         rd_o <= rd;
@@ -495,8 +527,8 @@ always_ff @(posedge clk) begin
     end else begin
         i_queue_read <= 1'b0;
         rd_o <= rd;
-        load_tag <= 1'b0;
-        tag <= '0;
+        // load_tag <= 1'b0;
+        // tag <= '0;
         case (opcode)
             op_lui, op_auipc, op_jal : begin
                 if (rd == 0)
@@ -504,8 +536,8 @@ always_ff @(posedge clk) begin
                 else if (alu_rs_full == 0 && rob_free_tag != 0) begin
                     i_queue_read <= 1'b1;
                     rd_o <= rd;
-                    load_tag <= 1'b1;
-                    tag <= rob_free_tag;
+                    tags[rd] <= rob_free_tag;
+                    // tag <= rob_free_tag;
                 end
             end
 
@@ -522,8 +554,8 @@ always_ff @(posedge clk) begin
                 else if ((lsb_full == 0) && rob_free_tag != 0) begin
                     i_queue_read <= 1'b1;
                     rd_o <= rd;
-                    load_tag <= 1'b1;
-                    tag <= rob_free_tag;
+                    // tag <= rob_free_tag;
+                    tags[rd] <= rob_free_tag;
                     // $displayh("Tag=%p, rd=%p", rob_free_tag, rd);
                 end
             end
@@ -543,8 +575,8 @@ always_ff @(posedge clk) begin
                                 if (cmp_rs_full == 0) begin
                                     i_queue_read <= 1'b1;
                                     rd_o <= rd;
-                                    load_tag <= 1'b1;
-                                    tag <= rob_free_tag;
+                                    tags[rd] <= rob_free_tag;
+
                                 end
                             end
 
@@ -552,8 +584,7 @@ always_ff @(posedge clk) begin
                                 if (alu_rs_full == 0) begin
                                     i_queue_read <= 1'b1;
                                     rd_o <= rd;
-                                    load_tag <= 1'b1;
-                                    tag <= rob_free_tag;
+                                    tags[rd] <= rob_free_tag;
                                 end
                             end
                             default : ;
@@ -572,8 +603,7 @@ always_ff @(posedge clk) begin
                                 if (cmp_rs_full == 0) begin
                                     i_queue_read <= 1'b1;
                                     rd_o <= rd;
-                                    load_tag <= 1'b1;
-                                    tag <= rob_free_tag;
+                                    tags[rd] <= rob_free_tag;
                                 end
                             end
 
@@ -581,8 +611,7 @@ always_ff @(posedge clk) begin
                                 if (alu_rs_full == 0) begin
                                     i_queue_read <= 1'b1;
                                     rd_o <= rd;
-                                    load_tag <= 1'b1;
-                                    tag <= rob_free_tag;
+                                    tags[rd] <= rob_free_tag;
                                 end
                             end
                             default : ;

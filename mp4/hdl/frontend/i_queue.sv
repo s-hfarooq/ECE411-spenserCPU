@@ -51,8 +51,8 @@ always_ff @ (posedge clk) begin
             2'b00: ; // do nothing
             2'b01: begin // only write
                 if (mem_resp == 1'b1 && counter < `I_QUEUE_ENRTRIES) begin
-                    if (empty)
-                        data_out <= data_in;
+                    // if (empty)
+                    //     data_out <= data_in;
                     i_queue_arr[tail_ptr] <= data_in;
                     tail_ptr <= tail_ptr + 1'b1;
                     counter <= counter + 1'b1;

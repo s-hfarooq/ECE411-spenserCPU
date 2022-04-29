@@ -219,7 +219,9 @@ i_decode decode (
     .cmp_o(cmp_o),
     .lsb_full(ldst_full),
     .lsb_almost_full(ldst_almost_full),
-    .lsb_o(lsb_decode_o)
+    .lsb_o(lsb_decode_o),
+    .rob_o(rob_o),
+    .rob_is_committing(rob_is_committing)
 );
 
 regfile reg_file (
