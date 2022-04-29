@@ -105,7 +105,7 @@ Burst Memory Ports:
 Please refer to tb_itf.sv for more information.
 */
 // logic halt;
-// assign halt = dut.i_fetch.pc_load & (dut.i_fetch.pc_out == dut.i_fetch.next_pc);
+// assign halt = dut.i_fetch.pc_load & (dut.i_fetch.pc_out == dut.i_fetch.pc_in);
 
 // always @(posedge itf.clk) begin
 //     if (halt)

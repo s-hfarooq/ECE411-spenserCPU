@@ -136,13 +136,6 @@ always_ff @ (posedge clk) begin
         alu_o.valid <= 1'b0;
         cmp_o.valid <= 1'b0;
         lsb_o.valid <= 1'b0;
-        // prevReg <= '0;
-        // prevTag <= '0;
-
-        // if(rd == 0) begin
-        //     prevReg <= '0;
-        //     prevTag <= '0;
-        // end
 
         case (opcode)
             op_lui : begin
@@ -162,6 +155,9 @@ always_ff @ (posedge clk) begin
                     alu_o.rob_idx <= rob_free_tag;
                     prevReg <= rd;
                     prevTag <= rob_free_tag;
+                end else begin
+                    prevReg <= '0;
+                    prevTag <= '0;
                 end
             end
 
@@ -182,6 +178,9 @@ always_ff @ (posedge clk) begin
                     alu_o.rob_idx <= rob_free_tag;
                     prevReg <= rd;
                     prevTag <= rob_free_tag;
+                end else begin
+                    prevReg <= '0;
+                    prevTag <= '0;
                 end
             end
 
@@ -202,6 +201,9 @@ always_ff @ (posedge clk) begin
                     alu_o.rob_idx <= rob_free_tag;
                     prevReg <= rd;
                     prevTag <= rob_free_tag;
+                end else begin
+                    prevReg <= '0;
+                    prevTag <= '0;
                 end
             end
 
@@ -252,6 +254,8 @@ always_ff @ (posedge clk) begin
                     cmp_o.op <= branch_funct3;
                     cmp_o.rob_idx <= rob_free_tag;
                     rob_write <= 1'b1;
+                    prevReg <= '0;
+                    prevTag <= '0;
                 end
             end
 
@@ -286,6 +290,9 @@ always_ff @ (posedge clk) begin
                     rob_write <= 1'b1;
                     prevReg <= rd;
                     prevTag <= rob_free_tag;
+                end else begin
+                    prevReg <= '0;
+                    prevTag <= '0;
                 end
             end
 
@@ -322,6 +329,9 @@ always_ff @ (posedge clk) begin
                     lsb_o.type_of_inst <= 1'b1;
                     lsb_o.can_finish <= 1'b0;
                     rob_write <= 1'b1;
+
+                    prevReg <= '0;
+                    prevTag <= '0;
                 end
             end
 
@@ -361,6 +371,9 @@ always_ff @ (posedge clk) begin
                                 cmp_o.op <= branch_funct3;
                                 cmp_o.rob_idx <= rob_free_tag;
                                 rob_write <= 1'b1;
+                            end else begin
+                                prevReg <= '0;
+                                prevTag <= '0;
                             end
                         end
 
@@ -391,6 +404,9 @@ always_ff @ (posedge clk) begin
                                 cmp_o.op <= branch_funct3;
                                 cmp_o.rob_idx <= rob_free_tag;
                                 rob_write <= 1'b1;
+                            end else begin
+                                prevReg <= '0;
+                                prevTag <= '0;
                             end
                         end
 
@@ -435,6 +451,9 @@ always_ff @ (posedge clk) begin
                                     end
                                     default : ;
                                 endcase
+                            end else begin
+                                prevReg <= '0;
+                                prevTag <= '0;
                             end
                         end
 
@@ -461,6 +480,9 @@ always_ff @ (posedge clk) begin
                                 alu_o.op <= alu_ops'(funct3);
                                 alu_o.rob_idx <= rob_free_tag;
                                 rob_write <= 1'b1;
+                            end else begin
+                                prevReg <= '0;
+                                prevTag <= '0;
                             end
                         end
                     endcase
@@ -528,6 +550,9 @@ always_ff @ (posedge clk) begin
                                     end
                                     default : ;
                                 endcase
+                            end else begin
+                                prevReg <= '0;
+                                prevTag <= '0;
                             end
                         end
 
@@ -568,6 +593,9 @@ always_ff @ (posedge clk) begin
                                 cmp_o.op <= branch_funct3;
                                 cmp_o.rob_idx <= rob_free_tag;
                                 rob_write <= 1'b1;
+                            end else begin
+                                prevReg <= '0;
+                                prevTag <= '0;
                             end
                         end
 
@@ -607,6 +635,9 @@ always_ff @ (posedge clk) begin
                                 cmp_o.op <= branch_funct3;
                                 cmp_o.rob_idx <= rob_free_tag;
                                 rob_write <= 1'b1;
+                            end else begin
+                                prevReg <= '0;
+                                prevTag <= '0;
                             end
                         end
 
@@ -661,6 +692,9 @@ always_ff @ (posedge clk) begin
                                     end
                                     default : ;
                                 endcase
+                            end else begin
+                                prevReg <= '0;
+                                prevTag <= '0;
                             end
                         end
 
@@ -697,6 +731,9 @@ always_ff @ (posedge clk) begin
                                 alu_o.op <= alu_ops'(funct3);
                                 alu_o.rob_idx <= rob_free_tag;
                                 rob_write <= 1'b1;
+                            end else begin
+                                prevReg <= '0;
+                                prevTag <= '0;
                             end
                         end
                     endcase
