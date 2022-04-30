@@ -137,7 +137,22 @@ always_ff @(posedge clk) begin
 
             // Send data to CDB
             if (is_in_use[i] == 1'b1 && load_cdb[i] == 1'b1) begin
-                cdb_alu_vals_o[i].value <= alu_res_arr[i];
+                case (alu_rs_data_arr[i].jmp_type)
+                    jal: begin
+                        cdb_alu_vals_o[i].target_pc <= alu_res_arr[i];
+                        cdb_alu_vals_o[i].value <= alu_res_arr[i];
+                    end
+                    
+                    jalr: begin
+                        cdb_alu_vals_o[i].target_pc <= (alu_res_arr[i]) & 32'hFFFF_FFFE;
+                        cdb_alu_vals_o[i].value <= (alu_res_arr[i]) & 32'hFFFF_FFFE;
+                    end
+
+                    default: begin
+                        cdb_alu_vals_o[i].value <= alu_res_arr[i];
+                    end
+                endcase
+
                 cdb_alu_vals_o[i].tag <= alu_rs_data_arr[i].rob_idx;
                 is_in_use[i] <= 1'b0;
                 load_alu[i] <= 1'b0;

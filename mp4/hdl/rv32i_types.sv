@@ -26,6 +26,12 @@ typedef enum bit [2:0] {
 } instr_t;
 
 typedef enum bit [2:0] {
+    none,
+    jal,
+    jalr
+} jmp_t;
+
+typedef enum bit [2:0] {
     beq  = 3'b000,
     bne  = 3'b001,
     blt  = 3'b100,

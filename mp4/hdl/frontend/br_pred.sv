@@ -5,10 +5,11 @@ module br_pred (
     output logic branch_pred_pc_sel,
     output logic pc_load,
     input logic mem_resp,
-    input logic flush
+    input logic flush,
+    input logic resolve_jal
 );
 
 assign branch_pred_pc_sel = 1'b0;
-assign pc_load = (~i_queue_full && mem_resp) || flush;
+assign pc_load = (~i_queue_full && mem_resp) || flush || resolve_jal;
 
 endmodule : br_pred

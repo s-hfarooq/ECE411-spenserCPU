@@ -57,6 +57,7 @@ typedef struct packed { // when alu_rs needs to send data to the alu, it uses th
     rs_reg_t res;
     alu_ops op;
     tag_t rob_idx;
+    jmp_t jmp_type;
 } alu_rs_t;
 
 typedef struct packed { // when alu_rs needs to send data to the alu, it uses this struct

@@ -15,6 +15,8 @@ module i_decode (
 
     // To Instruction Queue
     output logic i_queue_read,
+    output logic resolve_jal,
+    output rv32i_word jal_target_pc,
 
     // From Register File
     // input rv32i_word reg_vj, reg_vk, // r1, r2 inputs
@@ -136,7 +138,8 @@ always_ff @ (posedge clk) begin
         alu_o.valid <= 1'b0;
         cmp_o.valid <= 1'b0;
         lsb_o.valid <= 1'b0;
-
+        resolve_jal <= 1'b0;
+        jal_target_pc <= '0;
         case (opcode)
             op_lui : begin
                 if (rd != 0 && alu_rs_full == 0 && rob_free_tag != 0) begin
@@ -152,6 +155,7 @@ always_ff @ (posedge clk) begin
                     alu_o.rs1.tag <= 4'd0;
                     alu_o.rs2.tag <= 4'd0;
                     alu_o.op <= alu_add;
+                    alu_o.jmp_type <= none;
                     alu_o.rob_idx <= rob_free_tag;
                     prevReg <= rd;
                     prevTag <= rob_free_tag;
@@ -175,6 +179,7 @@ always_ff @ (posedge clk) begin
                     alu_o.rs1.tag <= 4'd0;
                     alu_o.rs2.tag <= 4'd0;
                     alu_o.op <= alu_add;
+                    alu_o.jmp_type <= none;
                     alu_o.rob_idx <= rob_free_tag;
                     prevReg <= rd;
                     prevTag <= rob_free_tag;
@@ -191,7 +196,7 @@ always_ff @ (posedge clk) begin
                     pc_and_rd.rd <= rd;
                     rob_write <= 1'b1;
                     alu_o.valid <= 1'b1;
-                    alu_o.rs1.value <= instr_pc + 32'd4;
+                    alu_o.rs1.value <= instr_pc;
                     alu_o.rs1.valid <= 1'b1;
                     alu_o.rs2.value <= j_imm;
                     alu_o.rs2.valid <= 1'b1;
@@ -199,6 +204,36 @@ always_ff @ (posedge clk) begin
                     alu_o.rs2.tag <= 4'd0;
                     alu_o.op <= alu_add;
                     alu_o.rob_idx <= rob_free_tag;
+
+                    alu_o.jmp_type <= jal;
+
+                    // send instr_pc+j_imm+4 to ROB and instr_pc+j_imm to pc
+                    jal_target_pc <= instr_pc + j_imm;
+                    resolve_jal <= 1'b1;
+                    prevReg <= rd;
+                    prevTag <= rob_free_tag;
+                    // update pc
+                end else begin
+                    prevReg <= '0;
+                    prevTag <= '0;
+                end
+            end
+
+            op_jalr : begin
+                // ????? no idea what conditions to use, CHECK
+                if (alu_rs_full == 0) begin
+                    pc_and_rd.instr_pc <= instr_pc;
+                    pc_and_rd.opcode <= rv32i_opcode'(opcode);
+                    pc_and_rd.rd <= rd;
+                    rob_write <= 1'b1;
+                    alu_o.valid <= 1'b1;
+                    alu_o.rs1.value <= vj_o;
+                    alu_o.rs1.tag <= qj_o;
+                    alu_o.rs2.value <= i_imm;
+                    alu_o.rs2.tag <= 4'd0;
+                    alu_o.op <= alu_add;
+                    alu_o.rob_idx <= rob_free_tag;
+                    alu_o.jmp_type <= jalr;
                     prevReg <= rd;
                     prevTag <= rob_free_tag;
                 end else begin
@@ -206,13 +241,6 @@ always_ff @ (posedge clk) begin
                     prevTag <= '0;
                 end
             end
-
-            // op_jalr : begin
-            //     // ????? no idea what conditions to use, CHECK
-            //     if () begin
-
-            //     end
-            // end
 
             op_br : begin   // KEEP
                 if (cmp_rs_full == 0) begin
@@ -415,7 +443,7 @@ always_ff @ (posedge clk) begin
 
                         sr : begin
                             if (alu_rs_full == 0) begin
-
+                                alu_o.jmp_type <= none;
                                 if(rs1 != 0 && prevReg == rs1) begin
                                     alu_o.rs1.value <= 32'd0;
                                     alu_o.rs1.valid <= 1'b0;
@@ -462,7 +490,7 @@ always_ff @ (posedge clk) begin
 
                         default : begin  // add, sll, axor, aor, aand
                             if (alu_rs_full == 0) begin
-
+                                alu_o.jmp_type <= none;
                                 if(rs1 != 0 && prevReg == rs1) begin
                                     alu_o.rs1.value <= 32'd0;
                                     alu_o.rs1.valid <= 1'b0;
@@ -505,6 +533,7 @@ always_ff @ (posedge clk) begin
                     case (arith_funct3_t'(funct3))
                         add : begin
                             if (alu_rs_full == 0) begin
+                                alu_o.jmp_type <= none;
 
                                 if(rs1 != 0 && prevReg == rs1) begin
                                     alu_o.rs1.value <= 32'd0;
@@ -649,6 +678,7 @@ always_ff @ (posedge clk) begin
 
                         sr : begin
                             if (alu_rs_full == 0) begin
+                                alu_o.jmp_type <= none;
                                 if(rs1 != 0 && prevReg == rs1) begin
                                     alu_o.rs1.value <= 32'd0;
                                     alu_o.rs1.valid <= 1'b0;
@@ -706,7 +736,7 @@ always_ff @ (posedge clk) begin
 
                         default : begin  // sll, axor, aor, aand
                             if (alu_rs_full == 0) begin
-
+                                alu_o.jmp_type <= none;
                                 if(rs1 != 0 && prevReg == rs1) begin
                                     alu_o.rs1.value <= 32'd0;
                                     alu_o.rs1.valid <= 1'b0;

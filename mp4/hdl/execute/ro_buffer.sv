@@ -100,6 +100,13 @@ always_ff @ (posedge clk) begin
                     rob_arr[head_ptr] <= '{default: 0};
                     incrementToNextInstr();
                 end
+            end else if (rob_arr[head_ptr].op.opcode == op_jal || rob_arr[head_ptr].op.opcode == op_jalr) begin
+                // do jump
+                target_pc <= rob_arr[head_ptr].target_pc;
+                rob_arr[head_ptr] <= '{default: 0};
+                incrementToNextInstr();
+                // flush <= 1'b1;
+                branch_taken <= 1'b1;
             end else begin
                 // Output to regfile, dequeue
                 rob_o <= rob_arr[head_ptr];
@@ -120,7 +127,11 @@ always_ff @ (posedge clk) begin
             if (counter < (`RO_BUFFER_ENTRIES - 1)) begin
                 rob_arr[tail_ptr].op <= decoder_instr_i;
                 rob_arr[tail_ptr].tag <= tail_ptr; 
-                rob_arr[tail_ptr].reg_data.can_commit <= 1'b0;
+                if (decoder_instr_i.opcode == op_jal) begin
+                    rob_arr[tail_ptr].reg_data.can_commit <= 1'b1;
+                end else begin
+                    rob_arr[tail_ptr].reg_data.can_commit <= 1'b0;
+                end
 
                 // wait for computation
                 rob_arr[tail_ptr].valid <= 1'b1;
