@@ -17,6 +17,25 @@ addi x2, x1, 1
 addi x3, x1, 1
 addi x4, x1, 1
 addi x5, x1, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+
 TO_JMP:
 addi x2, x2, 3
 addi x3, x3, 5

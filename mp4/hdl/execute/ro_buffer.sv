@@ -103,18 +103,27 @@ always_ff @ (posedge clk) begin
             end else if (rob_arr[head_ptr].op.opcode == op_jal || rob_arr[head_ptr].op.opcode == op_jalr) begin
                 // do jump
                 rob_o <= rob_arr[head_ptr];
-                rob_arr[head_ptr].valid <= 4'b0;
+                // rob_arr[head_ptr].valid <= 4'b0;
                 target_pc <= rob_arr[head_ptr].target_pc;
                 is_committing <= 1'b1;
 
-                rob_arr[head_ptr] <= '{default: 0};
+                // rob_arr[head_ptr] <= '{default: 0};
+                branch_taken <= 1'b1;
 
-                if (rob_arr[head_ptr].op.opcode == op_jalr) begin
+                if (mem_read == 1 && mem_resp == 1) begin
+                    rob_arr[head_ptr] <= '{default: 0};
+                    incrementToNextInstr();
                     flush <= 1'b1;
-                    branch_taken <= 1'b1;
                 end
 
-                incrementToNextInstr();
+                // flush <= 1'b1;
+
+                // if (rob_arr[head_ptr].op.opcode == op_jalr) begin
+                //     flush <= 1'b1;
+                //     branch_taken <= 1'b1;
+                // end
+
+                // incrementToNextInstr();
             end else begin
                 // Output to regfile, dequeue
                 rob_o <= rob_arr[head_ptr];

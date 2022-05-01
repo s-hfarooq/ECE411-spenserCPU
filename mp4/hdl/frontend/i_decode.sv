@@ -209,8 +209,8 @@ always_ff @ (posedge clk) begin
                     alu_o.jmp_type <= jal;
 
                     // send instr_pc+j_imm+4 to ROB and instr_pc+j_imm to pc
-                    jal_target_pc <= instr_pc + j_imm;
-                    resolve_jal <= 1'b1;
+                    // jal_target_pc <= instr_pc + j_imm;
+                    // resolve_jal <= 1'b1;
                     prevReg <= rd;
                     prevTag <= rob_free_tag;
                     // update pc

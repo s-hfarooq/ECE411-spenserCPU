@@ -9,12 +9,31 @@ addi x1, x1, 1
 addi x1, x1, 1
 addi x1, x1, 1
 auipc x1, %pcrel_hi(NEGTWO)
-jalr x7, x1, 28
+jalr x7, x1, 100
 addi x1, x1, 1
 addi x2, x1, 1
 addi x3, x1, 1
 addi x4, x1, 1
 addi x5, x1, 1
+
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
+addi x8, x8, 1
 
 addi x2, x2, 3
 addi x3, x3, 5
