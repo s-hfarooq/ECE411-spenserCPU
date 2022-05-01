@@ -132,20 +132,28 @@ always_ff @(posedge clk) begin
             load_alu[i] <= 1'b0;
             // if data[i].valid == 1'b1 then update alu_arr value and 
             // set load_rob high 1 cycle later
-            if (alu_rs_data_arr[i].valid == 1'b1 && alu_rs_data_arr[i].rs1.valid == 1'b1 && alu_rs_data_arr[i].rs2.valid == 1'b1)
+            if (alu_rs_data_arr[i].valid == 1'b1 && alu_rs_data_arr[i].rs1.valid == 1'b1 && alu_rs_data_arr[i].rs2.valid == 1'b1) begin
+                // if(alu_rs_data_arr[i].jmp_type != none) begin
+                //     if($signed(alu_rs_data_arr[i].rs1.value) > 0)
+                //         alu_rs_data_arr[i].op <= alu_add;
+                //     else
+                //         alu_rs_data_arr[i].op <= alu_sub;
+                // end
+                
                 load_alu[i] <= 1'b1;
+            end
 
             // Send data to CDB
             if (is_in_use[i] == 1'b1 && load_cdb[i] == 1'b1) begin
                 case (alu_rs_data_arr[i].jmp_type)
                     jal: begin
                         cdb_alu_vals_o[i].target_pc <= alu_res_arr[i];
-                        cdb_alu_vals_o[i].value <= alu_res_arr[i];
+                        cdb_alu_vals_o[i].value <= alu_rs_data_arr[i].curr_pc + 4; // should be old pc + 4
                     end
                     
                     jalr: begin
                         cdb_alu_vals_o[i].target_pc <= (alu_res_arr[i]) & 32'hFFFF_FFFE;
-                        cdb_alu_vals_o[i].value <= (alu_res_arr[i]) & 32'hFFFF_FFFE;
+                        cdb_alu_vals_o[i].value <= alu_rs_data_arr[i].curr_pc + 4; // should be old pc + 4
                     end
 
                     default: begin

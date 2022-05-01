@@ -89,10 +89,10 @@ always_comb begin
             i_queue_data_in.instr = 32'd0;
         end
         2'b11: begin // should hopefully never happen
-            pc_in = jal_target_pc; 
-            i_queue_data_in.pc = next_pc;
-            i_queue_data_in.next_pc = next_pc + 4;
-            i_queue_data_in.instr = 32'd0;
+            pc_in = jal_target_pc; // pc from jal instruction
+            i_queue_data_in.pc = jal_target_pc;
+            i_queue_data_in.next_pc = jal_target_pc + 4;
+            i_queue_data_in.instr = i_cache_mem_rdata;
         end
     endcase
 end

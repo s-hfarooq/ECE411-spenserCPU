@@ -104,9 +104,13 @@ always_ff @ (posedge clk) begin
                 // do jump
                 target_pc <= rob_arr[head_ptr].target_pc;
                 rob_arr[head_ptr] <= '{default: 0};
+
+                if (rob_arr[head_ptr].op.opcode == op_jalr) begin
+                    flush <= 1'b1;
+                    branch_taken <= 1'b1;
+                end
+                
                 incrementToNextInstr();
-                // flush <= 1'b1;
-                branch_taken <= 1'b1;
             end else begin
                 // Output to regfile, dequeue
                 rob_o <= rob_arr[head_ptr];

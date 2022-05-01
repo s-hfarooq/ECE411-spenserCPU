@@ -195,6 +195,7 @@ always_ff @ (posedge clk) begin
                     pc_and_rd.opcode <= rv32i_opcode'(opcode);
                     pc_and_rd.rd <= rd;
                     rob_write <= 1'b1;
+                    alu_o.curr_pc <= instr_pc;
                     alu_o.valid <= 1'b1;
                     alu_o.rs1.value <= instr_pc;
                     alu_o.rs1.valid <= 1'b1;
@@ -222,16 +223,39 @@ always_ff @ (posedge clk) begin
             op_jalr : begin
                 // ????? no idea what conditions to use, CHECK
                 if (alu_rs_full == 0) begin
+
+                    if(rs1 != 0 && prevReg == rs1) begin
+                        alu_o.rs1.value <= 32'd0;
+                        alu_o.rs1.tag <= prevTag;
+                        alu_o.rs1.valid <= 1'b0;
+                        alu_o.op <= alu_add;
+                    end else begin
+                        alu_o.rs1.value <= vj_o;
+                        alu_o.rs1.tag <= qj_o;
+                        alu_o.rs1.valid <= (qj_o == 0);
+                    end
+
+
                     pc_and_rd.instr_pc <= instr_pc;
                     pc_and_rd.opcode <= rv32i_opcode'(opcode);
                     pc_and_rd.rd <= rd;
                     rob_write <= 1'b1;
+                    alu_o.curr_pc <= instr_pc;
                     alu_o.valid <= 1'b1;
-                    alu_o.rs1.value <= vj_o;
-                    alu_o.rs1.tag <= qj_o;
-                    alu_o.rs2.value <= i_imm;
+                    // alu_o.rs1.value <= vj_o;
+                    // alu_o.rs1.tag <= qj_o;
+                    // alu_o.rs2.value <= i_imm;
+                    alu_o.rs2.value <= 32'(signed'(i_imm));
                     alu_o.rs2.tag <= 4'd0;
+                    alu_o.rs2.valid <= 1'b1;
                     alu_o.op <= alu_add;
+
+
+                    // if($signed(i_imm) > 0)
+                    //     alu_o.op <= alu_add;
+                    // else
+                    //     alu_o.op <= alu_sub;
+
                     alu_o.rob_idx <= rob_free_tag;
                     alu_o.jmp_type <= jalr;
                     prevReg <= rd;
@@ -794,7 +818,7 @@ always_comb begin
         rd_o = rd;
         load_tag = 1'b0;
         tag = '0;
-    end else if (rob_is_full == 1'b1 || lsb_almost_full == 1'b1 || lsb_full == 1'b1 /*|| i_queue_empty == 1'b1*/) begin
+    end else if (rob_is_full == 1'b1 || lsb_almost_full == 1'b1 || lsb_full == 1'b1 || alu_rs_full == 1'b1 /*|| i_queue_empty == 1'b1*/) begin
         i_queue_read = 1'b0;
     end else begin
         // i_queue_read = 1'b0;
@@ -802,7 +826,7 @@ always_comb begin
         // load_tag = 1'b0;
         // tag = '0;
         case (opcode)
-            op_lui, op_auipc, op_jal : begin
+            op_lui, op_auipc, op_jal, op_jalr : begin
                 if (rd == 0)
                     i_queue_read = 1'b1;
                 else if (alu_rs_full == 0 && rob_free_tag != 0) begin
@@ -813,7 +837,7 @@ always_comb begin
                 end
             end
 
-            op_jalr : ; // ????????????????????????????????
+            // op_jalr : ; // ????????????????????????????????
 
             op_br : begin
                 if (cmp_rs_full == 0 && rob_free_tag != 0)
