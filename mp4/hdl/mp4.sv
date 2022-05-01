@@ -167,7 +167,7 @@ cacheline_adaptor cacheline_adaptor (
     .read_i(arbiter_mem_read),
     .write_i(arbiter_mem_write),
     .resp_o(arbiter_mem_resp),
-    // Signals to physical memor
+    // Signals to physical memory
     .burst_i(mem_rdata),
     .burst_o(mem_wdata),
     .address_o(mem_addr),

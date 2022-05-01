@@ -79,6 +79,7 @@ assign j_imm = {{12{d_in.instr[31]}}, d_in.instr[19:12], d_in.instr[20], d_in.in
 assign rs1 = d_in.instr[19:15];
 assign rs2 = d_in.instr[24:20];
 assign rd = d_in.instr[11:7];
+assign pc_and_rd.instr = d_in.instr;
 
 load_funct3_t load_funct3;
 store_funct3_t store_funct3;

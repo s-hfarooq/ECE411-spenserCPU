@@ -28,6 +28,7 @@ typedef struct packed {
     rv32i_word instr_pc;
     rv32i_opcode opcode;
     rv32i_reg rd;
+    rv32i_word instr;
 } i_decode_opcode_t;
 
 typedef struct packed {
