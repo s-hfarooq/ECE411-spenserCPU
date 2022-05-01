@@ -9,9 +9,10 @@ addi x2, x1, 1
 addi x3, x1, 1
 addi x4, x1, 1
 addi x5, x1, 1
+addi x6, x1, 1
 auipc x7, %pcrel_hi(NEGTWO)
-jalr x1, x7, 128
-jalr x1, x7, 164
+jal x1, JAL_JUMP
+jal x1, DONE
 addi x1, x1, 1
 addi x2, x1, 1
 addi x3, x1, 1
@@ -36,23 +37,27 @@ addi x8, x8, 1
 addi x8, x8, 1
 addi x8, x8, 1
 
-JALR_JUMP_BUT_2:
+JAL_JUMP_BUT_2:
 addi x9, x9, 3
+li x10, 0
+beqz x10, BEQ_1
 addi x10, x10, 5
-beqz x0, BEQ_MV
+BEQ_1:
 addi x11, x11, 6
-BEQ_MV:
+beqz x11, BEQ_2
 addi x12, x12, 1
+BEQ_2:
 ret
 
-JALR_JUMP:
+JAL_JUMP:
 addi x2, x2, 3
 addi x3, x3, 5
 addi x5, x5, 6
 addi x6, x6, 1
+
 auipc x13, %pcrel_hi(NEGTWO)
 sw x1, 24(x13)
-jalr x1, x13, -40
+jal x1, JAL_JUMP_BUT_2
 lw x1, 24(x13)
 ret
 

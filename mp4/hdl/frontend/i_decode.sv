@@ -224,7 +224,7 @@ always_ff @ (posedge clk) begin
                 // ????? no idea what conditions to use, CHECK
                 if (alu_rs_full == 0) begin
 
-                    if(rs1 != 0 && prevReg == rs1 && rob_in[prevTag].valid == 1'b1) begin
+                    if(rs1 != 0 && prevReg == rs1 && (rob_in[prevTag].valid == 1'b1 || (rob_write == 1'b1 && pc_and_rd.rd == rs1))) begin
                         alu_o.rs1.value <= 32'd0;
                         alu_o.rs1.tag <= prevTag;
                         alu_o.rs1.valid <= 1'b0;
@@ -268,7 +268,7 @@ always_ff @ (posedge clk) begin
 
             op_br : begin   // KEEP
                 if (cmp_rs_full == 0) begin
-                    if(rs1 != 0 && prevReg == rs1 && rob_in[prevTag].valid == 1'b1) begin
+                    if(rs1 != 0 && prevReg == rs1 && (rob_in[prevTag].valid == 1'b1 || (rob_write == 1'b1 && pc_and_rd.rd == rs1))) begin
                         cmp_o.rs1.value <= 32'd0;
                         cmp_o.rs1.tag <= prevTag;
                         cmp_o.rs1.valid <= 1'b0;
@@ -278,7 +278,7 @@ always_ff @ (posedge clk) begin
                         cmp_o.rs1.valid <= (qj_o == 0);
                     end
 
-                    if(rs2 != 0 && prevReg == rs2 && rob_in[prevTag].valid == 1'b1) begin
+                    if(rs2 != 0 && prevReg == rs2 && (rob_in[prevTag].valid == 1'b1 || (rob_write == 1'b1 && pc_and_rd.rd == rs2))) begin
                         cmp_o.rs2.value <= 32'd0;
                         cmp_o.rs2.tag <= prevTag;
                         cmp_o.rs2.valid <= 1'b0;
@@ -314,7 +314,7 @@ always_ff @ (posedge clk) begin
             op_load : begin // KEEP
                 if (rd != 0 && (lsb_full == 0)) begin
                     // TOOD: add similar logic elsewhere
-                    if(rs1 != 0 && prevReg == rs1 && rob_in[prevTag].valid == 1'b1) begin
+                    if(rs1 != 0 && prevReg == rs1 && (rob_in[prevTag].valid == 1'b1 || (rob_write == 1'b1 && pc_and_rd.rd == rs1))) begin
                         lsb_o.vj <= 32'd0;
                         lsb_o.qj <= prevTag;
                     end else begin
@@ -351,7 +351,7 @@ always_ff @ (posedge clk) begin
             op_store : begin    // KEEP
                 if (lsb_full == 0) begin
 
-                    if(rs1 != 0 && prevReg == rs1 && rob_in[prevTag].valid == 1'b1) begin
+                    if(rs1 != 0 && prevReg == rs1 && (rob_in[prevTag].valid == 1'b1 || (rob_write == 1'b1 && pc_and_rd.rd == rs1))) begin
                         lsb_o.vj <= 32'd0;
                         lsb_o.qj <= prevTag;
                     end else begin
@@ -359,7 +359,7 @@ always_ff @ (posedge clk) begin
                         lsb_o.qj <= qj_o;
                     end
 
-                    if(rs2 != 0 && prevReg == rs2 && rob_in[prevTag].valid == 1'b1) begin
+                    if(rs2 != 0 && prevReg == rs2 && (rob_in[prevTag].valid == 1'b1 || (rob_write == 1'b1 && pc_and_rd.rd == rs2))) begin
                         lsb_o.vk <= 32'd0;
                         lsb_o.qk <= prevTag;
                     end else begin
@@ -402,7 +402,7 @@ always_ff @ (posedge clk) begin
                         slt : begin
                             if (cmp_rs_full == 0) begin
 
-                                if(rs1 != 0 && prevReg == rs1 && rob_in[prevTag].valid == 1'b1) begin
+                                if(rs1 != 0 && prevReg == rs1 && (rob_in[prevTag].valid == 1'b1 || (rob_write == 1'b1 && pc_and_rd.rd == rs1))) begin
                                     cmp_o.rs1.value <= 32'd0;
                                     cmp_o.rs1.valid <= 1'b0;
                                     cmp_o.rs1.tag <= prevTag;
@@ -435,7 +435,7 @@ always_ff @ (posedge clk) begin
                         sltu : begin
                             if (cmp_rs_full == 0) begin
 
-                                if(rs1 != 0 && prevReg == rs1 && rob_in[prevTag].valid == 1'b1) begin
+                                if(rs1 != 0 && prevReg == rs1 && (rob_in[prevTag].valid == 1'b1 || (rob_write == 1'b1 && pc_and_rd.rd == rs1))) begin
                                     cmp_o.rs1.value <= 32'd0;
                                     cmp_o.rs1.valid <= 1'b0;
                                     cmp_o.rs1.tag <= prevTag;
@@ -468,7 +468,7 @@ always_ff @ (posedge clk) begin
                         sr : begin
                             if (alu_rs_full == 0) begin
                                 alu_o.jmp_type <= none;
-                                if(rs1 != 0 && prevReg == rs1 && rob_in[prevTag].valid == 1'b1) begin
+                                if(rs1 != 0 && prevReg == rs1 && (rob_in[prevTag].valid == 1'b1 || (rob_write == 1'b1 && pc_and_rd.rd == rs1))) begin
                                     alu_o.rs1.value <= 32'd0;
                                     alu_o.rs1.valid <= 1'b0;
                                     alu_o.rs1.tag <= prevTag;
@@ -515,7 +515,7 @@ always_ff @ (posedge clk) begin
                         default : begin  // add, sll, axor, aor, aand
                             if (alu_rs_full == 0) begin
                                 alu_o.jmp_type <= none;
-                                if(rs1 != 0 && prevReg == rs1 && rob_in[prevTag].valid == 1'b1) begin
+                                if(rs1 != 0 && prevReg == rs1 && (rob_in[prevTag].valid == 1'b1 || (rob_write == 1'b1 && pc_and_rd.rd == rs1))) begin
                                     alu_o.rs1.value <= 32'd0;
                                     alu_o.rs1.valid <= 1'b0;
                                     alu_o.rs1.tag <= prevTag;
@@ -559,7 +559,7 @@ always_ff @ (posedge clk) begin
                             if (alu_rs_full == 0) begin
                                 alu_o.jmp_type <= none;
 
-                                if(rs1 != 0 && prevReg == rs1 && rob_in[prevTag].valid == 1'b1) begin
+                                if(rs1 != 0 && prevReg == rs1 && (rob_in[prevTag].valid == 1'b1 || (rob_write == 1'b1 && pc_and_rd.rd == rs1))) begin
                                     alu_o.rs1.value <= 32'd0;
                                     alu_o.rs1.valid <= 1'b0;
                                     alu_o.rs1.tag <= prevTag;
@@ -569,7 +569,7 @@ always_ff @ (posedge clk) begin
                                     alu_o.rs1.tag <= qj_o;
                                 end
 
-                                if(rs2 != 0 && prevReg == rs2 && rob_in[prevTag].valid == 1'b1) begin
+                                if(rs2 != 0 && prevReg == rs2 && (rob_in[prevTag].valid == 1'b1 || (rob_write == 1'b1 && pc_and_rd.rd == rs2))) begin
                                     alu_o.rs2.value <= 32'd0;
                                     alu_o.rs2.valid <= 1'b0;
                                     alu_o.rs2.tag <= prevTag;
@@ -618,7 +618,7 @@ always_ff @ (posedge clk) begin
                         slt : begin
                             if (cmp_rs_full == 0) begin
 
-                                if(rs1 != 0 && prevReg == rs1 && rob_in[prevTag].valid == 1'b1) begin
+                                if(rs1 != 0 && prevReg == rs1 && (rob_in[prevTag].valid == 1'b1 || (rob_write == 1'b1 && pc_and_rd.rd == rs1))) begin
                                     cmp_o.rs1.value <= 32'd0;
                                     cmp_o.rs1.valid <= 1'b0;
                                     cmp_o.rs1.tag <= prevTag;
@@ -628,7 +628,7 @@ always_ff @ (posedge clk) begin
                                     cmp_o.rs1.tag <= qj_o;
                                 end
 
-                                if(rs2 != 0 && prevReg == rs2 && rob_in[prevTag].valid == 1'b1) begin
+                                if(rs2 != 0 && prevReg == rs2 && (rob_in[prevTag].valid == 1'b1 || (rob_write == 1'b1 && pc_and_rd.rd == rs2))) begin
                                     cmp_o.rs2.value <= 32'd0;
                                     cmp_o.rs2.valid <= 1'b0;
                                     cmp_o.rs2.tag <= prevTag;
@@ -661,7 +661,7 @@ always_ff @ (posedge clk) begin
                         sltu : begin
                             if (cmp_rs_full == 0) begin
 
-                                if(rs1 != 0 && prevReg == rs1 && rob_in[prevTag].valid == 1'b1) begin
+                                if(rs1 != 0 && prevReg == rs1 && (rob_in[prevTag].valid == 1'b1 || (rob_write == 1'b1 && pc_and_rd.rd == rs1))) begin
                                     cmp_o.rs1.value <= 32'd0;
                                     cmp_o.rs1.valid <= 1'b0;
                                     cmp_o.rs1.tag <= prevTag;
@@ -671,7 +671,7 @@ always_ff @ (posedge clk) begin
                                     cmp_o.rs1.tag <= qj_o;
                                 end
 
-                                if(rs2 != 0 && prevReg == rs2 && rob_in[prevTag].valid == 1'b1) begin
+                                if(rs2 != 0 && prevReg == rs2 && (rob_in[prevTag].valid == 1'b1 || (rob_write == 1'b1 && pc_and_rd.rd == rs2))) begin
                                     cmp_o.rs2.value <= 32'd0;
                                     cmp_o.rs2.valid <= 1'b0;
                                     cmp_o.rs2.tag <= prevTag;
@@ -703,7 +703,7 @@ always_ff @ (posedge clk) begin
                         sr : begin
                             if (alu_rs_full == 0) begin
                                 alu_o.jmp_type <= none;
-                                if(rs1 != 0 && prevReg == rs1 && rob_in[prevTag].valid == 1'b1) begin
+                                if(rs1 != 0 && prevReg == rs1 && (rob_in[prevTag].valid == 1'b1 || (rob_write == 1'b1 && pc_and_rd.rd == rs1))) begin
                                     alu_o.rs1.value <= 32'd0;
                                     alu_o.rs1.valid <= 1'b0;
                                     alu_o.rs1.tag <= prevTag;
@@ -713,7 +713,7 @@ always_ff @ (posedge clk) begin
                                     alu_o.rs1.tag <= qj_o;
                                 end
 
-                                if(rs2 != 0 && prevReg == rs2 && rob_in[prevTag].valid == 1'b1) begin
+                                if(rs2 != 0 && prevReg == rs2 && (rob_in[prevTag].valid == 1'b1 || (rob_write == 1'b1 && pc_and_rd.rd == rs2))) begin
                                     alu_o.rs2.value <= 32'd0;
                                     alu_o.rs2.valid <= 1'b0;
                                     alu_o.rs2.tag <= prevTag;
@@ -761,7 +761,7 @@ always_ff @ (posedge clk) begin
                         default : begin  // sll, axor, aor, aand
                             if (alu_rs_full == 0) begin
                                 alu_o.jmp_type <= none;
-                                if(rs1 != 0 && prevReg == rs1 && rob_in[prevTag].valid == 1'b1) begin
+                                if(rs1 != 0 && prevReg == rs1 && (rob_in[prevTag].valid == 1'b1 || (rob_write == 1'b1 && pc_and_rd.rd == rs1))) begin
                                     alu_o.rs1.value <= 32'd0;
                                     alu_o.rs1.valid <= 1'b0;
                                     alu_o.rs1.tag <= prevTag;
@@ -771,7 +771,7 @@ always_ff @ (posedge clk) begin
                                     alu_o.rs1.tag <= qj_o;
                                 end
 
-                                if(rs2 != 0 && prevReg == rs2 && rob_in[prevTag].valid == 1'b1) begin
+                                if(rs2 != 0 && prevReg == rs2 && (rob_in[prevTag].valid == 1'b1 || (rob_write == 1'b1 && pc_and_rd.rd == rs2))) begin
                                     alu_o.rs2.value <= 32'd0;
                                     alu_o.rs2.valid <= 1'b0;
                                     alu_o.rs2.tag <= prevTag;
