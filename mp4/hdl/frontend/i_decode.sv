@@ -244,8 +244,8 @@ always_ff @ (posedge clk) begin
                     alu_o.valid <= 1'b1;
                     // alu_o.rs1.value <= vj_o;
                     // alu_o.rs1.tag <= qj_o;
-                    // alu_o.rs2.value <= i_imm;
-                    alu_o.rs2.value <= 32'(signed'(i_imm));
+                    alu_o.rs2.value <= i_imm;
+                    $displayh("jalr i_imm is %p", i_imm);
                     alu_o.rs2.tag <= 4'd0;
                     alu_o.rs2.valid <= 1'b1;
                     alu_o.op <= alu_add;

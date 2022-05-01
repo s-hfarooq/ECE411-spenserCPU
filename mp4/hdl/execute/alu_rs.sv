@@ -71,7 +71,7 @@ endtask
 
 task updateFromROBLater(int idx);
     for(int i = 0; i < `RO_BUFFER_ENTRIES; ++i) begin
-        if(alu_rs_data_arr[idx].rs1.tag == 0) begin
+        if(alu_rs_data_arr[idx].rs1.tag == 0 || alu_rs_data_arr[idx].rs1.valid == 1'b1) begin
             // do nothing
         end else if(rob_arr_o[i].tag == alu_rs_data_arr[idx].rs1.tag) begin
             if(rob_arr_o[i].valid == 1'b1) begin
@@ -84,7 +84,7 @@ task updateFromROBLater(int idx);
             end
         end 
 
-        if(alu_rs_data_arr[idx].rs2.tag == 0) begin
+        if(alu_rs_data_arr[idx].rs2.tag == 0 || alu_rs_data_arr[idx].rs2.valid == 1'b1) begin
             // do nothing
         end else if(rob_arr_o[i].tag == alu_rs_data_arr[idx].rs2.tag) begin
             if(rob_arr_o[i].valid == 1'b1) begin
