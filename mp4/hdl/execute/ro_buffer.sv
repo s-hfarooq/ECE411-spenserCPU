@@ -148,6 +148,7 @@ always_ff @ (posedge clk) begin
                 // wait for computation
                 rob_arr[tail_ptr].valid <= 1'b1;
                 rob_arr[tail_ptr].reg_data.value <= 32'b0;
+                rob_arr[tail_ptr].reg_data.can_commit <= 32'b0;
 
                 // Entry 0 is reserved
                 if (tail_ptr >= (`RO_BUFFER_ENTRIES - 1))

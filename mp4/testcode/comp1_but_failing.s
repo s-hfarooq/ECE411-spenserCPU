@@ -5,6 +5,17 @@
 _start:
 
 lui	  x2,0x84000
+mv x3, x2
+li x4, 0x15
+andi x4, x4, 0x10
+li x5,0x15
+ori x5, x5, 0x7
+beqz x5, DONE
+li x6, 0x15
+slli x6, x6, 6
+srai x6, x6, 5
+
+beqz x16, DONE
 addi  x2,x2,-16
 sw	  x2,12(x2)
 sw	  x8,8(x2)
@@ -16,6 +27,8 @@ auipc x1,0x0
 jalr  372(x1)
 or	  x12,x12,x10
 jal   x18, DONE
+
+
 addi x3, x1, 1
 addi x4, x1, 1
 addi x5, x1, 1
