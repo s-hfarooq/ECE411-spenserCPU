@@ -5,9 +5,13 @@
 _start:
 
 addi x1, x1, 1
-addi x1, x1, 1
+addi x2, x1, 1
+addi x3, x1, 1
+addi x4, x1, 1
+addi x5, x1, 1
+addi x6, x1, 1
 auipc x1, %pcrel_hi(NEGTWO)
-jalr x0, x1, 48
+jalr x0, x1, 28
 nop
 nop
 nop

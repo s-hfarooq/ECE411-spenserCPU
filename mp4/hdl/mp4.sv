@@ -304,7 +304,7 @@ cmp_rs cmp_rs (
     .rob_arr_o(rob_arr),
     // To/from CDB
     .cdb_vals_i(cdb),
-    .cdb_cmp_vals_o(cdb[(2*(`CMP_RS_SIZE-1))+2 -: `CMP_RS_SIZE]),
+    .cdb_cmp_vals_o(cdb[`NUM_CDB_ENTRIES-1 -: `CMP_RS_SIZE]),
     // To/from decoder
     .cmp_o(cmp_o),
     .cmp_rs_full(cmp_rs_full)

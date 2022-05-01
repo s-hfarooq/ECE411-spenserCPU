@@ -69,6 +69,36 @@ task updateFromROB(int idx);
     end
 endtask
 
+task updateFromROBLater(int idx);
+    for(int i = 0; i < `RO_BUFFER_ENTRIES; ++i) begin
+        if(alu_rs_data_arr[idx].rs1.tag == 0) begin
+            // do nothing
+        end else if(rob_arr_o[i].tag == alu_rs_data_arr[idx].rs1.tag) begin
+            if(rob_arr_o[i].valid == 1'b1) begin
+                // copy from ROB
+                if(rob_arr_o[alu_rs_data_arr[idx].rs1.tag].reg_data.can_commit) begin
+                    alu_rs_data_arr[idx].rs1.tag <= 32'd0;
+                    alu_rs_data_arr[idx].rs1.valid <= 1'b1;
+                end
+                alu_rs_data_arr[idx].rs1.value <= rob_arr_o[alu_rs_data_arr[idx].rs1.tag].reg_data.value;
+            end
+        end 
+
+        if(alu_rs_data_arr[idx].rs2.tag == 0) begin
+            // do nothing
+        end else if(rob_arr_o[i].tag == alu_rs_data_arr[idx].rs2.tag) begin
+            if(rob_arr_o[i].valid == 1'b1) begin
+                // copy from ROB
+                if(rob_arr_o[alu_rs_data_arr[idx].rs2.tag].reg_data.can_commit)  begin
+                    alu_rs_data_arr[idx].rs2.tag <= 32'd0;
+                    alu_rs_data_arr[idx].rs2.valid <= 1'b1;
+                end
+                alu_rs_data_arr[idx].rs2.value <= rob_arr_o[alu_rs_data_arr[idx].rs2.tag].reg_data.value;
+            end
+        end
+    end
+endtask
+
 always_ff @(posedge clk) begin
     // Can probably make more efficient - worry about later
     alu_rs_full <= 1'b1;
@@ -134,6 +164,9 @@ always_ff @(posedge clk) begin
     if (~(rst || flush)) begin
         for (int i = 0; i < `ALU_RS_SIZE; ++i) begin
             // check for tag match
+            if(alu_rs_data_arr[i].valid == 1'b1)
+                updateFromROBLater(i);
+
             for (int j = 0; j < `NUM_CDB_ENTRIES; ++j) begin
                 if (alu_rs_data_arr[i].rs1.valid == 1'b0 && alu_rs_data_arr[i].rs1.tag == cdb_vals_i[j].tag) begin
                     alu_rs_data_arr[i].rs1.value <= cdb_vals_i[j].value;
