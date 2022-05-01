@@ -28,7 +28,7 @@ module alu_rs (
 // time as data is loading into RS? Don't think data would ever load into RS
 
 alu_rs_t alu_rs_data_arr [`ALU_RS_SIZE-1:0] /* synthesis ramstyle = "logic" */;
-logic is_in_use [3:0];
+logic [`ALU_RS_SIZE-1:0] is_in_use;
 logic [`ALU_RS_SIZE-1:0] load_alu;
 logic [`ALU_RS_SIZE-1:0] load_cdb;
 
@@ -104,6 +104,22 @@ always_ff @(posedge clk) begin
             alu_rs_data_arr[3] <= alu_o;
             is_in_use[3] <= 1'b1;
             updateFromROB(3);
+        end else if (is_in_use[4] == 1'b0) begin
+            alu_rs_data_arr[4] <= alu_o;
+            is_in_use[4] <= 1'b1;
+            updateFromROB(4);
+        end else if (is_in_use[5] == 1'b0) begin
+            alu_rs_data_arr[5] <= alu_o;
+            is_in_use[5] <= 1'b1;
+            updateFromROB(5);
+        end else if (is_in_use[6] == 1'b0) begin
+            alu_rs_data_arr[6] <= alu_o;
+            is_in_use[6] <= 1'b1;
+            updateFromROB(6);
+        end else if (is_in_use[7] == 1'b0) begin
+            alu_rs_data_arr[7] <= alu_o;
+            is_in_use[7] <= 1'b1;
+            updateFromROB(7);
         end else begin
             alu_rs_full <= 1'b1;
         end

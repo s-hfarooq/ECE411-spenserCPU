@@ -14,7 +14,7 @@
 `define REGISTER_WIDTH 32
 
 // alu_reservation_station.sv
-`define ALU_RS_SIZE 4
+`define ALU_RS_SIZE 8
 
 // cmp_reservation_station.sv
 `define CMP_RS_SIZE 4
