@@ -102,14 +102,18 @@ always_ff @ (posedge clk) begin
                 end
             end else if (rob_arr[head_ptr].op.opcode == op_jal || rob_arr[head_ptr].op.opcode == op_jalr) begin
                 // do jump
+                rob_o <= rob_arr[head_ptr];
+                rob_arr[head_ptr].valid <= 4'b0;
                 target_pc <= rob_arr[head_ptr].target_pc;
+                is_committing <= 1'b1;
+
                 rob_arr[head_ptr] <= '{default: 0};
 
                 if (rob_arr[head_ptr].op.opcode == op_jalr) begin
                     flush <= 1'b1;
                     branch_taken <= 1'b1;
                 end
-                
+
                 incrementToNextInstr();
             end else begin
                 // Output to regfile, dequeue
@@ -130,13 +134,8 @@ always_ff @ (posedge clk) begin
             // Save value to ROB, enqueue
             if (counter < (`RO_BUFFER_ENTRIES - 1)) begin
                 rob_arr[tail_ptr].op <= decoder_instr_i;
-                rob_arr[tail_ptr].tag <= tail_ptr; 
-                if (decoder_instr_i.opcode == op_jal) begin
-                    rob_arr[tail_ptr].reg_data.can_commit <= 1'b1;
-                end else begin
-                    rob_arr[tail_ptr].reg_data.can_commit <= 1'b0;
-                end
-
+                rob_arr[tail_ptr].tag <= tail_ptr;
+                
                 // wait for computation
                 rob_arr[tail_ptr].valid <= 1'b1;
                 rob_arr[tail_ptr].reg_data.value <= 32'b0;

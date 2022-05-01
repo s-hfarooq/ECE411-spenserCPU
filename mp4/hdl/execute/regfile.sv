@@ -39,7 +39,9 @@ always_ff @ (posedge clk) begin
         for (int i = 0; i < 32; ++i) begin
             tags[i] <= 5'b00000;
         end
-    end else if (rob_is_committing == 1'b1 && rob_o.op.rd != 0) begin
+    end 
+    
+    if (rob_is_committing == 1'b1 && rob_o.op.rd != 0) begin
         // Load register value from ROB
         regfile[rob_o.op.rd] <= rob_o.reg_data.value;
 

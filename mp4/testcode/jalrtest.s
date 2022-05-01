@@ -5,19 +5,17 @@
 _start:
 
 addi x1, x1, 1
-addi x2, x1, 1
-addi x3, x1, 1
-addi x4, x1, 1
-addi x5, x1, 1
-addi x6, x1, 1
+addi x1, x1, 1
+addi x1, x1, 1
+addi x1, x1, 1
 auipc x1, %pcrel_hi(NEGTWO)
-jal x7, TO_JMP
+jalr x7, x1, 28
 addi x1, x1, 1
 addi x2, x1, 1
 addi x3, x1, 1
 addi x4, x1, 1
 addi x5, x1, 1
-TO_JMP:
+
 addi x2, x2, 3
 addi x3, x3, 5
 addi x5, x5, 6
