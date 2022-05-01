@@ -24,7 +24,7 @@ module cmp_rs (
 // time as data is loading into RS? Don't think data would ever load into RS
 
 cmp_rs_t cmp_rs_data_arr [`CMP_RS_SIZE-1:0] /* synthesis ramstyle = "logic" */;
-logic is_in_use [3:0];
+logic [`CMP_RS_SIZE-1:0] is_in_use;
 logic [`CMP_RS_SIZE-1:0] load_cmp;
 logic [`CMP_RS_SIZE-1:0] load_cdb;
 
@@ -65,6 +65,36 @@ task updateFromROB(int idx);
     end
 endtask
 
+task updateFromROBLater(int idx);
+    for(int i = 0; i < `RO_BUFFER_ENTRIES; ++i) begin
+        if(cmp_rs_data_arr[idx].rs1.tag == 0) begin
+            // do nothing
+        end else if(rob_arr_o[i].tag == cmp_rs_data_arr[idx].rs1.tag) begin
+            if(rob_arr_o[i].valid == 1'b1) begin
+                // copy from ROB
+                if(rob_arr_o[cmp_rs_data_arr[idx].rs1.tag].reg_data.can_commit) begin
+                    cmp_rs_data_arr[idx].rs1.tag <= 32'd0;
+                    cmp_rs_data_arr[idx].rs1.valid <= 1'b1;
+                end
+                cmp_rs_data_arr[idx].rs1.value <= rob_arr_o[cmp_rs_data_arr[idx].rs1.tag].reg_data.value;
+            end
+        end 
+
+        if(cmp_rs_data_arr[idx].rs2.tag == 0) begin
+            // do nothing
+        end else if(rob_arr_o[i].tag == cmp_rs_data_arr[idx].rs2.tag) begin
+            if(rob_arr_o[i].valid == 1'b1) begin
+                // copy from ROB
+                if(rob_arr_o[cmp_rs_data_arr[idx].rs2.tag].reg_data.can_commit)  begin
+                    cmp_rs_data_arr[idx].rs2.tag <= 32'd0;
+                    cmp_rs_data_arr[idx].rs2.valid <= 1'b1;
+                end
+                cmp_rs_data_arr[idx].rs2.value <= rob_arr_o[cmp_rs_data_arr[idx].rs2.tag].reg_data.value;
+            end
+        end
+    end
+endtask
+
 always_ff @ (posedge clk) begin
     // Can probably make more efficient - worry about later
     cmp_rs_full <= 1'b1;
@@ -100,6 +130,22 @@ always_ff @ (posedge clk) begin
             cmp_rs_data_arr[3] <= cmp_o;
             is_in_use[3] <= 1'b1;
             updateFromROB(3);
+        end else if (is_in_use[4] == 1'b0) begin
+            cmp_rs_data_arr[4] <= cmp_o;
+            is_in_use[4] <= 1'b1;
+            updateFromROB(4);
+        end else if (is_in_use[5] == 1'b0) begin
+            cmp_rs_data_arr[5] <= cmp_o;
+            is_in_use[5] <= 1'b1;
+            updateFromROB(5);
+        end else if (is_in_use[6] == 1'b0) begin
+            cmp_rs_data_arr[6] <= cmp_o;
+            is_in_use[6] <= 1'b1;
+            updateFromROB(6);
+        end else if (is_in_use[7] == 1'b0) begin
+            cmp_rs_data_arr[7] <= cmp_o;
+            is_in_use[7] <= 1'b1;
+            updateFromROB(7);
         end else begin
             cmp_rs_full <= 1'b1;
         end
@@ -114,6 +160,9 @@ always_ff @ (posedge clk) begin
     if (~(rst || flush)) begin
         for (int i = 0; i < `CMP_RS_SIZE; ++i) begin
             // check for tag match
+            if(cmp_rs_data_arr[i].valid == 1'b1)
+                updateFromROBLater(i);
+                
             for (int j = 0; j < `NUM_CDB_ENTRIES; ++j) begin
                 if (cmp_rs_data_arr[i].rs1.valid == 1'b0 && cmp_rs_data_arr[i].rs1.tag == cdb_vals_i[j].tag) begin
                     cmp_rs_data_arr[i].rs1.value <= cdb_vals_i[j].value;
