@@ -32,66 +32,54 @@ logic [`CMP_RS_SIZE-1:0] load_cdb;
 rv32i_word [`CMP_RS_SIZE-1:0] cmp_res_arr;
 
 task updateFromROB(int idx);
-    for(int i = 0; i < `RO_BUFFER_ENTRIES; ++i) begin
-        if(cmp_o.rs1.valid == 1'b1) begin
-            // do nothing
-        end else if(rob_arr_o[i].tag == cmp_o.rs1.tag) begin
-            if(rob_arr_o[i].valid == 1'b1) begin
-                // copy from ROB
-                if(rob_arr_o[cmp_o.rs1.tag].reg_data.can_commit) begin
-                    cmp_rs_data_arr[idx].rs1.valid <= 1'b1;
-                    cmp_rs_data_arr[idx].rs1.tag <= 32'd0;
-                end else begin
-                    cmp_rs_data_arr[idx].rs1.tag <= cmp_o.rs1.tag;
-                end
-                cmp_rs_data_arr[idx].rs1.value <= rob_arr_o[cmp_o.rs1.tag].reg_data.value;
-            end
-        end 
-
-        if(cmp_o.rs2.valid == 1'b1) begin
-            // do nothing
-        end else if(rob_arr_o[i].tag == cmp_o.rs2.tag) begin
-            if(rob_arr_o[i].valid == 1'b1) begin
-                // copy from ROB
-                if(rob_arr_o[cmp_o.rs2.tag].reg_data.can_commit) begin
-                    cmp_rs_data_arr[idx].rs2.valid <= 1'b1;
-                    cmp_rs_data_arr[idx].rs2.tag <= 32'd0;
-                end else begin
-                    cmp_rs_data_arr[idx].rs2.tag <= cmp_o.rs2.tag;
-                end
-                cmp_rs_data_arr[idx].rs2.value <= rob_arr_o[cmp_o.rs2.tag].reg_data.value;
-            end
+    if (cmp_o.rs1.valid == 1'b1) begin
+        // do nothing
+    end else if (rob_arr_o[cmp_o.rs1.tag].valid == 1'b1) begin
+        // copy from ROB
+        if (rob_arr_o[cmp_o.rs1.tag].reg_data.can_commit) begin
+            cmp_rs_data_arr[idx].rs1.valid <= 1'b1;
+            cmp_rs_data_arr[idx].rs1.tag <= 32'd0;
+        end else begin
+            cmp_rs_data_arr[idx].rs1.tag <= cmp_o.rs1.tag;
         end
+        cmp_rs_data_arr[idx].rs1.value <= rob_arr_o[cmp_o.rs1.tag].reg_data.value;
+    end 
+
+    if (cmp_o.rs2.valid == 1'b1) begin
+        // do nothing
+    end else if (rob_arr_o[cmp_o.rs2.tag].valid == 1'b1) begin
+        // copy from ROB
+        if (rob_arr_o[cmp_o.rs2.tag].reg_data.can_commit) begin
+            cmp_rs_data_arr[idx].rs2.valid <= 1'b1;
+            cmp_rs_data_arr[idx].rs2.tag <= 32'd0;
+        end else begin
+            cmp_rs_data_arr[idx].rs2.tag <= cmp_o.rs2.tag;
+        end
+        cmp_rs_data_arr[idx].rs2.value <= rob_arr_o[cmp_o.rs2.tag].reg_data.value;
     end
 endtask
 
 task updateFromROBLater(int idx);
-    for(int i = 0; i < `RO_BUFFER_ENTRIES; ++i) begin
-        if(cmp_rs_data_arr[idx].rs1.tag == 0) begin
-            // do nothing
-        end else if(rob_arr_o[i].tag == cmp_rs_data_arr[idx].rs1.tag) begin
-            if(rob_arr_o[i].valid == 1'b1) begin
-                // copy from ROB
-                if(rob_arr_o[cmp_rs_data_arr[idx].rs1.tag].reg_data.can_commit) begin
-                    cmp_rs_data_arr[idx].rs1.tag <= 32'd0;
-                    cmp_rs_data_arr[idx].rs1.valid <= 1'b1;
-                end
-                cmp_rs_data_arr[idx].rs1.value <= rob_arr_o[cmp_rs_data_arr[idx].rs1.tag].reg_data.value;
-            end
-        end 
-
-        if(cmp_rs_data_arr[idx].rs2.tag == 0) begin
-            // do nothing
-        end else if(rob_arr_o[i].tag == cmp_rs_data_arr[idx].rs2.tag) begin
-            if(rob_arr_o[i].valid == 1'b1) begin
-                // copy from ROB
-                if(rob_arr_o[cmp_rs_data_arr[idx].rs2.tag].reg_data.can_commit)  begin
-                    cmp_rs_data_arr[idx].rs2.tag <= 32'd0;
-                    cmp_rs_data_arr[idx].rs2.valid <= 1'b1;
-                end
-                cmp_rs_data_arr[idx].rs2.value <= rob_arr_o[cmp_rs_data_arr[idx].rs2.tag].reg_data.value;
-            end
+    if(cmp_rs_data_arr[idx].rs1.tag == 0) begin
+        // do nothing
+    end else if (rob_arr_o[cmp_rs_data_arr[idx].rs1.tag].valid == 1'b1) begin
+        // copy from ROB
+        if (rob_arr_o[cmp_rs_data_arr[idx].rs1.tag].reg_data.can_commit) begin
+            cmp_rs_data_arr[idx].rs1.tag <= 32'd0;
+            cmp_rs_data_arr[idx].rs1.valid <= 1'b1;
         end
+        cmp_rs_data_arr[idx].rs1.value <= rob_arr_o[cmp_rs_data_arr[idx].rs1.tag].reg_data.value;
+    end 
+
+    if (cmp_rs_data_arr[idx].rs2.tag == 0) begin
+        // do nothing
+    end else if(rob_arr_o[cmp_rs_data_arr[idx].rs2.tag].valid == 1'b1) begin
+        // copy from ROB
+        if(rob_arr_o[cmp_rs_data_arr[idx].rs2.tag].reg_data.can_commit)  begin
+            cmp_rs_data_arr[idx].rs2.tag <= 32'd0;
+            cmp_rs_data_arr[idx].rs2.valid <= 1'b1;
+        end
+        cmp_rs_data_arr[idx].rs2.value <= rob_arr_o[cmp_rs_data_arr[idx].rs2.tag].reg_data.value;
     end
 endtask
 

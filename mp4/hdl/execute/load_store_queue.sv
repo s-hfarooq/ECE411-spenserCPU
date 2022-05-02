@@ -54,59 +54,46 @@ task set_defaults();
 endtask
 
 task updateFromROB(int idx);
-    for(int i = 0; i < `RO_BUFFER_ENTRIES; ++i) begin
-        if(lsb_entry.qj == 0) begin
-            // do nothing
-        end else if(rob_arr_o[i].tag == lsb_entry.qj) begin
-            if(rob_arr_o[i].valid == 1'b1) begin
-                // copy from ROB
-                if(rob_arr_o[lsb_entry.qj].reg_data.can_commit)
-                    ldst_queue[idx].qj <= 32'd0;
-                else
-                    ldst_queue[idx].qj <= lsb_entry.qj;
-                ldst_queue[idx].vj <= rob_arr_o[lsb_entry.qj].reg_data.value;
-            end
-        end 
+    if (lsb_entry.qj == 0) begin
+        // do nothing
+    end else if (rob_arr_o[lsb_entry.qj].valid == 1'b1) begin
+        // copy from ROB
+        if (rob_arr_o[lsb_entry.qj].reg_data.can_commit)
+            ldst_queue[idx].qj <= 32'd0;
+        else
+            ldst_queue[idx].qj <= lsb_entry.qj;
+        ldst_queue[idx].vj <= rob_arr_o[lsb_entry.qj].reg_data.value;
+    end
 
-        if(lsb_entry.qk == 0) begin
-            // do nothing
-        end else if(rob_arr_o[i].tag == lsb_entry.qk) begin
-            if(rob_arr_o[i].valid == 1'b1) begin
-                // copy from ROB
-                if(rob_arr_o[lsb_entry.qk].reg_data.can_commit)
-                    ldst_queue[idx].qk <= 32'd0;
-                else
-                    ldst_queue[idx].qk <= lsb_entry.qk;
-                ldst_queue[idx].vk <= rob_arr_o[lsb_entry.qk].reg_data.value;
-            end
-        end
+    if (lsb_entry.qk == 0) begin
+        // do nothing
+    end else if (rob_arr_o[lsb_entry.qk].valid == 1'b1) begin
+        // copy from ROB
+        if (rob_arr_o[lsb_entry.qk].reg_data.can_commit)
+            ldst_queue[idx].qk <= 32'd0;
+        else
+            ldst_queue[idx].qk <= lsb_entry.qk;
+        ldst_queue[idx].vk <= rob_arr_o[lsb_entry.qk].reg_data.value;
     end
 endtask
 
-
 task updateFromROBLater(int idx);
-    for(int i = 0; i < `RO_BUFFER_ENTRIES; ++i) begin
-        if(ldst_queue[idx].qj == 0) begin
-            // do nothing
-        end else if(rob_arr_o[i].tag == ldst_queue[idx].qj) begin
-            if(rob_arr_o[i].valid == 1'b1) begin
-                // copy from ROB
-                if(rob_arr_o[lsb_entry.qj].reg_data.can_commit)
-                    ldst_queue[idx].qj <= 32'd0;
-                ldst_queue[idx].vj <= rob_arr_o[lsb_entry.qj].reg_data.value;
-            end
-        end 
+    if (ldst_queue[idx].qj == 0) begin
+        // do nothing
+    end else if (rob_arr_o[ldst_queue[idx].qj].valid == 1'b1) begin
+        // copy from ROB
+        if (rob_arr_o[lsb_entry.qj].reg_data.can_commit)
+            ldst_queue[idx].qj <= 32'd0;
+        ldst_queue[idx].vj <= rob_arr_o[lsb_entry.qj].reg_data.value;
+    end
 
-        if(ldst_queue[idx].qk == 0) begin
-            // do nothing
-        end else if(rob_arr_o[i].tag == ldst_queue[idx].qk) begin
-            if(rob_arr_o[i].valid == 1'b1) begin
-                // copy from ROB
-                if(rob_arr_o[lsb_entry.qk].reg_data.can_commit)
-                    ldst_queue[idx].qk <= 32'd0;
-                ldst_queue[idx].vk <= rob_arr_o[lsb_entry.qk].reg_data.value;
-            end
-        end
+    if (ldst_queue[idx].qk == 0) begin
+        // do nothing
+    end else if (rob_arr_o[ldst_queue[idx].qk].valid == 1'b1) begin
+        // copy from ROB
+        if (rob_arr_o[lsb_entry.qk].reg_data.can_commit)
+            ldst_queue[idx].qk <= 32'd0;
+        ldst_queue[idx].vk <= rob_arr_o[lsb_entry.qk].reg_data.value;
     end
 endtask
 
