@@ -105,6 +105,15 @@ Burst Memory Ports:
 Please refer to tb_itf.sv for more information.
 */
 
+// halt logic wrong - when this is true, we might not be fully done, may have just fetched instruction (still need to execute)
+// logic halt;
+// assign halt = dut.i_fetch.pc_load & (dut.i_fetch.pc_out == dut.i_fetch.pc_in);
+
+// always @(posedge itf.clk) begin
+//     if (halt)
+//         $finish;
+// end
+
 mp4 dut(
     .clk(itf.clk),
     .rst(itf.rst),

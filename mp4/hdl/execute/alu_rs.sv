@@ -28,12 +28,64 @@ module alu_rs (
 // time as data is loading into RS? Don't think data would ever load into RS
 
 alu_rs_t alu_rs_data_arr [`ALU_RS_SIZE-1:0] /* synthesis ramstyle = "logic" */;
-logic is_in_use [3:0];
+logic [`ALU_RS_SIZE-1:0] is_in_use;
 logic [`ALU_RS_SIZE-1:0] load_alu;
 logic [`ALU_RS_SIZE-1:0] load_cdb;
 
 // for whatever reason we got a multiple drivers error when writing directly to alu_arr[i].value
 rv32i_word [`ALU_RS_SIZE-1:0] alu_res_arr;
+
+task updateFromROB(int idx);
+    if (alu_o.rs1.valid == 1'b1) begin
+        // do nothing
+    end else if (rob_arr_o[alu_o.rs1.tag].valid == 1'b1) begin
+        // copy from ROB
+        if (rob_arr_o[alu_o.rs1.tag].reg_data.can_commit) begin
+            alu_rs_data_arr[idx].rs1.valid <= 1'b1;
+            alu_rs_data_arr[idx].rs1.tag <= '0;
+        end else begin
+            alu_rs_data_arr[idx].rs1.tag <= alu_o.rs1.tag;
+        end
+        alu_rs_data_arr[idx].rs1.value <= rob_arr_o[alu_o.rs1.tag].reg_data.value;
+    end 
+
+    if (alu_o.rs2.valid == 1'b1) begin
+        // do nothing
+    end else if (rob_arr_o[alu_o.rs2.tag].valid == 1'b1) begin
+        // copy from ROB
+        if(rob_arr_o[alu_o.rs2.tag].reg_data.can_commit) begin
+            alu_rs_data_arr[idx].rs2.valid <= 1'b1;
+            alu_rs_data_arr[idx].rs2.tag <= '0;
+        end else begin
+            alu_rs_data_arr[idx].rs2.tag <= alu_o.rs2.tag;
+        end
+        alu_rs_data_arr[idx].rs2.value <= rob_arr_o[alu_o.rs2.tag].reg_data.value;
+    end
+endtask
+
+task updateFromROBLater(int idx);
+    if (alu_rs_data_arr[idx].rs1.tag == 0 || alu_rs_data_arr[idx].rs1.valid == 1'b1) begin
+        // do nothing
+    end else if (rob_arr_o[alu_rs_data_arr[idx].rs1.tag].valid == 1'b1) begin
+        // copy from ROB
+        if (rob_arr_o[alu_rs_data_arr[idx].rs1.tag].reg_data.can_commit) begin
+            alu_rs_data_arr[idx].rs1.tag <= '0;
+            alu_rs_data_arr[idx].rs1.valid <= 1'b1;
+        end
+        alu_rs_data_arr[idx].rs1.value <= rob_arr_o[alu_rs_data_arr[idx].rs1.tag].reg_data.value;
+    end 
+
+    if (alu_rs_data_arr[idx].rs2.tag == 0 || alu_rs_data_arr[idx].rs2.valid == 1'b1) begin
+        // do nothing
+    end else if (rob_arr_o[alu_rs_data_arr[idx].rs2.tag].valid == 1'b1) begin
+        // copy from ROB
+        if (rob_arr_o[alu_rs_data_arr[idx].rs2.tag].reg_data.can_commit)  begin
+            alu_rs_data_arr[idx].rs2.tag <= '0;
+            alu_rs_data_arr[idx].rs2.valid <= 1'b1;
+        end
+        alu_rs_data_arr[idx].rs2.value <= rob_arr_o[alu_rs_data_arr[idx].rs2.tag].reg_data.value;
+    end
+endtask
 
 always_ff @(posedge clk) begin
     // Can probably make more efficient - worry about later
@@ -57,15 +109,35 @@ always_ff @(posedge clk) begin
         if (is_in_use[0] == 1'b0) begin
             alu_rs_data_arr[0] <= alu_o;
             is_in_use[0] <= 1'b1;
+            updateFromROB(0);
         end else if (is_in_use[1] == 1'b0) begin
             alu_rs_data_arr[1] <= alu_o;
             is_in_use[1] <= 1'b1;
+            updateFromROB(1);
         end else if (is_in_use[2] == 1'b0) begin
             alu_rs_data_arr[2] <= alu_o;
             is_in_use[2] <= 1'b1;
+            updateFromROB(2);
         end else if (is_in_use[3] == 1'b0) begin
             alu_rs_data_arr[3] <= alu_o;
             is_in_use[3] <= 1'b1;
+            updateFromROB(3);
+        end else if (is_in_use[4] == 1'b0) begin
+            alu_rs_data_arr[4] <= alu_o;
+            is_in_use[4] <= 1'b1;
+            updateFromROB(4);
+        end else if (is_in_use[5] == 1'b0) begin
+            alu_rs_data_arr[5] <= alu_o;
+            is_in_use[5] <= 1'b1;
+            updateFromROB(5);
+        end else if (is_in_use[6] == 1'b0) begin
+            alu_rs_data_arr[6] <= alu_o;
+            is_in_use[6] <= 1'b1;
+            updateFromROB(6);
+        end else if (is_in_use[7] == 1'b0) begin
+            alu_rs_data_arr[7] <= alu_o;
+            is_in_use[7] <= 1'b1;
+            updateFromROB(7);
         end else begin
             alu_rs_full <= 1'b1;
         end
@@ -80,6 +152,9 @@ always_ff @(posedge clk) begin
     if (~(rst || flush)) begin
         for (int i = 0; i < `ALU_RS_SIZE; ++i) begin
             // check for tag match
+            if(alu_rs_data_arr[i].valid == 1'b1)
+                updateFromROBLater(i);
+
             for (int j = 0; j < `NUM_CDB_ENTRIES; ++j) begin
                 if (alu_rs_data_arr[i].rs1.valid == 1'b0 && alu_rs_data_arr[i].rs1.tag == cdb_vals_i[j].tag) begin
                     alu_rs_data_arr[i].rs1.value <= cdb_vals_i[j].value;
@@ -94,15 +169,39 @@ always_ff @(posedge clk) begin
             load_alu[i] <= 1'b0;
             // if data[i].valid == 1'b1 then update alu_arr value and 
             // set load_rob high 1 cycle later
-            if (alu_rs_data_arr[i].valid == 1'b1 && alu_rs_data_arr[i].rs1.valid == 1'b1 && alu_rs_data_arr[i].rs2.valid == 1'b1)
+            if (alu_rs_data_arr[i].valid == 1'b1 && alu_rs_data_arr[i].rs1.valid == 1'b1 && alu_rs_data_arr[i].rs2.valid == 1'b1) begin
+                // if(alu_rs_data_arr[i].jmp_type != none) begin
+                //     if($signed(alu_rs_data_arr[i].rs1.value) > 0)
+                //         alu_rs_data_arr[i].op <= alu_add;
+                //     else
+                //         alu_rs_data_arr[i].op <= alu_sub;
+                // end
+                
                 load_alu[i] <= 1'b1;
+            end
 
             // Send data to CDB
             if (is_in_use[i] == 1'b1 && load_cdb[i] == 1'b1) begin
-                cdb_alu_vals_o[i].value <= alu_res_arr[i];
+                case (alu_rs_data_arr[i].jmp_type)
+                    jal: begin
+                        cdb_alu_vals_o[i].target_pc <= alu_res_arr[i];
+                        cdb_alu_vals_o[i].value <= alu_rs_data_arr[i].curr_pc + 4; // should be old pc + 4
+                    end
+                    
+                    jalr: begin
+                        cdb_alu_vals_o[i].target_pc <= (alu_res_arr[i]) & 32'hFFFF_FFFE;
+                        cdb_alu_vals_o[i].value <= alu_rs_data_arr[i].curr_pc + 4; // should be old pc + 4
+                    end
+
+                    default: begin
+                        cdb_alu_vals_o[i].value <= alu_res_arr[i];
+                    end
+                endcase
+
                 cdb_alu_vals_o[i].tag <= alu_rs_data_arr[i].rob_idx;
                 is_in_use[i] <= 1'b0;
                 load_alu[i] <= 1'b0;
+                alu_rs_data_arr[i].valid <= 1'b0;
             end
         end
     end

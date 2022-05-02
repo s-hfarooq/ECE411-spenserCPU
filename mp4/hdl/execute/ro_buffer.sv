@@ -100,10 +100,34 @@ always_ff @ (posedge clk) begin
                     rob_arr[head_ptr] <= '{default: 0};
                     incrementToNextInstr();
                 end
+            end else if (rob_arr[head_ptr].op.opcode == op_jal || rob_arr[head_ptr].op.opcode == op_jalr) begin
+                // do jump
+                rob_o <= rob_arr[head_ptr];
+                // rob_arr[head_ptr].valid <= 4'b0;
+                target_pc <= rob_arr[head_ptr].target_pc;
+                is_committing <= 1'b1;
+
+                // rob_arr[head_ptr] <= '{default: 0};
+                branch_taken <= 1'b1;
+
+                if (mem_read == 1 && mem_resp == 1) begin
+                    rob_arr[head_ptr] <= '{default: 0};
+                    incrementToNextInstr();
+                    flush <= 1'b1;
+                end
+
+                // flush <= 1'b1;
+
+                // if (rob_arr[head_ptr].op.opcode == op_jalr) begin
+                //     flush <= 1'b1;
+                //     branch_taken <= 1'b1;
+                // end
+
+                // incrementToNextInstr();
             end else begin
                 // Output to regfile, dequeue
                 rob_o <= rob_arr[head_ptr];
-                rob_arr[head_ptr].valid <= 4'b0;
+                rob_arr[head_ptr].valid <= '0;
 
                 if (rob_store_complete == 1'b0)
                     is_committing <= 1'b1;
@@ -119,12 +143,12 @@ always_ff @ (posedge clk) begin
             // Save value to ROB, enqueue
             if (counter < (`RO_BUFFER_ENTRIES - 1)) begin
                 rob_arr[tail_ptr].op <= decoder_instr_i;
-                rob_arr[tail_ptr].tag <= tail_ptr; 
-                rob_arr[tail_ptr].reg_data.can_commit <= 1'b0;
-
+                rob_arr[tail_ptr].tag <= tail_ptr;
+                
                 // wait for computation
                 rob_arr[tail_ptr].valid <= 1'b1;
                 rob_arr[tail_ptr].reg_data.value <= 32'b0;
+                rob_arr[tail_ptr].reg_data.can_commit <= '0;
 
                 // Entry 0 is reserved
                 if (tail_ptr >= (`RO_BUFFER_ENTRIES - 1))

@@ -27,7 +27,9 @@ module load_store_queue (
     output rv32i_word data_addr,
     output rv32i_word data_wdata,
     input logic data_resp,
-    input rv32i_word data_rdata
+    input rv32i_word data_rdata,
+
+    input rob_arr_t rob_arr_o
 );
 
 // Head and tail pointers
@@ -51,8 +53,54 @@ task set_defaults();
     data_wdata <= 32'd0;
 endtask
 
+task updateFromROB(int idx);
+    if (lsb_entry.qj == 0) begin
+        // do nothing
+    end else if (rob_arr_o[lsb_entry.qj].valid == 1'b1) begin
+        // copy from ROB
+        if (rob_arr_o[lsb_entry.qj].reg_data.can_commit)
+            ldst_queue[idx].qj <= '0;
+        else
+            ldst_queue[idx].qj <= lsb_entry.qj;
+        ldst_queue[idx].vj <= rob_arr_o[lsb_entry.qj].reg_data.value;
+    end
+
+    if (lsb_entry.qk == 0) begin
+        // do nothing
+    end else if (rob_arr_o[lsb_entry.qk].valid == 1'b1) begin
+        // copy from ROB
+        if (rob_arr_o[lsb_entry.qk].reg_data.can_commit)
+            ldst_queue[idx].qk <= '0;
+        else
+            ldst_queue[idx].qk <= lsb_entry.qk;
+        ldst_queue[idx].vk <= rob_arr_o[lsb_entry.qk].reg_data.value;
+    end
+endtask
+
+task updateFromROBLater(int idx);
+    if (ldst_queue[idx].qj == 0) begin
+        // do nothing
+    end else if (rob_arr_o[ldst_queue[idx].qj].valid == 1'b1) begin
+        // copy from ROB
+        if (rob_arr_o[lsb_entry.qj].reg_data.can_commit)
+            ldst_queue[idx].qj <= '0;
+        ldst_queue[idx].vj <= rob_arr_o[lsb_entry.qj].reg_data.value;
+    end
+
+    if (ldst_queue[idx].qk == 0) begin
+        // do nothing
+    end else if (rob_arr_o[ldst_queue[idx].qk].valid == 1'b1) begin
+        // copy from ROB
+        if (rob_arr_o[lsb_entry.qk].reg_data.can_commit)
+            ldst_queue[idx].qk <= '0;
+        ldst_queue[idx].vk <= rob_arr_o[lsb_entry.qk].reg_data.value;
+    end
+endtask
+
 always_ff @ (posedge clk) begin : store_rs
     set_defaults();
+
+    data_read <= 1'b0;
 
     if (rst || flush) begin
         for(int i = 0; i < `LDST_SIZE; ++i)
@@ -64,6 +112,7 @@ always_ff @ (posedge clk) begin : store_rs
         // add new entry to queue
         if (lsb_entry.valid == 1'b1 && counter < `LDST_SIZE) begin
             ldst_queue[tail_ptr] <= lsb_entry;
+            updateFromROB(tail_ptr);
             tail_ptr <= tail_ptr + 1;
         end
     end
@@ -71,6 +120,8 @@ always_ff @ (posedge clk) begin : store_rs
     if (counter > 0) begin
         // Check CDB to see if needed values have been broadcasted
         for (int i = 0; i < `LDST_SIZE; ++i) begin
+            if(ldst_queue[i].valid == 1'b1)
+                updateFromROBLater(i);
             for (int j = 0; j < `NUM_CDB_ENTRIES; ++j) begin
                 if (ldst_queue[i].qj != 0 && ldst_queue[i].qj == cdb[j].tag) begin
                     ldst_queue[i].vj <= cdb[j].value;

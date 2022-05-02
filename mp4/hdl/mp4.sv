@@ -47,6 +47,10 @@ logic rob_is_full;
 logic take_br;
 rv32i_word next_pc;
 
+// decode - ifetch signals
+logic resolve_jal;
+rv32i_word jal_target_pc;
+
 // ALU/CMP signals
 logic alu_rs_full;
 logic cmp_rs_full;
@@ -65,10 +69,10 @@ logic i_cache_arbiter_write;
 rv32i_word i_cache_mem_addr;
 logic i_cache_mem_read;
 logic i_cache_mem_resp;
-logic [255:0] i_cache_mem_rdata;
+rv32i_word i_cache_mem_rdata;
 
 // d-cache signals
-logic [255:0] d_cache_mem_rdata;
+rv32i_word d_cache_mem_rdata;
 logic d_cache_mem_resp;
 logic d_cache_mem_write;
 logic d_cache_mem_read;
@@ -163,7 +167,7 @@ cacheline_adaptor cacheline_adaptor (
     .read_i(arbiter_mem_read),
     .write_i(arbiter_mem_write),
     .resp_o(arbiter_mem_resp),
-    // Signals to physical memory
+    // Signals to physical memor
     .burst_i(mem_rdata),
     .burst_o(mem_wdata),
     .address_o(mem_addr),
@@ -184,7 +188,9 @@ i_fetch i_fetch (
     .i_queue_read(i_queue_read),
     .next_pc(next_pc),
     .i_queue_empty(i_queue_empty),
-    .take_br(take_br)
+    .take_br(take_br),
+    .resolve_jal(resolve_jal),
+    .jal_target_pc(jal_target_pc)
 );
 
 i_decode decode (
@@ -211,7 +217,9 @@ i_decode decode (
     .cmp_o(cmp_o),
     .lsb_full(ldst_full),
     .lsb_almost_full(ldst_almost_full),
-    .lsb_o(lsb_decode_o)
+    .lsb_o(lsb_decode_o),
+    .resolve_jal(resolve_jal),
+    .jal_target_pc(jal_target_pc)
 );
 
 regfile reg_file (
@@ -249,7 +257,8 @@ load_store_queue ldstbuf (
     .data_addr(d_cache_mem_addr),
     .data_wdata(d_cache_mem_wdata),
     .data_resp(d_cache_mem_resp),
-    .data_rdata(d_cache_mem_rdata)
+    .data_rdata(d_cache_mem_rdata),
+    .rob_arr_o(rob_arr)
 );
 
 ro_buffer rob (
@@ -295,7 +304,7 @@ cmp_rs cmp_rs (
     .rob_arr_o(rob_arr),
     // To/from CDB
     .cdb_vals_i(cdb),
-    .cdb_cmp_vals_o(cdb[(2*(`CMP_RS_SIZE-1))+2 -: `CMP_RS_SIZE]),
+    .cdb_cmp_vals_o(cdb[`NUM_CDB_ENTRIES-1 -: `CMP_RS_SIZE]),
     // To/from decoder
     .cmp_o(cmp_o),
     .cmp_rs_full(cmp_rs_full)

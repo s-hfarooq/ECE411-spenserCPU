@@ -17,6 +17,8 @@ module i_fetch (
     input logic i_queue_read,
     input rv32i_word next_pc,
     output logic i_queue_empty,
+    input logic resolve_jal,
+    input rv32i_word jal_target_pc,
 
     // From ROB
     input logic take_br
@@ -48,7 +50,8 @@ br_pred predictor (
     .branch_pred_pc_sel(branch_pred_pc_sel),
     .pc_load(pc_load),
     .mem_resp(i_cache_mem_resp),
-    .flush(flush)
+    .flush(flush),
+    .resolve_jal(resolve_jal)
 );
 
 i_queue i_queue (
@@ -64,24 +67,33 @@ i_queue i_queue (
     .full(i_queue_full)
 );
 
-// logic going to i-queue
+// logic going to i-queue and pc_in
 always_comb begin
-    if (take_br) begin
-        i_queue_data_in.pc = next_pc;
-        i_queue_data_in.next_pc = next_pc + 4;
-        i_queue_data_in.instr = 32'd0;
-    end else begin
-        i_queue_data_in.pc = pc_out;
-        i_queue_data_in.next_pc = pc_out + 4;
-        i_queue_data_in.instr = i_cache_mem_rdata;
-    end
-end
-
-// pc_in logic
-always_comb begin : MUXES
-    case (take_br)
-        1'b0: pc_in = pc_out + 4;
-        1'b1: pc_in = next_pc;
+    case ({take_br, resolve_jal})  
+        2'b00: begin
+            pc_in = pc_out + 4;
+            i_queue_data_in.pc = pc_out;
+            i_queue_data_in.next_pc = pc_out + 4;
+            i_queue_data_in.instr = i_cache_mem_rdata;
+        end
+        2'b01: begin
+            pc_in = jal_target_pc; // pc from jal instruction
+            i_queue_data_in.pc = jal_target_pc;
+            i_queue_data_in.next_pc = jal_target_pc + 4;
+            i_queue_data_in.instr = i_cache_mem_rdata;
+        end
+        2'b10: begin
+            pc_in = next_pc;
+            i_queue_data_in.pc = next_pc;
+            i_queue_data_in.next_pc = next_pc + 4;
+            i_queue_data_in.instr = 32'd0;
+        end
+        2'b11: begin // should hopefully never happen
+            pc_in = jal_target_pc; // pc from jal instruction
+            i_queue_data_in.pc = jal_target_pc;
+            i_queue_data_in.next_pc = jal_target_pc + 4;
+            i_queue_data_in.instr = i_cache_mem_rdata;
+        end
     endcase
 end
 
