@@ -130,14 +130,6 @@ always_ff @(posedge clk) begin
             alu_rs_data_arr[5] <= alu_o;
             is_in_use[5] <= 1'b1;
             updateFromROB(5);
-        end else if (is_in_use[6] == 1'b0) begin
-            alu_rs_data_arr[6] <= alu_o;
-            is_in_use[6] <= 1'b1;
-            updateFromROB(6);
-        end else if (is_in_use[7] == 1'b0) begin
-            alu_rs_data_arr[7] <= alu_o;
-            is_in_use[7] <= 1'b1;
-            updateFromROB(7);
         end else begin
             alu_rs_full <= 1'b1;
         end
