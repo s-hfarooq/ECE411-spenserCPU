@@ -14,10 +14,10 @@
 `define REGISTER_WIDTH 32
 
 // alu_reservation_station.sv
-`define ALU_RS_SIZE 8
+`define ALU_RS_SIZE 6
 
 // cmp_reservation_station.sv
-`define CMP_RS_SIZE 8
+`define CMP_RS_SIZE 6
 
 // alu_reservation_station.sv
 `define LDST_SIZE 8
@@ -26,4 +26,4 @@
 // 8 + 1 because entry 0 is reserved
 `define RO_BUFFER_ENTRIES 9 
 
-`define NUM_CDB_ENTRIES 17
+`define NUM_CDB_ENTRIES 13
