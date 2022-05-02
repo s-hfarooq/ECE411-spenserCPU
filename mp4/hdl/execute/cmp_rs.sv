@@ -29,7 +29,7 @@ logic [`CMP_RS_SIZE-1:0] load_cmp;
 logic [`CMP_RS_SIZE-1:0] load_cdb;
 
 // for whatever reason we got a multiple drivers error when writing directly to cmp_arr[i].value
-rv32i_word [`CMP_RS_SIZE-1:0] cmp_res_arr;
+logic [`CMP_RS_SIZE-1:0] cmp_res_arr;
 
 task updateFromROB(int idx);
     if (cmp_o.rs1.valid == 1'b1) begin
@@ -38,7 +38,7 @@ task updateFromROB(int idx);
         // copy from ROB
         if (rob_arr_o[cmp_o.rs1.tag].reg_data.can_commit) begin
             cmp_rs_data_arr[idx].rs1.valid <= 1'b1;
-            cmp_rs_data_arr[idx].rs1.tag <= 32'd0;
+            cmp_rs_data_arr[idx].rs1.tag <= '0;
         end else begin
             cmp_rs_data_arr[idx].rs1.tag <= cmp_o.rs1.tag;
         end
@@ -51,7 +51,7 @@ task updateFromROB(int idx);
         // copy from ROB
         if (rob_arr_o[cmp_o.rs2.tag].reg_data.can_commit) begin
             cmp_rs_data_arr[idx].rs2.valid <= 1'b1;
-            cmp_rs_data_arr[idx].rs2.tag <= 32'd0;
+            cmp_rs_data_arr[idx].rs2.tag <= '0;
         end else begin
             cmp_rs_data_arr[idx].rs2.tag <= cmp_o.rs2.tag;
         end
@@ -65,7 +65,7 @@ task updateFromROBLater(int idx);
     end else if (rob_arr_o[cmp_rs_data_arr[idx].rs1.tag].valid == 1'b1) begin
         // copy from ROB
         if (rob_arr_o[cmp_rs_data_arr[idx].rs1.tag].reg_data.can_commit) begin
-            cmp_rs_data_arr[idx].rs1.tag <= 32'd0;
+            cmp_rs_data_arr[idx].rs1.tag <= '0;
             cmp_rs_data_arr[idx].rs1.valid <= 1'b1;
         end
         cmp_rs_data_arr[idx].rs1.value <= rob_arr_o[cmp_rs_data_arr[idx].rs1.tag].reg_data.value;
@@ -76,7 +76,7 @@ task updateFromROBLater(int idx);
     end else if(rob_arr_o[cmp_rs_data_arr[idx].rs2.tag].valid == 1'b1) begin
         // copy from ROB
         if(rob_arr_o[cmp_rs_data_arr[idx].rs2.tag].reg_data.can_commit)  begin
-            cmp_rs_data_arr[idx].rs2.tag <= 32'd0;
+            cmp_rs_data_arr[idx].rs2.tag <= '0;
             cmp_rs_data_arr[idx].rs2.valid <= 1'b1;
         end
         cmp_rs_data_arr[idx].rs2.value <= rob_arr_o[cmp_rs_data_arr[idx].rs2.tag].reg_data.value;

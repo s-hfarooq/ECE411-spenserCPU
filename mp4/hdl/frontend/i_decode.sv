@@ -89,12 +89,12 @@ assign branch_funct3 = branch_funct3_t'(funct3);
 
 // Glue signals
 rv32i_word vj_o, vk_o;
-logic [3:0] qj_o, qk_o;
+tag_t qj_o, qk_o;
 assign rs1_o = rs1;
 assign rs2_o = rs2;
 
 rv32i_word prevReg;
-rv32i_word prevTag;
+tag_t prevTag;
 
 always_comb begin
     // if source register is not reg0, and if ROB has the value for the
@@ -300,7 +300,7 @@ always_ff @ (posedge clk) begin
                     pc_and_rd.rd <= rd;
                     lsb_o.valid <= 1'b1;
                     lsb_o.vk <= 32'd0;
-                    lsb_o.qk <= 32'd0;
+                    lsb_o.qk <= '0;
                     lsb_o.addr <= i_imm;
                     lsb_o.type_of_inst <= 1'b0;  // 0 = load, 1 = store
                     lsb_o.funct <= load_funct3;
@@ -430,7 +430,7 @@ always_ff @ (posedge clk) begin
                                         alu_o.valid <= 1'b1;
                                         alu_o.rs2.value <= i_imm;
                                         alu_o.rs2.valid <= 1'b1;
-                                        alu_o.rs2.tag <= 32'b0;
+                                        alu_o.rs2.tag <= '0;
                                         alu_o.op <= alu_srl;
                                         alu_o.rob_idx <= rob_free_tag;
                                         rob_write <= 1'b1;
@@ -440,7 +440,7 @@ always_ff @ (posedge clk) begin
                                         alu_o.valid <= 1'b1;
                                         alu_o.rs2.value <= i_imm;
                                         alu_o.rs2.valid <= 1'b1;
-                                        alu_o.rs2.tag <= 32'b0;
+                                        alu_o.rs2.tag <= '0;
                                         alu_o.op <= alu_sra;
                                         alu_o.rob_idx <= rob_free_tag;
                                         rob_write <= 1'b1;
@@ -468,7 +468,7 @@ always_ff @ (posedge clk) begin
                                 alu_o.valid <= 1'b1;
                                 alu_o.rs2.value <= i_imm;
                                 alu_o.rs2.valid <= 1'b1;
-                                alu_o.rs2.tag <= 32'b0;
+                                alu_o.rs2.tag <= '0;
                                 alu_o.op <= alu_ops'(funct3);
                                 alu_o.rob_idx <= rob_free_tag;
                                 rob_write <= 1'b1;

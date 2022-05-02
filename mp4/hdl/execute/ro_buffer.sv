@@ -127,7 +127,7 @@ always_ff @ (posedge clk) begin
             end else begin
                 // Output to regfile, dequeue
                 rob_o <= rob_arr[head_ptr];
-                rob_arr[head_ptr].valid <= 4'b0;
+                rob_arr[head_ptr].valid <= '0;
 
                 if (rob_store_complete == 1'b0)
                     is_committing <= 1'b1;
@@ -148,7 +148,7 @@ always_ff @ (posedge clk) begin
                 // wait for computation
                 rob_arr[tail_ptr].valid <= 1'b1;
                 rob_arr[tail_ptr].reg_data.value <= 32'b0;
-                rob_arr[tail_ptr].reg_data.can_commit <= 32'b0;
+                rob_arr[tail_ptr].reg_data.can_commit <= '0;
 
                 // Entry 0 is reserved
                 if (tail_ptr >= (`RO_BUFFER_ENTRIES - 1))

@@ -42,7 +42,7 @@ task updateFromROB(int idx);
         // copy from ROB
         if (rob_arr_o[alu_o.rs1.tag].reg_data.can_commit) begin
             alu_rs_data_arr[idx].rs1.valid <= 1'b1;
-            alu_rs_data_arr[idx].rs1.tag <= 32'd0;
+            alu_rs_data_arr[idx].rs1.tag <= '0;
         end else begin
             alu_rs_data_arr[idx].rs1.tag <= alu_o.rs1.tag;
         end
@@ -55,7 +55,7 @@ task updateFromROB(int idx);
         // copy from ROB
         if(rob_arr_o[alu_o.rs2.tag].reg_data.can_commit) begin
             alu_rs_data_arr[idx].rs2.valid <= 1'b1;
-            alu_rs_data_arr[idx].rs2.tag <= 32'd0;
+            alu_rs_data_arr[idx].rs2.tag <= '0;
         end else begin
             alu_rs_data_arr[idx].rs2.tag <= alu_o.rs2.tag;
         end
@@ -64,13 +64,12 @@ task updateFromROB(int idx);
 endtask
 
 task updateFromROBLater(int idx);
-
     if (alu_rs_data_arr[idx].rs1.tag == 0 || alu_rs_data_arr[idx].rs1.valid == 1'b1) begin
         // do nothing
     end else if (rob_arr_o[alu_rs_data_arr[idx].rs1.tag].valid == 1'b1) begin
         // copy from ROB
         if (rob_arr_o[alu_rs_data_arr[idx].rs1.tag].reg_data.can_commit) begin
-            alu_rs_data_arr[idx].rs1.tag <= 32'd0;
+            alu_rs_data_arr[idx].rs1.tag <= '0;
             alu_rs_data_arr[idx].rs1.valid <= 1'b1;
         end
         alu_rs_data_arr[idx].rs1.value <= rob_arr_o[alu_rs_data_arr[idx].rs1.tag].reg_data.value;
@@ -81,7 +80,7 @@ task updateFromROBLater(int idx);
     end else if (rob_arr_o[alu_rs_data_arr[idx].rs2.tag].valid == 1'b1) begin
         // copy from ROB
         if (rob_arr_o[alu_rs_data_arr[idx].rs2.tag].reg_data.can_commit)  begin
-            alu_rs_data_arr[idx].rs2.tag <= 32'd0;
+            alu_rs_data_arr[idx].rs2.tag <= '0;
             alu_rs_data_arr[idx].rs2.valid <= 1'b1;
         end
         alu_rs_data_arr[idx].rs2.value <= rob_arr_o[alu_rs_data_arr[idx].rs2.tag].reg_data.value;

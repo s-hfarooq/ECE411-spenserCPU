@@ -69,10 +69,10 @@ logic i_cache_arbiter_write;
 rv32i_word i_cache_mem_addr;
 logic i_cache_mem_read;
 logic i_cache_mem_resp;
-logic [255:0] i_cache_mem_rdata;
+rv32i_word i_cache_mem_rdata;
 
 // d-cache signals
-logic [255:0] d_cache_mem_rdata;
+rv32i_word d_cache_mem_rdata;
 logic d_cache_mem_resp;
 logic d_cache_mem_write;
 logic d_cache_mem_read;

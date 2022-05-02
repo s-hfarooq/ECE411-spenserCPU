@@ -59,7 +59,7 @@ task updateFromROB(int idx);
     end else if (rob_arr_o[lsb_entry.qj].valid == 1'b1) begin
         // copy from ROB
         if (rob_arr_o[lsb_entry.qj].reg_data.can_commit)
-            ldst_queue[idx].qj <= 32'd0;
+            ldst_queue[idx].qj <= '0;
         else
             ldst_queue[idx].qj <= lsb_entry.qj;
         ldst_queue[idx].vj <= rob_arr_o[lsb_entry.qj].reg_data.value;
@@ -70,7 +70,7 @@ task updateFromROB(int idx);
     end else if (rob_arr_o[lsb_entry.qk].valid == 1'b1) begin
         // copy from ROB
         if (rob_arr_o[lsb_entry.qk].reg_data.can_commit)
-            ldst_queue[idx].qk <= 32'd0;
+            ldst_queue[idx].qk <= '0;
         else
             ldst_queue[idx].qk <= lsb_entry.qk;
         ldst_queue[idx].vk <= rob_arr_o[lsb_entry.qk].reg_data.value;
@@ -83,7 +83,7 @@ task updateFromROBLater(int idx);
     end else if (rob_arr_o[ldst_queue[idx].qj].valid == 1'b1) begin
         // copy from ROB
         if (rob_arr_o[lsb_entry.qj].reg_data.can_commit)
-            ldst_queue[idx].qj <= 32'd0;
+            ldst_queue[idx].qj <= '0;
         ldst_queue[idx].vj <= rob_arr_o[lsb_entry.qj].reg_data.value;
     end
 
@@ -92,7 +92,7 @@ task updateFromROBLater(int idx);
     end else if (rob_arr_o[ldst_queue[idx].qk].valid == 1'b1) begin
         // copy from ROB
         if (rob_arr_o[lsb_entry.qk].reg_data.can_commit)
-            ldst_queue[idx].qk <= 32'd0;
+            ldst_queue[idx].qk <= '0;
         ldst_queue[idx].vk <= rob_arr_o[lsb_entry.qk].reg_data.value;
     end
 endtask
