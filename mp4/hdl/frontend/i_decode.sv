@@ -89,7 +89,7 @@ assign branch_funct3 = branch_funct3_t'(funct3);
 
 // Glue signals
 rv32i_word vj_o, vk_o;
-logic [2:0] qj_o, qk_o;
+logic [4:0] qj_o, qk_o;
 assign rs1_o = rs1;
 assign rs2_o = rs2;
 
