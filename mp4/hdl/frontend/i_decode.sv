@@ -89,7 +89,7 @@ assign branch_funct3 = branch_funct3_t'(funct3);
 
 // Glue signals
 rv32i_word vj_o, vk_o;
-logic [4:0] qj_o, qk_o;
+logic [3:0] qj_o, qk_o;
 assign rs1_o = rs1;
 assign rs2_o = rs2;
 
@@ -102,7 +102,7 @@ always_comb begin
     // use the value from the regfile.
     if (regfile_entry_i.qj_out != 0 && rob_in[regfile_entry_i.qj_out].reg_data.can_commit) begin
         vj_o = rob_in[regfile_entry_i.qj_out].reg_data.value;
-        qj_o = 3'b000;
+        qj_o = 4'b0000;
     end else begin
         vj_o = regfile_entry_i.vj_out;
         qj_o = regfile_entry_i.qj_out;
@@ -110,7 +110,7 @@ always_comb begin
 
     if (regfile_entry_i.qk_out != 0 && rob_in[regfile_entry_i.qk_out].reg_data.can_commit) begin
         vk_o = rob_in[regfile_entry_i.qk_out].reg_data.value;
-        qk_o = 3'b000;
+        qk_o = 4'b0000;
     end else begin
         vk_o = regfile_entry_i.vk_out;
         qk_o = regfile_entry_i.qk_out;
