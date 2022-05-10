@@ -1,4 +1,7 @@
-module cache_datapath (
+module cache_datapath # (
+  parameter num_sets = 8
+)
+(
   input clk,
 
   /* CPU memory data signals */
@@ -54,8 +57,8 @@ always_comb begin
 end
 
 data_array DM_cache (clk, mask, index, index, line_in, line_out);
-array #(24) tag (clk, tag_load, index, index, address_tag, tag_out);
-array #(1) valid (clk, valid_load, index, index, 1'b1, valid_out);
-array #(1) dirty (clk, dirty_load, index, index, dirty_in, dirty_out);
+array #(24, num_sets) tag (clk, tag_load, index, index, address_tag, tag_out);
+array #(1, num_sets) valid (clk, valid_load, index, index, 1'b1, valid_out);
+array #(1, num_sets) dirty (clk, dirty_load, index, index, dirty_in, dirty_out);
 
 endmodule : cache_datapath

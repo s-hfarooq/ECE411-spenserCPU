@@ -1,4 +1,7 @@
-module cache (
+module cache # (
+  parameter num_sets = 8
+)
+(
   input clk,
 
   /* Physical memory signals */
@@ -33,7 +36,7 @@ logic [255:0] mem_rdata;
 logic [31:0] mem_byte_enable;
 
 cache_control control(.*);
-cache_datapath datapath(.*);
+cache_datapath #(num_sets) datapath(.*);
 
 line_adapter bus (
     .mem_wdata_line(mem_wdata),
